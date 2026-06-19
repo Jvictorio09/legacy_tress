@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LegacyTress – Technical Development Plan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --gold: #9E7B36;
+    --olive: #1C3A29;
+    --olive-light: #3E6B4C;
+    --cream: #F6F2E8;
+    --beige: #ECE6D4;
+    --dark: #142E20;
+    --mid-grey: #6C6C6C;
+    --light-grey: #F5F5F5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10pt;
+    color: var(--dark);
+    background: #fff;
+    line-height: 1.6;
+  }
+
+  /* ── Print ── */
+  @media print {
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+    body { font-size: 9.5pt; }
+    .cover { min-height: 100vh; }
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: #1E2D1A;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 50px;
+    position: relative;
+    text-align: center;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 12px;
+    background: var(--gold);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--gold);
+  }
+  .cover-stripe {
+    position: absolute;
+    top: 12px; left: 0; right: 0;
+    height: 8px;
+    background: var(--olive);
+  }
+  .cover-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 42pt;
+    color: var(--gold);
+    letter-spacing: 8px;
+    margin-bottom: 8px;
+  }
+  .cover-divider {
+    width: 200px;
+    height: 1.5px;
+    background: var(--gold);
+    margin: 12px auto;
+  }
+  .cover-title {
+    font-size: 11pt;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .cover-plan-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20pt;
+    color: var(--gold);
+    margin: 8px 0 6px;
+  }
+  .cover-tagline {
+    font-size: 9.5pt;
+    color: var(--beige);
+    font-style: italic;
+    margin: 14px 0 40px;
+  }
+  .cover-prep-label {
+    font-size: 8.5pt;
+    color: var(--beige);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .cover-prep-name {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .cover-prep-email {
+    font-size: 8.5pt;
+    color: var(--beige);
+    margin-bottom: 20px;
+  }
+  .cover-for {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .cover-version {
+    font-size: 8.5pt;
+    color: var(--beige);
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  /* ── Content pages ── */
+  .content {
+    background: var(--cream);
+    padding: 0;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 55px 60px;
+    position: relative;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: var(--gold);
+  }
+
+  .page-footer {
+    border-top: 1px solid var(--beige);
+    padding-top: 8px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    color: var(--mid-grey);
+    font-style: italic;
+  }
+
+  /* ── Headings ── */
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20pt;
+    color: var(--olive);
+    margin: 30px 0 6px;
+  }
+  h2 {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 22px 0 6px;
+  }
+  h3 {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: var(--olive);
+    margin: 14px 0 4px;
+  }
+
+  .gold-rule {
+    width: 100%;
+    height: 1.5px;
+    background: var(--gold);
+    margin: 6px 0 12px;
+  }
+
+  /* ── Body text ── */
+  p.body-text {
+    font-size: 10pt;
+    line-height: 1.7;
+    color: var(--dark);
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+
+  /* ── Bullets ── */
+  ul.styled {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 0;
+  }
+  ul.styled li {
+    padding: 3px 0 3px 20px;
+    position: relative;
+    font-size: 10pt;
+    line-height: 1.6;
+  }
+  ul.styled li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 9pt;
+  }
+  table thead tr {
+    background: var(--olive);
+    color: #fff;
+  }
+  table thead th {
+    padding: 7px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9pt;
+  }
+  table tbody tr:nth-child(odd)  { background: var(--cream); }
+  table tbody tr:nth-child(even) { background: var(--light-grey); }
+  table tbody td {
+    padding: 6px 10px;
+    border: 0.5px solid var(--beige);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .td-bold { font-weight: 600; color: var(--olive); }
+  .td-mono { font-family: 'Courier New', monospace; }
+  .td-grey { color: var(--mid-grey); }
+  .td-gold { color: var(--gold); font-weight: 700; }
+  .td-center { text-align: center; }
+
+  /* ── Code blocks ── */
+  pre {
+    background: #F0EDE6;
+    border-left: 3px solid var(--gold);
+    padding: 12px 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 8pt;
+    line-height: 1.6;
+    margin: 8px 0 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-radius: 2px;
+  }
+
+  /* ── TOC ── */
+  .toc-item {
+    display: flex;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 10pt;
+    border-bottom: 1px dotted var(--beige);
+  }
+  .toc-num { color: var(--gold); font-weight: 700; min-width: 28px; }
+
+  /* ── Tags ── */
+  .tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 6px 0 12px;
+  }
+  .tag {
+    background: var(--cream);
+    border: 1px solid var(--beige);
+    color: var(--olive);
+    font-weight: 700;
+    font-size: 8pt;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── Architecture boxes ── */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 10px 0 14px;
+  }
+  .arch-box {
+    border: 1.5px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .arch-box-header {
+    background: var(--olive);
+    color: #fff;
+    font-weight: 700;
+    font-size: 9pt;
+    padding: 8px 12px;
+    text-align: center;
+  }
+  .arch-box-body {
+    background: var(--cream);
+    padding: 10px 12px;
+    font-size: 8.5pt;
+    line-height: 1.8;
+    color: var(--dark);
+  }
+
+  /* ── Two-col bullets ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+    margin-bottom: 8px;
+  }
+
+  /* ── Disclaimer ── */
+  .disclaimer {
+    background: var(--beige);
+    border-left: 3px solid var(--olive);
+    padding: 10px 14px;
+    font-size: 9pt;
+    font-style: italic;
+    color: var(--mid-grey);
+    margin: 8px 0 12px;
+    border-radius: 2px;
+  }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--light-grey);
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    font-size: 9.5pt;
+    color: var(--dark);
+    margin: 8px 0 12px;
+    border-radius: 2px;
+  }
+
+  /* ── Section wrapper ── */
+  .section { margin-bottom: 4px; }
+
+  .workflow-trigger {
+    font-style: italic;
+    color: var(--mid-grey);
+    font-size: 9pt;
+    margin-bottom: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════ COVER ══ -->
+
+
+<!-- ══════════════════════════════════════════ CONTENT ══ -->
+<div class="content">
+<div class="page">
+
+<!-- ── TABLE OF CONTENTS ── -->
+<h1>Table of Contents</h1>
+<div class="gold-rule"></div>
+<div class="toc-item"><span class="toc-num">1.</span> Project Overview &amp; Goals</div>
+<div class="toc-item"><span class="toc-num">2.</span> Architecture Overview</div>
+<div class="toc-item"><span class="toc-num">3.</span> Technology Stack</div>
+<div class="toc-item"><span class="toc-num">4.</span> Website Pages &amp; Features</div>
+<div class="toc-item"><span class="toc-num">5.</span> AI Features &amp; Automation</div>
+<div class="toc-item"><span class="toc-num">6.</span> Virtual Try-On Integration</div>
+<div class="toc-item"><span class="toc-num">7.</span> Payment Integration — Square + Afterpay</div>
+<div class="toc-item"><span class="toc-num">8.</span> GoHighLevel CRM Integration</div>
+<div class="toc-item"><span class="toc-num">9.</span> CRM Pipelines, Tags &amp; Forms</div>
+<div class="toc-item"><span class="toc-num">10.</span> Automation Workflows</div>
+<div class="toc-item"><span class="toc-num">11.</span> SEO Strategy</div>
+<div class="toc-item"><span class="toc-num">12.</span> Blog Content Plan</div>
+<div class="toc-item"><span class="toc-num">13.</span> Build Phases &amp; Timeline</div>
+<div class="toc-item"><span class="toc-num">14.</span> Infrastructure &amp; Hosting</div>
+<div class="toc-item"><span class="toc-num">15.</span> Django Project Structure</div>
+<div class="toc-item"><span class="toc-num">16.</span> Security &amp; Compliance</div>
+<div class="toc-item"><span class="toc-num">17.</span> Post-Launch Roadmap</div>
+
+<!-- ── 1. PROJECT OVERVIEW ── -->
+<div class="page-break"></div>
+<h1>1. Project Overview &amp; Goals</h1>
+<div class="gold-rule"></div>
+<p class="body-text">LegacyTress is a luxury braiding and natural hair care salon located in Margate, FL. This document outlines the complete technical plan for designing, building, and deploying a high-converting, AI-powered website that positions LegacyTress as the premium protective styling destination in South Florida.</p>
+
+<h2>Primary Objectives</h2>
+<ul class="styled">
+  <li>Convert website visitors into booked appointments through seamless UX and AI-guided service selection</li>
+  <li>Educate clients on services, pricing, hair care, and scalp wellness with rich, expert content</li>
+  <li>Enable virtual hairstyle try-on before booking to reduce hesitation and increase confidence</li>
+  <li>Collect and nurture leads with GoHighLevel CRM automation and AI follow-up sequences</li>
+  <li>Offer flexible Afterpay / payment plan options via Square for every service tier</li>
+  <li>Power AI consultation, follow-up, aftercare, and rebooking sequences automatically</li>
+  <li>Rank on Google for luxury braiding searches across Broward County and South Florida</li>
+  <li>Reflect the brand's chic, elegant, wellness-focused aesthetic at every client touchpoint</li>
+</ul>
+
+<h2>Brand Aesthetic Direction</h2>
+<p class="body-text">The website must feel like a luxury braid spa, not a typical hair salon listing. Design direction: chic, elegant, soft, feminine, professional, and wellness-focused. Clients should feel that booking LegacyTress is a premium self-care experience.</p>
+
+<h3>Colour Palette</h3>
+<table>
+  <thead><tr><th>Colour</th><th>Hex</th><th>Usage</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold" style="color:#1C3A29;">Deep Emerald Green</td><td class="td-mono">#1C3A29</td><td>Headers, body ink, dark sections, navigation</td></tr>
+    <tr><td class="td-bold" style="color:#9E7B36;">Antique Gold</td><td class="td-mono">#9E7B36</td><td>Buttons, dividers, luxury highlights</td></tr>
+    <tr><td class="td-bold">Cream / Ivory</td><td class="td-mono">#F6F2E8</td><td>Page backgrounds, cards, hero overlay</td></tr>
+    <tr><td class="td-bold">Beige / Nude</td><td class="td-mono">#ECE6D4</td><td>Section backgrounds, alternating rows</td></tr>
+    <tr><td class="td-bold">Green-Black Ink</td><td class="td-mono">#142E20</td><td>All body text</td></tr>
+    <tr><td class="td-bold">White</td><td class="td-mono">#FFFFFF</td><td>Contrast areas, CTA buttons</td></tr>
+  </tbody>
+</table>
+
+<!-- ── 2. ARCHITECTURE ── -->
+<h1>2. Architecture Overview</h1>
+<div class="gold-rule"></div>
+<p class="body-text">Rather than building the entire site inside GoHighLevel's page builder, this architecture gives LegacyTress full ownership of the frontend and backend — with GoHighLevel retained as the CRM, automation, and AI chatbot engine. This delivers superior performance, design flexibility, and long-term scalability at a low monthly infrastructure cost.</p>
+
+<div class="arch-grid">
+  <div class="arch-box">
+    <div class="arch-box-header">Cloudflare Pages<br>(Frontend)</div>
+    <div class="arch-box-body">Next.js / Astro<br>Tailwind CSS<br>Global CDN delivery<br>Free SSL + DDoS protection<br>Edge caching<br>GitHub auto-deploy</div>
+  </div>
+  <div class="arch-box">
+    <div class="arch-box-header">Railway<br>(Django Backend)</div>
+    <div class="arch-box-body">Django REST Framework<br>PostgreSQL database<br>Redis + Celery<br>AI consultation API<br>Square payment logic<br>GHL sync webhooks</div>
+  </div>
+  <div class="arch-box">
+    <div class="arch-box-header">GoHighLevel<br>(CRM Layer)</div>
+    <div class="arch-box-body">Contact pipelines<br>SMS / email workflows<br>Conversation AI chatbot<br>Appointment reminders<br>Review requests<br>Win-back campaigns</div>
+  </div>
+</div>
+
+<p class="body-text">Data flows from the website frontend to the Django API, which persists records in PostgreSQL, triggers async Celery tasks for follow-up sequences, and pushes contact/lead data into GoHighLevel via its REST API. GoHighLevel drives all SMS/email communications, appointment reminders, and AI chatbot conversations.</p>
+
+<!-- ── 3. TECH STACK ── -->
+<h1>3. Technology Stack</h1>
+<div class="gold-rule"></div>
+
+<h2>Frontend</h2>
+<table>
+  <thead><tr><th>Component</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold">Framework</td><td>Next.js 14 (React) or Astro — deployed to Cloudflare Pages</td></tr>
+    <tr><td class="td-bold">Styling</td><td>Tailwind CSS with custom LegacyTress design tokens (olive, gold, cream)</td></tr>
+    <tr><td class="td-bold">Fonts</td><td>Playfair Display (headings) + Montserrat (body) via Google Fonts</td></tr>
+    <tr><td class="td-bold">Animations</td><td>Framer Motion for luxury micro-interactions and page transitions</td></tr>
+    <tr><td class="td-bold">Image handling</td><td>next/image with Cloudflare R2 for globally optimised delivery</td></tr>
+  </tbody>
+</table>
+
+<h2>Backend</h2>
+<table>
+  <thead><tr><th>Component</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold">Framework</td><td>Django 5.x with Django REST Framework (DRF)</td></tr>
+    <tr><td class="td-bold">Database</td><td>PostgreSQL — Railway managed, daily automated backups</td></tr>
+    <tr><td class="td-bold">Cache / Queue</td><td>Redis + Celery for async tasks and timed follow-up sequences</td></tr>
+    <tr><td class="td-bold">File storage</td><td>Cloudflare R2 (S3-compatible) via django-storages</td></tr>
+    <tr><td class="td-bold">Auth</td><td>Django sessions or JWT for future client portal feature</td></tr>
+  </tbody>
+</table>
+
+<h2>Integrations</h2>
+<table>
+  <thead><tr><th>Component</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold">CRM</td><td>GoHighLevel REST API v2 — contacts, tags, pipelines, workflows</td></tr>
+    <tr><td class="td-bold">Payments</td><td>Square Python SDK — payment links + Web Payments SDK (v2)</td></tr>
+    <tr><td class="td-bold">AI</td><td>Anthropic Claude API for consultation recommendations and chatbot logic</td></tr>
+    <tr><td class="td-bold">SMS / Email</td><td>GoHighLevel workflows (Twilio under the hood) for all client communications</td></tr>
+    <tr><td class="td-bold">Virtual Try-On</td><td>Replicate.com API (hairstyle transfer model) — Perfect Corp API in v3</td></tr>
+  </tbody>
+</table>
+
+<h2>Infrastructure</h2>
+<table>
+  <thead><tr><th>Component</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold">Frontend host</td><td>Cloudflare Pages — free tier, global CDN, auto-deploy from GitHub</td></tr>
+    <tr><td class="td-bold">Backend host</td><td>Railway — auto-deploy from GitHub, managed PostgreSQL included</td></tr>
+    <tr><td class="td-bold">Static / media</td><td>Cloudflare R2 object storage — low cost, high performance</td></tr>
+    <tr><td class="td-bold">DNS / SSL</td><td>Cloudflare — manages DNS, SSL certificates, caching rules, WAF</td></tr>
+    <tr><td class="td-bold">CI/CD</td><td>GitHub Actions — automated test and deploy pipeline on every push to main</td></tr>
+  </tbody>
+</table>
+
+<!-- ── 4. WEBSITE PAGES ── -->
+<h1>4. Website Pages &amp; Features</h1>
+<div class="gold-rule"></div>
+
+<div class="no-break">
+<h2>Home Page</h2>
+<ul class="styled">
+  <li>Hero: full-width luxury image, headline, two CTAs — <em>Book Now</em> / <em>Try On Your Look</em></li>
+  <li>Why LegacyTress: icon grid — fast service, multiple braiders, hair care, kid-friendly, Afterpay</li>
+  <li>Signature services: horizontal scroll cards with image, service name, and starting price</li>
+  <li>Virtual try-on teaser with animated style preview</li>
+  <li>AI consultation call-to-action block</li>
+  <li>Before &amp; after gallery strip (6 curated images)</li>
+  <li>Google reviews carousel with star ratings</li>
+  <li>Afterpay / payment plan feature section</li>
+  <li>Meet the salon and owner (Christelle) section</li>
+  <li>FAQ accordion with AI assistant fallback</li>
+  <li>Final booking CTA banner</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Services Page</h2>
+<ul class="styled">
+  <li>Filterable grid by category: Knotless, Boho, French Curls, Kids, Twists, Natural Hair, Wellness</li>
+  <li>Each card: description, starting price, estimated time, hair included note, best for, maintenance tip, Book button</li>
+  <li><em>AI Recommends</em> badge on styles matching the client's consultation result</li>
+  <li>Deep conditioning and scalp treatment upsell prompts throughout</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Virtual Try-On Page</h2>
+<ul class="styled">
+  <li>Selfie upload interface with mobile camera support on iOS and Android</li>
+  <li>Style category selector: Knotless, Boho, Twists, Locs, Cornrows</li>
+  <li>Length and colour selector: 1B, 2, 4, 27, 30, 99J, burgundy, honey blonde</li>
+  <li>AI-generated hairstyle preview result</li>
+  <li>Save and share favourite look button</li>
+  <li>Send look to LegacyTress button — pushes style data to GHL contact record</li>
+  <li>Guided CTA to book the matching service with pre-filled selection</li>
+  <li>Disclaimer: AI try-on results are for inspiration only</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>AI Hair Consultation Page</h2>
+<ul class="styled">
+  <li>Multi-step form: personal info, hair profile (texture, length, scalp condition, treatment history)</li>
+  <li>Style preferences: desired look, length, colour, budget, event date</li>
+  <li>Upload current hair photo and inspiration photo</li>
+  <li>AI processes form and returns: recommended style, prep service, add-ons, price range, booking link</li>
+  <li>Full consultation data pushed to GHL with tagged custom fields</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Booking Page</h2>
+<ul class="styled">
+  <li>Embedded calendar — Fresha or GHL calendar widget</li>
+  <li>Deposit payment via Square payment link</li>
+  <li>Inspiration photo upload at booking stage</li>
+  <li>Policy acknowledgement checkbox</li>
+  <li>Afterpay and payment plan information</li>
+  <li>Fallback CTA: <em>Not sure what to book? Start with our AI Hair Consultation.</em></li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Gallery Page</h2>
+<ul class="styled">
+  <li>Filterable masonry grid: Knotless, Boho, French Curls, Kids, Natural Hair, Before &amp; After, Behind the Scenes</li>
+  <li>Each image: style name, length, colour, service time, Book Similar Look button</li>
+  <li>Lightbox view with swipe navigation on mobile</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>About, Reviews, Policies, Contact Pages</h2>
+<ul class="styled">
+  <li><strong>About:</strong> Christelle's story, salon values (wellness-first, fast service, multiple braiders, child-friendly), team bios</li>
+  <li><strong>Reviews:</strong> Google reviews embed, before &amp; after gallery, video testimonials, client message screenshots</li>
+  <li><strong>Policies:</strong> Deposit, late, cancellation, no-show, hair prep, children's, photo consent, Afterpay, AI disclaimers</li>
+  <li><strong>Contact:</strong> Address, phone, email, Instagram, TikTok, embedded Google Map, business hours, parking note, AI chat widget</li>
+</ul>
+</div>
+
+<!-- ── 5. AI FEATURES ── -->
+<h1>5. AI Features &amp; Automation</h1>
+<div class="gold-rule"></div>
+<p class="body-text">AI is woven throughout the LegacyTress experience — but always in a warm, luxury tone. No robotic language. Every AI touchpoint should feel like a knowledgeable, gracious stylist assistant.</p>
+
+<div class="no-break">
+<h2>AI Chatbot (GHL Conversation AI)</h2>
+<ul class="styled">
+  <li>Answers: prices, services, hours, location, policies, hair prep, and maintenance questions</li>
+  <li>Guides clients to the correct booking service based on their inquiry</li>
+  <li>Handles Afterpay, kids services, and scalp care questions</li>
+  <li>Sample greeting: <em>Welcome to LegacyTress, where protective styling meets luxury hair care.</em></li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>AI Hair Consultation (Django + Claude API)</h2>
+<ul class="styled">
+  <li>Processes multi-step consultation form via Anthropic Claude API</li>
+  <li>Returns: recommended style, size, length, prep service, add-ons, maintenance tips, price range</li>
+  <li>Personalised response delivered by email and SMS within 2 minutes</li>
+  <li>Full consultation record created in GHL with all custom fields populated</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>AI Style Recommender</h2>
+<ul class="styled">
+  <li>Client selects: texture, lifestyle, budget, fullness preference, time-in-chair tolerance</li>
+  <li>AI returns: best match, luxury match, low-maintenance match, and kid-friendly match</li>
+  <li>Each match links directly to the corresponding service booking page</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>AI Lead Follow-Up (Celery + GHL)</h2>
+<ul class="styled">
+  <li>5 minutes after form submit: <em>Do you need help choosing a braid style?</em></li>
+  <li>24 hours: <em>Your luxury braid consultation is still available.</em></li>
+  <li>3 days: <em>Would you like us to recommend a protective style based on your hair goals?</em></li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>AI Abandoned Booking Follow-Up</h2>
+<ul class="styled">
+  <li>Triggers when a booking is started but not completed</li>
+  <li>SMS: <em>Hi beautiful, we noticed you were interested in booking with LegacyTress...</em></li>
+  <li>Email follow-up with style recommendation and a direct one-click booking link</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>AI Maintenance Coach (Post-Appointment Sequence)</h2>
+<ul class="styled">
+  <li>Day 1: Thank you message + Day 1 braid care instructions</li>
+  <li>Day 3: Scalp comfort check-in</li>
+  <li>Day 7: Weekly maintenance and moisturising tips</li>
+  <li>Week 3: Touch-up offer with booking link</li>
+  <li>Week 6: Take-down and deep conditioning offer</li>
+  <li>Week 8: Rebooking reminder</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Additional AI Features</h2>
+<ul class="styled">
+  <li><strong>AI Review Request:</strong> Luxury thank-you + Google review link sent after every appointment; polite follow-up if no review in 3 days</li>
+  <li><strong>AI Upsell Assistant:</strong> Suggests deep conditioning, scalp treatment, touch-up, or membership at appropriate follow-up points</li>
+  <li><strong>AI Content Capture Prompt:</strong> After each appointment, team receives automated reminder to capture before photo, process video, final photo, and hair flip reel</li>
+</ul>
+</div>
+
+<!-- ── 6. VIRTUAL TRY-ON ── -->
+<h1>6. Virtual Try-On Integration</h1>
+<div class="gold-rule"></div>
+
+<h2>Phase 1 (MVP) — Link-Out Approach</h2>
+<p class="body-text">To get to market quickly, the try-on page guides clients to an existing AI hairstyle tool (e.g., YouCam Makeup web app) with LegacyTress-branded context, style references, and colour guides. The client is then directed back to book the matching service. This unblocks the launch immediately while v2 is developed.</p>
+
+<h2>Phase 2 — Replicate.com API Integration</h2>
+<p class="body-text">A hairstyle transfer model on Replicate.com accepts a selfie and a style reference image, returning an AI-composited preview. Django handles the API call, stores the result in Cloudflare R2, and returns the preview URL to the frontend. Affordable, fully API-driven, no third-party licensing required.</p>
+
+<pre>
+# Django view (simplified)
+import replicate
+
+def generate_preview(selfie_url, style_ref_url):
+    output = replicate.run(
+        'model/hairstyle-transfer:version',
+        input={'image': selfie_url, 'style_image': style_ref_url}
+    )
+    return output[0]  # URL of generated image
+</pre>
+
+<h2>Phase 3 — Perfect Corp API (Premium)</h2>
+<p class="body-text">Perfect Corp's enterprise YouCam API delivers photorealistic results with a large style library. Recommended as the long-term solution once the website is generating consistent revenue. Requires a licensing agreement with Perfect Corp.</p>
+
+<h2>Styles &amp; Colours Available</h2>
+<div class="two-col">
+  <ul class="styled">
+    <li>Medium knotless braids</li>
+    <li>Small knotless braids</li>
+    <li>Boho braids</li>
+    <li>French curls</li>
+    <li>Fulani braids</li>
+    <li>Tribal braids</li>
+  </ul>
+  <ul class="styled">
+    <li>Passion twists</li>
+    <li>Kinky twists</li>
+    <li>Invisible locs</li>
+    <li>Braided bob</li>
+    <li>Waist-length braids</li>
+    <li>Natural curls</li>
+  </ul>
+</div>
+<p class="body-text"><strong>Colours:</strong> 1B, 2, 4, 27, 30, 99J, burgundy, honey blonde, and custom blends.</p>
+
+<div class="disclaimer"><strong>Required disclaimer on page:</strong> AI try-on results are for inspiration only. Final results may vary based on hair texture, length, density, scalp condition, and service choice.</div>
+
+<!-- ── 7. PAYMENTS ── -->
+<h1>7. Payment Integration — Square + Afterpay</h1>
+<div class="gold-rule"></div>
+
+<h2>Phase 1 — Square Payment Links (Recommended Launch Path)</h2>
+<p class="body-text">Square Payment Links are the fastest path to accepting Afterpay on the website. The Django backend generates a payment link on demand via the Square Python SDK. Square's hosted checkout natively supports Afterpay/Clearpay, Apple Pay, Google Pay, and credit/debit cards.</p>
+
+<pre>
+from square.client import Client
+import uuid
+
+def create_deposit_link(service_name, amount_cents, redirect_url):
+    result = client.checkout.create_payment_link({
+        'idempotency_key': str(uuid.uuid4()),
+        'quick_pay': {
+            'name': service_name,
+            'price_money': {'amount': amount_cents, 'currency': 'USD'},
+            'location_id': settings.SQUARE_LOCATION_ID,
+        },
+        'checkout_options': {
+            'redirect_url': redirect_url,
+            'accepted_payment_methods': {'afterpay_clearpay': True}
+        }
+    })
+    return result.body['payment_link']['url']
+</pre>
+
+<h2>Payment Buttons on Website</h2>
+<table>
+  <thead><tr><th>Button Label</th><th>Function</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold">PAY DEPOSIT</td><td>Square link for service deposit amount, generated on demand</td></tr>
+    <tr><td class="td-bold">PAY WITH AFTERPAY</td><td>Square checkout with Afterpay/Clearpay pre-selected</td></tr>
+    <tr><td class="td-bold">SECURE YOUR APPOINTMENT</td><td>Deposit link created at booking confirmation step</td></tr>
+    <tr><td class="td-bold">PAY REMAINING BALANCE</td><td>Outstanding balance link sent before appointment day</td></tr>
+  </tbody>
+</table>
+
+<h2>Phase 2 — Embedded Square Web Payments SDK</h2>
+<p class="body-text">For a seamless checkout embedded within the LegacyTress website (no external redirect), the Square Web Payments SDK can be integrated into the Next.js frontend. Supports PCI-compliant card input, Apple Pay, Google Pay, and Afterpay. Recommended as a post-launch upgrade.</p>
+
+<!-- ── 8. GHL CRM ── -->
+<h1>8. GoHighLevel CRM Integration</h1>
+<div class="gold-rule"></div>
+<p class="body-text">GoHighLevel is retained as the CRM and automation engine. The Django backend acts as the data bridge — every form submission, consultation, try-on request, and booking event creates or updates a GHL contact via the REST API, with the correct tags, pipeline stage, and custom fields applied automatically.</p>
+
+<h2>Django GHL Client</h2>
+<pre>
+import httpx
+from django.conf import settings
+
+def push_contact_to_ghl(data: dict):
+    headers = {'Authorization': f'Bearer {settings.GHL_API_KEY}'}
+    payload = {
+        'firstName': data['first_name'],
+        'email':     data['email'],
+        'phone':     data['phone'],
+        'tags':      data.get('tags', []),
+        'customField': {
+            'hair_texture':    data.get('hair_texture'),
+            'desired_style':   data.get('desired_style'),
+            'scalp_condition': data.get('scalp_condition'),
+        }
+    }
+    resp = httpx.post('https://rest.gohighlevel.com/v1/contacts/',
+                      json=payload, headers=headers)
+    return resp.json()
+</pre>
+
+<h2>GHL Trigger Points from Django</h2>
+<div class="no-break">
+<h3>General inquiry form submitted</h3>
+<ul class="styled"><li>Add tag: New Lead</li><li>Notify owner/VA</li><li>Start follow-up sequence</li></ul>
+</div>
+<div class="no-break">
+<h3>Consultation form submitted</h3>
+<ul class="styled"><li>Consultation Submitted tag</li><li>AI recommendation email + SMS sent</li><li>Add to Consultation pipeline</li></ul>
+</div>
+<div class="no-break">
+<h3>Virtual try-on form submitted</h3>
+<ul class="styled"><li>Virtual Try-On Lead tag</li><li>Confirmation SMS with result</li><li>Follow-up if no booking within 48 hours</li></ul>
+</div>
+<div class="no-break">
+<h3>Booking started, not completed</h3>
+<ul class="styled"><li>Abandoned Booking tag</li><li>5-min SMS + 24-hr email sequence</li></ul>
+</div>
+<div class="no-break">
+<h3>Appointment marked complete</h3>
+<ul class="styled"><li>Completed Client tag</li><li>Trigger aftercare sequence</li><li>Review request workflow</li></ul>
+</div>
+
+<!-- ── 9. PIPELINES, TAGS, FORMS ── -->
+<h1>9. CRM Pipelines, Tags &amp; Forms</h1>
+<div class="gold-rule"></div>
+
+<h2>Pipelines</h2>
+<ul class="styled">
+  <li>New Lead</li><li>Consultation Submitted</li><li>Virtual Try-On Lead</li>
+  <li>Booked Appointment</li><li>Deposit Paid</li><li>Needs Follow-Up</li>
+  <li>Completed Client</li><li>Review Requested</li><li>Rebook Opportunity</li>
+</ul>
+
+<h2>Contact Tags</h2>
+<div class="tag-grid">
+  <span class="tag">Knotless Lead</span><span class="tag">Boho Lead</span>
+  <span class="tag">Kids Braids Lead</span><span class="tag">Natural Hair Lead</span>
+  <span class="tag">Virtual Try-On</span><span class="tag">Afterpay Interest</span>
+  <span class="tag">High Ticket Lead</span><span class="tag">Needs Consultation</span>
+  <span class="tag">VIP Client</span><span class="tag">Returning Client</span>
+  <span class="tag">Abandoned Booking</span><span class="tag">Completed Client</span>
+  <span class="tag">Review Received</span><span class="tag">Win-Back Target</span>
+  <span class="tag">Birthday Month</span>
+</div>
+
+<h2>Forms to Build</h2>
+<ul class="styled">
+  <li>General Inquiry Form — name, phone, email, message</li>
+  <li>AI Hair Consultation Form — full hair profile, style preferences, photo uploads</li>
+  <li>Virtual Try-On Intake Form — name, email, preferred styles, uploaded selfie</li>
+  <li>Booking Help Form — service interest, date preference, questions</li>
+  <li>Afterpay Interest Form — service, budget, preferred payment split</li>
+  <li>Influencer / Collaboration Form — platform, following, collab idea</li>
+  <li>Review Request Form — star rating + Google review redirect</li>
+  <li>Newsletter Signup — name, email, hair interest</li>
+</ul>
+
+<!-- ── 10. AUTOMATION WORKFLOWS ── -->
+<h1>10. Automation Workflows</h1>
+<div class="gold-rule"></div>
+
+<div class="no-break">
+<h2>New Lead Workflow</h2>
+<p class="workflow-trigger">Trigger: Any form submitted</p>
+<ul class="styled">
+  <li>Add tag: New Lead</li><li>Send SMS welcome message</li><li>Send email</li>
+  <li>Notify owner/VA</li><li>Create pipeline opportunity</li><li>Start 5-minute follow-up Celery task</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Consultation Response Workflow</h2>
+<p class="workflow-trigger">Trigger: AI Consultation form submitted</p>
+<ul class="styled">
+  <li>Claude API generates personalised style recommendation</li>
+  <li>Email + SMS delivered within 2 minutes of submission</li>
+  <li>Booking link with pre-selected matching service included</li>
+  <li>Contact moved to Consultation Submitted pipeline stage</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Virtual Try-On Follow-Up</h2>
+<p class="workflow-trigger">Trigger: Try-on form submitted</p>
+<ul class="styled">
+  <li>Confirmation SMS with style result link</li>
+  <li>24-hour: <em>Have you found your perfect style?</em></li>
+  <li>Booking CTA with matching service pre-selected</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Abandoned Booking Workflow</h2>
+<p class="workflow-trigger">Trigger: Booking started, not completed</p>
+<ul class="styled">
+  <li>5 minutes: SMS — <em>Hi beautiful, we noticed you were looking at booking with LegacyTress...</em></li>
+  <li>24 hours: Email with personalised style recommendation</li>
+  <li>3 days: Final follow-up with offer to help choose a service</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Appointment Reminder Workflow</h2>
+<p class="workflow-trigger">Trigger: Appointment confirmed</p>
+<ul class="styled">
+  <li>72 hours: Reminder + salon address and parking note</li>
+  <li>48 hours: Hair prep instructions — come with clean, detangled hair</li>
+  <li>24 hours: Reminder + policy summary</li>
+  <li>Morning-of: Final reminder with directions</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Aftercare Sequence</h2>
+<p class="workflow-trigger">Trigger: Appointment marked complete</p>
+<ul class="styled">
+  <li>Day 1: Thank you + Day 1 braid care tips</li>
+  <li>Day 3: Scalp comfort check-in</li>
+  <li>Day 7: Weekly maintenance and moisture tips</li>
+  <li>Week 3: Touch-up offer with booking link</li>
+  <li>Week 6: Take-down / deep conditioning offer</li>
+  <li>Week 8: Rebooking reminder</li>
+</ul>
+</div>
+
+<div class="no-break">
+<h2>Review, Birthday &amp; Win-Back Workflows</h2>
+<ul class="styled">
+  <li><strong>Review (2 days post-appointment):</strong> Luxury thank-you + Google review link; tag if received; 3-day follow-up if no review</li>
+  <li><strong>Birthday:</strong> Birthday message, small add-on offer, VIP booking invitation</li>
+  <li><strong>Win-Back (60–90 days no booking):</strong> Reactivation message, complimentary consultation offer, new styles preview</li>
+</ul>
+</div>
+
+<!-- ── 11. SEO ── -->
+<h1>11. SEO Strategy</h1>
+<div class="gold-rule"></div>
+<p class="body-text">Django is an excellent platform for SEO. Every page will have hand-crafted meta titles, descriptions, and Open Graph tags. Cloudflare handles page speed and global CDN delivery. django.contrib.sitemaps generates a live sitemap automatically.</p>
+
+<h2>Target Keywords</h2>
+<div class="two-col">
+  <ul class="styled">
+    <li>Luxury braiding salon Margate FL</li>
+    <li>Knotless braids Margate</li>
+    <li>Boho braids Broward County</li>
+    <li>Braiding salon near me Margate</li>
+    <li>Natural hair care Margate FL</li>
+    <li>Kids braids Margate</li>
+  </ul>
+  <ul class="styled">
+    <li>Protective styles Broward County</li>
+    <li>French curl braids Florida</li>
+    <li>Luxury braid salon South Florida</li>
+    <li>LegacyTress Braiding Salon</li>
+    <li>Scalp treatment Margate FL</li>
+    <li>Deep conditioning Broward County</li>
+  </ul>
+</div>
+
+<h2>On-Page SEO Checklist</h2>
+<ul class="styled">
+  <li>Unique meta title and description for every page</li>
+  <li>Alt text on every image — descriptive and keyword-rich</li>
+  <li>Structured data: LocalBusiness, Service, and FAQ schema</li>
+  <li>Google Business Profile embedded map on Contact page</li>
+  <li>Clean semantic HTML5 from Django / Next.js templates</li>
+  <li>Sitemap.xml auto-generated via django.contrib.sitemaps</li>
+  <li>robots.txt correctly configured</li>
+  <li>Canonical URLs on all pages to prevent duplicate content</li>
+  <li>Mobile-first responsive design — Core Web Vitals optimised</li>
+  <li>Google Analytics 4 + Search Console integration from day one</li>
+  <li>Blog section for long-form, keyword-rich content</li>
+</ul>
+
+<!-- ── 12. BLOG ── -->
+<h1>12. Blog Content Plan</h1>
+<div class="gold-rule"></div>
+<p class="body-text">The blog serves dual purposes: driving SEO traffic from long-tail keyword searches, and educating clients in a way that builds trust and reduces pre-booking hesitation. All posts are written in the LegacyTress luxury tone.</p>
+
+<table>
+  <thead><tr><th>#</th><th>Post Title</th><th>Target Keyword</th></tr></thead>
+  <tbody>
+    <tr><td class="td-gold td-center">1</td><td>Best Protective Styles for Natural Hair in South Florida</td><td class="td-grey">protective styles natural hair Florida</td></tr>
+    <tr><td class="td-gold td-center">2</td><td>Knotless Braids vs Box Braids: What's the Difference?</td><td class="td-grey">knotless braids vs box braids</td></tr>
+    <tr><td class="td-gold td-center">3</td><td>How to Prepare Your Hair Before a Braid Appointment</td><td class="td-grey">how to prepare hair for braids</td></tr>
+    <tr><td class="td-gold td-center">4</td><td>How Long Do Boho Braids Last? (And How to Make Them Last Longer)</td><td class="td-grey">how long do boho braids last</td></tr>
+    <tr><td class="td-gold td-center">5</td><td>Why Deep Conditioning Before Braids Matters for Hair Health</td><td class="td-grey">deep conditioning before braids</td></tr>
+    <tr><td class="td-gold td-center">6</td><td>Best Braid Styles for Kids: What Every Parent Should Know</td><td class="td-grey">kids braid styles Margate</td></tr>
+    <tr><td class="td-gold td-center">7</td><td>How to Maintain Braids Without Dry Scalp</td><td class="td-grey">maintain braids dry scalp</td></tr>
+    <tr><td class="td-gold td-center">8</td><td>Why LegacyTress Is Margate's Luxury Braiding Destination</td><td class="td-grey">luxury braiding salon Margate FL</td></tr>
+    <tr><td class="td-gold td-center">9</td><td>How to Choose the Right Braid Length for Your Face Shape</td><td class="td-grey">braid length face shape</td></tr>
+    <tr><td class="td-gold td-center">10</td><td>Can You Pay for Braids With Afterpay?</td><td class="td-grey">afterpay braiding salon</td></tr>
+  </tbody>
+</table>
+
+<!-- ── 13. BUILD PHASES ── -->
+<h1>13. Build Phases &amp; Timeline</h1>
+<div class="gold-rule"></div>
+
+<table>
+  <thead><tr><th>Phase</th><th>Name</th><th>When</th><th>Key Deliverables</th></tr></thead>
+  <tbody>
+    <tr><td class="td-gold td-center">1</td><td class="td-bold">Foundation Setup</td><td class="td-grey td-center">Week 1</td><td>Django on Railway, PostgreSQL, Redis, DRF, Cloudflare DNS, GitHub repo, CI/CD, design tokens</td></tr>
+    <tr><td class="td-gold td-center">2</td><td class="td-bold">Frontend Scaffold</td><td class="td-grey td-center">Week 1–2</td><td>Next.js on Cloudflare Pages, Tailwind setup, Home page, Services page, nav + footer</td></tr>
+    <tr><td class="td-gold td-center">3</td><td class="td-bold">Payments</td><td class="td-grey td-center">Week 2</td><td>Square SDK, deposit links, Afterpay checkout, payment buttons on site, Square webhook handler</td></tr>
+    <tr><td class="td-gold td-center">4</td><td class="td-bold">AI Consultation</td><td class="td-grey td-center">Week 3</td><td>Multi-step form, Claude API, recommendation email/SMS, GHL contact sync, Celery tasks</td></tr>
+    <tr><td class="td-gold td-center">5</td><td class="td-bold">CRM &amp; Automations</td><td class="td-grey td-center">Week 3–4</td><td>GHL pipelines, tags, all 9 automation workflows, Celery sequences, chatbot training</td></tr>
+    <tr><td class="td-gold td-center">6</td><td class="td-bold">Remaining Pages</td><td class="td-grey td-center">Week 4</td><td>Booking, Gallery, About, Reviews, Policies, Contact; blog model and first 3 posts; SEO meta tags</td></tr>
+    <tr><td class="td-gold td-center">7</td><td class="td-bold">Virtual Try-On (MVP)</td><td class="td-grey td-center">Week 5</td><td>Link-out try-on page with style guide, colour selector, GHL contact push, disclaimer</td></tr>
+    <tr><td class="td-gold td-center">8</td><td class="td-bold">Polish &amp; QA</td><td class="td-grey td-center">Week 6</td><td>Mobile QA on iOS + Android, Core Web Vitals audit, cross-browser testing, accessibility review</td></tr>
+    <tr><td class="td-gold td-center">9</td><td class="td-bold">Launch &amp; Handoff</td><td class="td-grey td-center">Week 6</td><td>DNS cutover, Cloudflare caching rules, Google Analytics, Search Console, GHL chatbot live test</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">Virtual try-on v2 (Replicate API integration) is planned as a post-launch enhancement in weeks 8–10. Embedded Square Web Payments SDK can be added once the baseline payment flow is proven and revenue is established.</div>
+
+<!-- ── 14. INFRASTRUCTURE ── -->
+<h1>14. Infrastructure &amp; Hosting</h1>
+<div class="gold-rule"></div>
+
+<table>
+  <thead><tr><th>Service</th><th>Purpose</th><th>Est. Cost</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="td-bold">Cloudflare Pages</td><td>Frontend hosting</td><td class="td-grey td-center">Free</td><td>Global CDN, auto-deploy, free SSL</td></tr>
+    <tr><td class="td-bold">Cloudflare CDN</td><td>DNS / proxy / DDoS</td><td class="td-grey td-center">Free</td><td>All traffic routed through Cloudflare edge</td></tr>
+    <tr><td class="td-bold">Cloudflare R2</td><td>Object storage</td><td class="td-grey td-center">~$0–5/mo</td><td>Images, media, consultation uploads</td></tr>
+    <tr><td class="td-bold">Railway</td><td>Django API + Postgres</td><td class="td-grey td-center">~$5–20/mo</td><td>Auto-scaling, managed PostgreSQL included</td></tr>
+    <tr><td class="td-bold">Railway Redis</td><td>Cache + task queue</td><td class="td-grey td-center">~$5/mo</td><td>Celery broker and session cache</td></tr>
+    <tr><td class="td-bold">GoHighLevel</td><td>CRM + automation</td><td class="td-grey td-center">Existing plan</td><td>Contacts, workflows, chatbot, SMS/email</td></tr>
+    <tr><td class="td-bold">Square</td><td>Payments</td><td class="td-grey td-center">2.9% + 30¢</td><td>Payment links, Afterpay, webhook events</td></tr>
+    <tr><td class="td-bold">Anthropic API</td><td>AI consultation</td><td class="td-grey td-center">Pay-per-use</td><td>Claude API for style recommendations</td></tr>
+    <tr><td class="td-bold">Replicate.com</td><td>Virtual try-on v2</td><td class="td-grey td-center">Pay-per-run</td><td>Hairstyle transfer model (post-launch)</td></tr>
+    <tr><td class="td-bold">GitHub</td><td>Source control + CI</td><td class="td-grey td-center">Free</td><td>Private repo, GitHub Actions CI/CD</td></tr>
+  </tbody>
+</table>
+
+<div class="callout"><strong>Total estimated infrastructure cost: approximately $15–30/month</strong>, excluding transaction fees and pay-per-use AI / try-on API costs.</div>
+
+<!-- ── 15. DJANGO STRUCTURE ── -->
+<h1>15. Django Project Structure</h1>
+<div class="gold-rule"></div>
+<p class="body-text">The project is organised into focused Django apps, each owning its own models, serializers, views, and Celery tasks. This keeps the codebase clean and maintainable as the platform grows.</p>
+
+<pre>
+legacytress/
+├── core/              # Settings, URLs, middleware, base config
+├── services/          # Service catalogue — models, API, admin
+├── bookings/          # Booking logic, deposit tracking, calendar
+├── consultations/     # AI consultation form, Claude API, recommendations
+├── gallery/           # Photo uploads, style tagging, R2 storage
+├── blog/              # SEO blog posts, slug URLs, categories
+├── crm/               # GoHighLevel API client, contact sync
+├── payments/          # Square SDK, payment links, webhooks
+├── tryon/             # Virtual try-on — Replicate API, result storage
+├── automations/       # Celery tasks — follow-ups, reminders, sequences
+└── api/               # DRF router, versioned endpoints for frontend
+</pre>
+
+<h2>Key Models per App</h2>
+<table>
+  <thead><tr><th>App</th><th>Key Models</th></tr></thead>
+  <tbody>
+    <tr><td class="td-mono td-bold">services/</td><td class="td-mono">Service, ServiceCategory, ServiceImage, FAQItem</td></tr>
+    <tr><td class="td-mono td-bold">bookings/</td><td class="td-mono">Booking, Deposit, PaymentLink, BookingStatus</td></tr>
+    <tr><td class="td-mono td-bold">consultations/</td><td class="td-mono">ConsultationSubmission, AIRecommendation, HairProfile</td></tr>
+    <tr><td class="td-mono td-bold">gallery/</td><td class="td-mono">GalleryImage, StyleTag, BeforeAfterPair</td></tr>
+    <tr><td class="td-mono td-bold">blog/</td><td class="td-mono">BlogPost, BlogCategory, BlogAuthor</td></tr>
+    <tr><td class="td-mono td-bold">crm/</td><td class="td-mono">GHLContact, GHLTag, GHLSync, WebhookLog</td></tr>
+    <tr><td class="td-mono td-bold">payments/</td><td class="td-mono">SquarePaymentLink, PaymentRecord, AfterpaySession</td></tr>
+    <tr><td class="td-mono td-bold">tryon/</td><td class="td-mono">TryOnRequest, TryOnResult, StyleReference</td></tr>
+    <tr><td class="td-mono td-bold">automations/</td><td class="td-mono">FollowUpTask, SequenceLog, CampaignEvent</td></tr>
+  </tbody>
+</table>
+
+<!-- ── 16. SECURITY ── -->
+<h1>16. Security &amp; Compliance</h1>
+<div class="gold-rule"></div>
+<ul class="styled">
+  <li>All API keys stored as Railway environment variables — never in source code or version control</li>
+  <li>Django CSRF protection enabled on all form endpoints</li>
+  <li>DRF API rate-limiting via django-ratelimit to prevent abuse and scraping</li>
+  <li>Cloudflare WAF (Web Application Firewall) active on all traffic</li>
+  <li>Square PCI-compliant checkout — card data never touches the Django server</li>
+  <li>GDPR-friendly: cookie consent banner, privacy policy page, data deletion on request</li>
+  <li>File uploads validated and type-checked before storage in Cloudflare R2</li>
+  <li>HTTPS enforced everywhere via Cloudflare Full Strict SSL</li>
+  <li>Django security middleware: HSTS, X-Frame-Options, Content Security Policy headers</li>
+  <li>GHL API key scoped to minimum required permissions (contacts + workflows only)</li>
+  <li>Automated PostgreSQL backups on Railway — daily, 7-day retention</li>
+  <li>Uptime monitoring via Railway alerts or Better Uptime</li>
+</ul>
+
+<!-- ── 17. POST-LAUNCH ── -->
+<h1>17. Post-Launch Roadmap</h1>
+<div class="gold-rule"></div>
+
+<h2>Immediate Post-Launch (Weeks 7–8)</h2>
+<ul class="styled">
+  <li>Monitor Railway logs and Cloudflare analytics for errors</li>
+  <li>Review GHL workflow performance: open rates, click rates, booking conversions</li>
+  <li>A/B test hero CTA copy: <em>Book Now</em> vs. <em>Reserve Your Experience</em></li>
+  <li>Submit sitemap to Google Search Console</li>
+  <li>Set up Google Analytics 4 conversion goals for booking completions</li>
+  <li>Gather client feedback on try-on and consultation experience</li>
+</ul>
+
+<h2>Version 2 Roadmap (Month 2–3)</h2>
+<ul class="styled">
+  <li>Virtual try-on v2: Replicate.com API with live AI hairstyle generation</li>
+  <li>Embedded Square Web Payments SDK — remove hosted checkout redirect</li>
+  <li>Client portal: login, appointment history, saved styles, loyalty points</li>
+  <li>Membership / VIP programme with recurring billing via Square</li>
+  <li>Staff dashboard: internal tool for managing bookings, leads, and follow-ups</li>
+  <li>Instagram feed auto-sync to Gallery page via Meta Graph API</li>
+  <li>Google review live-pull to Reviews page</li>
+</ul>
+
+
+</div><!-- /page -->
+</div><!-- /content -->
+
+</body>
+</html>
