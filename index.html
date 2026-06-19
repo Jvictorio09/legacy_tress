@@ -256,17 +256,20 @@
   .why-list{margin-top:54px;border-top:1px solid var(--line-gold)}
   .why-row{display:grid;grid-template-columns:64px 1fr 2fr;gap:30px;align-items:start;padding:34px 0;border-bottom:1px solid var(--line);transition:background .5s var(--ease)}
   .why-row:hover{background:linear-gradient(90deg,rgba(198,163,92,.05),transparent)}
-  .why-row .num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--gold-deep)}
+  .why-row .num{width:50px;height:50px;border-radius:50%;border:1px solid var(--line-gold);background:var(--paper);color:var(--gold-deep);display:grid;place-items:center;font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;transition:.4s var(--ease)}
+  .why-row:hover .num{background:var(--forest);color:var(--gold-soft);border-color:var(--forest)}
   .why-row h4{font-size:1.5rem;font-weight:500}
   .why-row p{color:var(--ink-mute);font-size:.97rem;max-width:46ch}
 
   /* ---------- RITUAL (real sequence → numbers earned) ---------- */
   .ritual{background:var(--canvas)}
-  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:14px;margin:8px 0 48px}
-  .stepchip{flex:1 1 130px;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:22px 18px;transition:.45s var(--ease);position:relative}
-  .stepchip:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:var(--shadow-sm)}
-  .stepchip .num{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold-deep);font-size:1.05rem;display:block;margin-bottom:8px}
-  .stepchip h4{font-family:'Jost',sans-serif;font-weight:500;font-size:.92rem;letter-spacing:.02em;color:var(--forest)}
+  .flow{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:6px;margin:26px 0 50px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+  .stepchip{flex:1 0 100px;text-align:center;position:relative;padding-top:4px}
+  /* connector line between nodes */
+  .stepchip:not(:last-child)::after{content:"";position:absolute;top:34px;left:50%;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),rgba(198,163,92,.32));z-index:0}
+  .stepchip .node{position:relative;z-index:1;width:60px;height:60px;margin:0 auto 16px;border-radius:50%;background:var(--paper);border:2px solid var(--gold);color:var(--forest);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:500;transition:transform .4s var(--ease),background .4s,color .4s,border-color .4s;box-shadow:0 8px 20px -12px rgba(16,34,23,.4)}
+  .stepchip:hover .node{background:var(--forest);color:var(--gold-soft);border-color:var(--forest);transform:translateY(-4px)}
+  .stepchip h4{font-family:'Jost',sans-serif;font-weight:500;font-size:.88rem;letter-spacing:.01em;color:var(--forest);line-height:1.3;padding:0 4px}
   .addons{border-top:1px solid var(--line-gold);padding-top:30px}
   .addons h4{font-family:'Jost',sans-serif;font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--meta);font-weight:500;margin-bottom:18px}
   .taglist{display:flex;flex-wrap:wrap;gap:10px}
@@ -431,7 +434,8 @@
   .conc-card p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;line-height:1.55;color:rgba(247,243,234,.82);max-width:54ch;margin:20px auto 34px}
   .conc-steps{display:flex;justify-content:center;gap:0;flex-wrap:wrap;margin-top:46px;border-top:1px solid var(--line-light-gold);padding-top:6px}
   .conc-steps .step{flex:1;min-width:170px;padding:28px 18px 0;text-align:center}
-  .conc-steps .n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--gold-soft);display:block;margin-bottom:10px}
+  .conc-steps .n{width:48px;height:48px;border-radius:50%;border:1px solid var(--line-light-gold);color:var(--gold-soft);display:grid;place-items:center;font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;margin:0 auto 14px;transition:.4s var(--ease)}
+  .conc-steps .step:hover .n{background:var(--gold);color:var(--forest-2);border-color:var(--gold)}
   .conc-steps .step p{font-size:.86rem;color:rgba(247,243,234,.78);margin:0;font-family:'Jost',sans-serif;font-weight:300}
 
   /* ---------- GALLERY ---------- */
@@ -591,7 +595,7 @@
     .nav-links{display:none}.burger{display:flex}
     .hero-grid,.why-top,.tryon-grid,.ap-grid,.owner-grid,.prod-grid,.feature-grid{grid-template-columns:1fr;gap:46px}
     .hero{min-height:auto;padding:120px 0 76px;background-position:72% center}
-    .why-row{grid-template-columns:44px 1fr;gap:18px}
+    .why-row{grid-template-columns:50px 1fr;gap:18px}
     .why-row p{grid-column:1/-1;max-width:none}
     .rev-grid,.amenities{grid-template-columns:1fr}
     .guide-grid{grid-template-columns:repeat(2,1fr)}
@@ -714,13 +718,13 @@
       <p>Before a single braid, we care for your natural hair and scalp. Every head of hair is different — so we cleanse, hydrate, strengthen and protect before any protective style begins.</p>
     </div>
     <div class="flow reveal">
-      <div class="stepchip"><span class="num">01</span><h4>Consultation</h4></div>
-      <div class="stepchip"><span class="num">02</span><h4>Cleanse</h4></div>
-      <div class="stepchip"><span class="num">03</span><h4>Custom Mask</h4></div>
-      <div class="stepchip"><span class="num">04</span><h4>Steam Treatment</h4></div>
-      <div class="stepchip"><span class="num">05</span><h4>Tea Rinse</h4></div>
-      <div class="stepchip"><span class="num">06</span><h4>Scalp Oil</h4></div>
-      <div class="stepchip"><span class="num">07</span><h4>Protective Style</h4></div>
+      <div class="stepchip"><div class="node">1</div><h4>Consultation</h4></div>
+      <div class="stepchip"><div class="node">2</div><h4>Cleanse</h4></div>
+      <div class="stepchip"><div class="node">3</div><h4>Custom Mask</h4></div>
+      <div class="stepchip"><div class="node">4</div><h4>Steam Treatment</h4></div>
+      <div class="stepchip"><div class="node">5</div><h4>Tea Rinse</h4></div>
+      <div class="stepchip"><div class="node">6</div><h4>Scalp Oil</h4></div>
+      <div class="stepchip"><div class="node">7</div><h4>Protective Style</h4></div>
     </div>
     <div class="addons reveal">
       <h4>Ritual Add-Ons</h4>
