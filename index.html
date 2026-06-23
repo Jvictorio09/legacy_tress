@@ -1423,18 +1423,9 @@
 
 <script>
   const BOOKING={
-    base:'https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking',
     default:'https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking?menu=true&dppub=true&cartId=6573ce45-8ba1-4c60-b9f8-d6f22b37a5b0'
   };
-  const bookingUrl=offerId=>{
-    if(!offerId)return BOOKING.default;
-    const url=new URL(BOOKING.base);
-    url.searchParams.set('menu','true');
-    url.searchParams.set('dppub','true');
-    url.searchParams.set('offerItemId',offerId);
-    return url.toString();
-  };
-  const applyBookingLinks=(root=document)=>root.querySelectorAll('[data-book]').forEach(a=>{a.href=bookingUrl(a.dataset.book||'')});
+  const applyBookingLinks=(root=document)=>root.querySelectorAll('[data-book]').forEach(a=>{a.href=BOOKING.default});
 
   const MENU_IMG={
     knotless:'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69272023c3c18212c2317c66.jpg',
