@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orchestra · Property Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#F4F3F0; --surface:#FFF; --s2:#EFEEEB; --s3:#F8F7F5;
+  --border:#E4E3E0; --bmd:#CCCCC8;
+  --t1:#0D0D0C; --t2:#636360; --t3:#A3A3A0;
+  --blue:#1C52FF; --blt:rgba(28,82,255,.07); --bdk:#1240D9;
+  --green:#059669; --glt:rgba(5,150,105,.08); --gdk:#047857;
+  --amber:#C07A1A; --alt:rgba(192,122,26,.09); --adk:#9A6015;
+  --purple:#7C3AED; --plt:rgba(124,58,237,.08); --pdk:#6D28D9;
+}
+html,body { height:100%; overflow:hidden; }
+body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--t1); font-size:13px; -webkit-font-smoothing:antialiased; }
+
+@keyframes glow   { 0%{box-shadow:0 0 0 0 rgba(28,82,255,.45)} 60%{box-shadow:0 0 0 7px rgba(28,82,255,0)} 100%{box-shadow:0 0 0 0 rgba(28,82,255,0)} }
+@keyframes breathe{ 0%,100%{opacity:1} 50%{opacity:.55} }
+@keyframes liveDot{ 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(.7);opacity:.5} }
+@keyframes slideR { from{transform:translateX(100%)} to{transform:translateX(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes rowIn  { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+@keyframes excIn  { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes pgIn   { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Shell ── */
+.shell { display:flex; height:100vh; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width:228px; flex-shrink:0; height:100vh;
+  background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden;
+}
+.sb-logo {
+  height:56px; display:flex; align-items:center; padding:0 18px; gap:10px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.sb-wordmark { font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:600; letter-spacing:-.02em; color:var(--t1); }
+.sb-wordmark em { color:var(--blue); font-style:normal; }
+.sb-org { font-size:10px; color:var(--t3); margin-top:2px; }
+.sb-nav { flex:1; padding:8px 0; }
+.sb-group { margin-bottom:4px; }
+.sb-grp-lbl { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; padding:10px 18px 4px; }
+.sb-item {
+  display:flex; align-items:center; gap:10px; padding:9px 18px;
+  cursor:pointer; transition:background .1s, color .1s; user-select:none;
+  border-left:2px solid transparent;
+}
+.sb-item:hover { background:var(--s2); }
+.sb-item.active { background:var(--blt); border-left-color:var(--blue); }
+.sb-icon { width:18px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.sb-icon i { font-size:15px; color:var(--t3); }
+.sb-item.active .sb-icon i { color:var(--blue); }
+.sb-text { flex:1; }
+.sb-label { font-size:12.5px; font-weight:500; color:var(--t2); line-height:1.2; }
+.sb-item.active .sb-label { color:var(--bdk); }
+.sb-hint { font-size:10px; color:var(--t3); margin-top:1px; }
+.sb-badge { font-size:10px; font-weight:600; background:var(--blue); color:#fff; border-radius:10px; padding:1px 7px; flex-shrink:0; }
+.sb-badge.warn { background:var(--amber); }
+.sb-footer {
+  padding:12px 18px; border-top:1px solid var(--border); flex-shrink:0;
+  display:flex; align-items:center; gap:10px;
+}
+.sb-av { width:28px; height:28px; border-radius:50%; background:var(--blt); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--bdk); flex-shrink:0; }
+.sb-user-name { font-size:12px; font-weight:500; color:var(--t1); }
+.sb-user-role { font-size:10px; color:var(--t3); }
+
+/* ── Main area ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+.main-hd {
+  height:56px; flex-shrink:0; background:var(--surface); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 24px; gap:10px;
+}
+.mh-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--t1); letter-spacing:-.01em; }
+.mh-sep { color:var(--bmd); font-size:12px; }
+.mh-sub { font-size:11px; color:var(--t3); }
+.live-row { display:flex; align-items:center; gap:5px; font-size:10px; font-weight:500; color:var(--green); letter-spacing:.04em; }
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:liveDot 2s ease-in-out infinite; }
+.mh-right { margin-left:auto; display:flex; gap:7px; align-items:center; }
+.hbtn {
+  display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:6px;
+  font-size:11px; font-weight:500; color:var(--t2); background:transparent;
+  border:1px solid var(--border); cursor:pointer; transition:all .12s; font-family:inherit;
+}
+.hbtn i { font-size:14px; }
+.hbtn:hover { background:var(--s2); border-color:var(--bmd); color:var(--t1); }
+.hbtn.prim { background:var(--blue); border-color:var(--blue); color:#fff; }
+.hbtn.prim:hover { background:var(--bdk); border-color:var(--bdk); }
+
+/* ── Exception bar ── */
+.exc-bar {
+  background:var(--alt); border-bottom:1px solid rgba(192,122,26,.18);
+  padding:10px 24px; display:flex; align-items:center; gap:10px;
+  flex-shrink:0; animation:excIn .3s ease;
+}
+.exc-bar i { color:var(--amber); font-size:15px; flex-shrink:0; }
+.exc-txt { font-size:12px; color:var(--adk); flex:1; }
+.exc-txt b { font-weight:500; color:var(--t1); }
+.exc-act { font-size:11px; font-weight:500; color:var(--adk); background:transparent; border:1px solid rgba(192,122,26,.3); padding:4px 10px; border-radius:5px; cursor:pointer; transition:all .12s; font-family:inherit; }
+.exc-act:hover { background:rgba(192,122,26,.12); }
+.exc-close { font-size:17px; color:var(--adk); background:none; border:none; cursor:pointer; opacity:.65; }
+.exc-close:hover { opacity:1; }
+
+/* ── Pages ── */
+.pages-wrap { flex:1; overflow:hidden; }
+.page { display:none; height:100%; flex-direction:column; animation:pgIn .18s ease; }
+.page.active { display:flex; }
+.pg-scroll { flex:1; overflow-y:auto; }
+.pg-scroll::-webkit-scrollbar { width:4px; }
+.pg-scroll::-webkit-scrollbar-thumb { background:var(--bmd); border-radius:2px; }
+
+/* ── PIPELINE ── */
+.metrics {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  background:var(--border); gap:1px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.mc { background:var(--surface); padding:20px 24px 18px; }
+.mc:last-child { background:var(--glt); }
+.mc-num { font-family:'Space Grotesk',sans-serif; font-size:48px; font-weight:600; line-height:1; letter-spacing:-.04em; color:var(--t1); margin-bottom:5px; }
+.mc:last-child .mc-num { color:var(--green); }
+.mc-lbl { font-size:11px; color:var(--t3); }
+.mc-note { font-size:10px; color:var(--gdk); margin-top:4px; display:flex; align-items:center; gap:4px; }
+
+.pg-section { padding:16px 24px 8px; display:flex; align-items:center; justify-content:space-between; }
+.pg-sec-title { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.08em; text-transform:uppercase; }
+.pg-sec-hint { font-size:10px; color:var(--t3); }
+
+.txn-row {
+  padding:16px 24px 18px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background .12s; background:var(--surface);
+  animation:rowIn .3s ease both;
+}
+.txn-row:nth-child(1){animation-delay:.05s} .txn-row:nth-child(2){animation-delay:.1s} .txn-row:nth-child(3){animation-delay:.15s}
+.txn-row:hover { background:var(--s3); }
+.txn-meta { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.txn-name { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--t1); letter-spacing:-.01em; margin-bottom:3px; }
+.txn-addr { font-size:11.5px; color:var(--t2); }
+.txn-r { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.txn-val { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; }
+.srow { display:flex; align-items:center; gap:5px; }
+.pip { width:7px; height:7px; border-radius:50%; }
+.pip-b { background:var(--blue); animation:liveDot 2s ease-in-out infinite; }
+.pip-a { background:var(--amber); animation:breathe 1.5s ease-in-out infinite; }
+.slbl { font-size:11px; font-weight:500; }
+
+/* Track */
+.track { display:flex; align-items:flex-start; padding:0 2px; }
+.ts { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+.tn { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; position:relative; z-index:1; }
+.tc { flex:1; margin-top:11px; height:1.5px; min-width:20px; }
+.tc-done { background:var(--green); }
+.tc-pend { background:repeating-linear-gradient(90deg,var(--bmd) 0,var(--bmd) 5px,transparent 5px,transparent 10px); }
+.ti { margin-top:7px; text-align:center; min-width:70px; max-width:90px; }
+.tl { font-size:9px; font-weight:500; color:var(--t2); line-height:1.3; }
+.to { font-size:8px; color:var(--t3); margin-top:1px; }
+.tt { font-size:8px; font-weight:500; margin-top:1px; }
+
+.ts.s-done  .tn { background:var(--green); color:#fff; }
+.ts.s-done  .tl { color:var(--t2); }
+.ts.s-done  .tt { color:var(--gdk); }
+.ts.s-act   .tn { background:var(--surface); border:2px solid var(--blue); color:var(--blue); animation:glow 2s ease-in-out infinite; }
+.ts.s-act   .tl { color:var(--t1); font-weight:600; }
+.ts.s-act   .tt { color:var(--blue); }
+.ts.s-wait  .tn { background:var(--s2); border:1.5px solid var(--bmd); color:var(--t3); }
+.ts.s-wait  .tl { color:var(--t3); }
+.ts.s-stall .tn { background:var(--alt); border:1.5px solid var(--amber); color:var(--amber); animation:breathe 1.5s ease-in-out infinite; }
+.ts.s-stall .tl { color:var(--adk); font-weight:600; }
+.ts.s-stall .tt { color:var(--amber); }
+
+/* ── APPROVALS ── */
+.filter-row { display:flex; gap:6px; padding:14px 24px; border-bottom:1px solid var(--border); background:var(--surface); flex-shrink:0; }
+.fchip { font-size:10px; font-weight:500; padding:3px 10px; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--t3); cursor:pointer; transition:all .1s; font-family:inherit; }
+.fchip:hover { border-color:var(--bmd); color:var(--t2); }
+.fchip.on { border-color:rgba(28,82,255,.25); background:var(--blt); color:var(--bdk); }
+.appr-list { padding:16px 24px; display:flex; flex-direction:column; gap:10px; }
+.appr-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; transition:opacity .22s,transform .22s,max-height .28s,padding .28s; max-height:400px; overflow:hidden; }
+.appr-card.clearing { opacity:0; transform:translateX(14px); max-height:0; padding:0; }
+.ac-hd { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:9px; }
+.ac-title { font-size:12.5px; font-weight:500; color:var(--t1); }
+.ac-sub { font-size:10px; color:var(--t3); margin-top:3px; }
+.ctx-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:9px; }
+.ctx-tag { font-size:9.5px; padding:2px 8px; border-radius:4px; background:var(--s2); color:var(--t2); border:1px solid var(--border); }
+.ac-body { font-size:12px; color:var(--t2); line-height:1.6; margin-bottom:11px; }
+.ac-actions { display:flex; gap:7px; }
+.abtn { font-size:11px; font-weight:500; padding:6px 14px; border-radius:5px; cursor:pointer; border:none; transition:opacity .1s; font-family:inherit; }
+.abtn:hover { opacity:.82; }
+.abtn.approve { background:var(--glt); color:var(--gdk); }
+.abtn.reject  { background:var(--s2); color:var(--t2); border:1px solid var(--border); }
+.abtn.info    { background:var(--blt); color:var(--bdk); }
+.past-section { padding:0 24px 24px; }
+.past-lbl { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; margin-bottom:10px; padding-top:16px; border-top:1px solid var(--border); }
+.past-row { display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
+.past-row:last-child { border-bottom:none; }
+.past-who { font-size:12px; color:var(--t2); flex:1; }
+.past-who b { font-weight:500; color:var(--t1); }
+.past-dec { font-size:10px; font-weight:500; }
+.dec-approve { color:var(--gdk); }
+.dec-reject  { color:var(--t3); }
+.past-when { font-size:10px; color:var(--t3); }
+
+/* ── PARTIES ── */
+.parties-list { padding:0 24px 24px; }
+.party-group { margin-bottom:4px; }
+.party-grp-lbl { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; padding:16px 0 6px; border-top:1px solid var(--border); margin-top:8px; }
+.party-grp-lbl:first-child { border-top:none; margin-top:0; }
+.party-row {
+  display:flex; align-items:center; gap:14px;
+  padding:11px 14px; border-radius:7px;
+  transition:background .12s; cursor:default;
+  margin-bottom:2px;
+}
+.party-row:hover { background:var(--s2); }
+.party-row.stalled { background:var(--alt); border:1px solid rgba(192,122,26,.15); }
+.party-av {
+  width:34px; height:34px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:600; flex-shrink:0;
+}
+.party-body { flex:1; min-width:0; }
+.party-name { font-size:12.5px; font-weight:500; color:var(--t1); }
+.party-last { font-size:10.5px; color:var(--t2); margin-top:2px; }
+.party-last b { font-weight:500; }
+.party-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+.party-flows { font-size:10px; color:var(--t3); }
+.party-status { font-size:9px; font-weight:500; padding:2px 7px; border-radius:10px; }
+.ps-active { background:var(--glt); color:var(--gdk); }
+.ps-stalled { background:var(--alt); color:var(--adk); }
+.ps-waiting { background:var(--s2); color:var(--t3); border:1px solid var(--border); }
+
+/* ── INSIGHTS ── */
+.ins-metrics { display:grid; grid-template-columns:repeat(4,1fr); background:var(--border); gap:1px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.im { background:var(--surface); padding:16px 20px; }
+.im-num { font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:600; letter-spacing:-.03em; color:var(--t1); line-height:1; margin-bottom:4px; }
+.im-lbl { font-size:10px; color:var(--t3); }
+.im-trend { font-size:10px; color:var(--gdk); margin-top:3px; }
+.ins-section { padding:20px 24px; border-bottom:1px solid var(--border); }
+.ins-sec-title { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; margin-bottom:14px; }
+.chart-row { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.chart-row:last-child { margin-bottom:0; }
+.chart-month { font-size:11px; color:var(--t2); min-width:28px; }
+.chart-track { flex:1; height:28px; background:var(--s2); border-radius:5px; overflow:hidden; }
+.chart-fill { height:100%; background:var(--blue); border-radius:5px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; transition:width 1s cubic-bezier(.25,.46,.45,.94); }
+.chart-fill-n { font-size:11px; font-weight:500; color:#fff; }
+.step-row-ins { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.step-row-ins:last-child { margin-bottom:0; }
+.step-lbl { font-size:11.5px; color:var(--t1); min-width:160px; }
+.step-bar-wrap { flex:1; height:8px; background:var(--s2); border-radius:4px; overflow:hidden; }
+.step-bar { height:100%; border-radius:4px; }
+.step-val { font-size:11px; font-weight:500; color:var(--t2); min-width:52px; text-align:right; }
+
+/* ── BUILDER ── */
+.builder-templates { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:20px 24px; border-bottom:1px solid var(--border); }
+.tpl-card {
+  background:var(--surface); border:1.5px solid var(--border); border-radius:8px;
+  padding:16px; cursor:pointer; transition:all .15s;
+}
+.tpl-card:hover { border-color:var(--bmd); background:var(--s3); }
+.tpl-card.selected { border-color:var(--blue); background:var(--blt); }
+.tpl-icon { width:32px; height:32px; border-radius:7px; background:var(--blt); display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
+.tpl-icon i { font-size:16px; color:var(--blue); }
+.tpl-name { font-size:12.5px; font-weight:500; color:var(--t1); margin-bottom:3px; }
+.tpl-desc { font-size:11px; color:var(--t3); }
+.tpl-steps { font-size:10px; color:var(--t3); margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
+
+.builder-body { padding:20px 24px; }
+.bdr-lbl { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; margin-bottom:10px; }
+.bdr-flow { display:flex; align-items:center; overflow-x:auto; padding-bottom:8px; margin-bottom:16px; }
+.bdr-flow::-webkit-scrollbar { height:3px; }
+.bdr-flow::-webkit-scrollbar-thumb { background:var(--bmd); border-radius:2px; }
+.bnode {
+  background:var(--surface); border:1px solid var(--border); border-radius:7px;
+  padding:10px 14px; flex-shrink:0; width:130px; cursor:pointer; transition:all .12s;
+}
+.bnode.sel { border-color:rgba(28,82,255,.35); background:rgba(28,82,255,.04); }
+.bnode:hover:not(.sel) { border-color:var(--bmd); }
+.bn-type { font-size:9px; font-weight:500; color:var(--t3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
+.bn-name { font-size:11.5px; font-weight:500; color:var(--t1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bn-own  { font-size:10px; color:var(--t3); margin-top:3px; }
+.barr { color:var(--t3); padding:0 6px; font-size:12px; flex-shrink:0; }
+.badd { width:32px; height:32px; border:1px dashed var(--bmd); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--t3); cursor:pointer; flex-shrink:0; transition:all .12s; user-select:none; }
+.badd:hover { border-color:rgba(28,82,255,.35); color:var(--blue); background:var(--blt); }
+
+.cfg-panel { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; }
+.cfg-title { font-size:12px; font-weight:500; color:var(--t1); margin-bottom:13px; }
+.cfg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.cfg-field { }
+.cfg-field label { font-size:10px; font-weight:500; color:var(--t3); text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:5px; }
+.cfg-input { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:5px; padding:7px 10px; font-size:12px; color:var(--t1); outline:none; transition:border-color .12s; font-family:inherit; }
+.cfg-input:focus { border-color:rgba(28,82,255,.35); }
+.cfg-select { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:5px; padding:7px 10px; font-size:12px; color:var(--t1); outline:none; font-family:inherit; cursor:pointer; }
+.type-pills { display:flex; gap:5px; flex-wrap:wrap; }
+.tpill { font-size:10px; font-weight:500; padding:4px 10px; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--t2); cursor:pointer; transition:all .1s; font-family:inherit; }
+.tpill:hover { border-color:var(--bmd); color:var(--t1); }
+.tpill.on { border-color:rgba(28,82,255,.28); background:var(--blt); color:var(--bdk); }
+.bdr-actions { display:flex; gap:8px; margin-top:14px; }
+.btn-launch { font-size:12px; font-weight:500; padding:7px 16px; border-radius:5px; background:var(--blue); color:#fff; border:none; cursor:pointer; transition:opacity .12s; font-family:inherit; }
+.btn-launch:hover { opacity:.88; }
+.btn-launch:disabled { opacity:.5; cursor:not-allowed; }
+.btn-save { font-size:12px; padding:7px 16px; border-radius:5px; background:transparent; color:var(--t2); border:1px solid var(--border); cursor:pointer; transition:all .12s; font-family:inherit; }
+.btn-save:hover { border-color:var(--bmd); color:var(--t1); }
+
+/* ── AUDIT ── */
+.audit-rows { }
+.arow { display:flex; gap:16px; padding:9px 24px; border-bottom:1px solid var(--border); align-items:baseline; }
+.arow:last-child { border-bottom:none; }
+.arow.exc { background:rgba(192,122,26,.025); }
+.ats { font-size:10px; color:var(--t3); min-width:72px; font-variant-numeric:tabular-nums; flex-shrink:0; }
+.aev { font-size:11.5px; color:var(--t2); flex:1; line-height:1.4; }
+.aev b { color:var(--t1); font-weight:500; }
+.aev.exc { color:var(--amber); }
+.awho { font-size:10px; color:var(--t3); min-width:78px; text-align:right; flex-shrink:0; }
+
+/* ── SETTINGS ── */
+.settings-body { padding:24px; display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+.set-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.set-card-hd { padding:14px 18px; border-bottom:1px solid var(--border); font-size:12px; font-weight:500; color:var(--t1); }
+.team-row { display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:1px solid var(--border); }
+.team-row:last-child { border-bottom:none; }
+.team-av { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; flex-shrink:0; }
+.team-name { font-size:12px; font-weight:500; color:var(--t1); }
+.team-role { font-size:10px; color:var(--t3); }
+.team-status { font-size:10px; color:var(--gdk); background:var(--glt); padding:2px 7px; border-radius:10px; margin-left:auto; }
+.invite-row { display:flex; align-items:center; gap:8px; padding:11px 18px; cursor:pointer; color:var(--blue); font-size:12px; font-weight:500; transition:background .1s; }
+.invite-row:hover { background:var(--s2); }
+.intg-row { display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:1px solid var(--border); }
+.intg-row:last-child { border-bottom:none; }
+.intg-icon { width:28px; height:28px; border-radius:6px; background:var(--s2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.intg-icon i { font-size:14px; color:var(--t2); }
+.intg-name { font-size:12px; font-weight:500; color:var(--t1); }
+.intg-desc { font-size:10px; color:var(--t3); }
+.intg-right { margin-left:auto; }
+.intg-on  { font-size:10px; font-weight:500; color:var(--gdk); background:var(--glt); padding:2px 8px; border-radius:10px; }
+.intg-btn { font-size:10px; font-weight:500; color:var(--bdk); background:var(--blt); border:1px solid rgba(28,82,255,.2); padding:3px 10px; border-radius:4px; cursor:pointer; font-family:inherit; transition:all .1s; border:none; }
+.intg-btn:hover { background:rgba(28,82,255,.12); }
+
+/* ── Right panel ── */
+.backdrop { position:fixed; left:228px; right:0; top:0; bottom:0; background:rgba(13,13,12,.1); opacity:0; pointer-events:none; transition:opacity .25s; z-index:80; }
+.backdrop.on { opacity:1; pointer-events:all; }
+.rpanel { position:fixed; top:0; right:0; bottom:0; width:420px; background:var(--surface); border-left:1px solid var(--border); z-index:90; display:flex; flex-direction:column; transform:translateX(100%); transition:transform .3s cubic-bezier(.25,.46,.45,.94); overflow:hidden; }
+.rpanel.open { transform:translateX(0); }
+.rp-hd { height:52px; flex-shrink:0; display:flex; align-items:center; padding:0 18px; border-bottom:1px solid var(--border); gap:10px; }
+.rp-title { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; color:var(--t1); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:-.01em; }
+.rp-close { width:26px; height:26px; border-radius:5px; border:1px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--t3); transition:all .12s; }
+.rp-close:hover { background:var(--s2); color:var(--t1); }
+.rp-body { flex:1; overflow-y:auto; }
+.rp-body::-webkit-scrollbar { width:3px; }
+.rp-body::-webkit-scrollbar-thumb { background:var(--bmd); border-radius:2px; }
+.rp-prop { padding:14px 18px; border-bottom:1px solid var(--border); background:var(--s2); animation:fadeUp .22s ease .08s both; }
+.rp-addr { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; color:var(--t1); letter-spacing:-.01em; }
+.rp-meta { font-size:11px; color:var(--t2); margin-top:3px; }
+.rp-val  { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:600; color:var(--gdk); margin-top:8px; }
+.rp-sec { padding:14px 18px; border-bottom:1px solid var(--border); animation:fadeUp .22s ease both; }
+.rp-sec:nth-child(2){animation-delay:.14s} .rp-sec:nth-child(3){animation-delay:.2s}
+.rp-sec-title { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; margin-bottom:10px; }
+.pstep { display:flex; gap:11px; margin-bottom:11px; }
+.pstep:last-child { margin-bottom:0; }
+.psn { width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600; margin-top:1px; }
+.ps-done   .psn { background:var(--green); color:#fff; }
+.ps-active .psn { background:var(--blt); border:2px solid var(--blue); color:var(--blue); animation:glow 2s ease-in-out infinite; }
+.ps-wait   .psn { background:var(--s2); border:1.5px solid var(--bmd); color:var(--t3); }
+.psbody { flex:1; }
+.pst { font-size:12px; font-weight:500; color:var(--t1); }
+.pst.dim { color:var(--t3); }
+.pso { font-size:10px; color:var(--t3); margin-top:2px; }
+.pss { font-size:10px; font-weight:500; }
+.ps-done   .pss { color:var(--gdk); }
+.ps-active .pss { color:var(--bdk); }
+.ps-wait   .pss { color:var(--t3); }
+.ple { display:flex; gap:9px; padding:7px 0; border-bottom:1px solid var(--border); align-items:baseline; }
+.ple:last-child { border-bottom:none; }
+.ple-ts  { font-size:10px; color:var(--t3); min-width:36px; font-variant-numeric:tabular-nums; }
+.ple-msg { font-size:11px; color:var(--t2); line-height:1.4; }
+.ple-msg b { color:var(--t1); font-weight:500; }
+.ple-warn { color:var(--amber) !important; }
+
+/* ── Badges ── */
+.badge { font-size:10px; font-weight:500; padding:2px 7px; border-radius:4px; }
+.b-blue  { background:var(--blt);  color:var(--bdk);  }
+.b-green { background:var(--glt);  color:var(--gdk);  }
+.b-amber { background:var(--alt);  color:var(--adk);  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div>
+      <div class="sb-wordmark">ORCH<em>E</em>STRA</div>
+      <div class="sb-org">Meridian Property Group</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-group">
+      <div class="sb-grp-lbl">Operations</div>
+
+      <div class="sb-item active" data-page="pipeline" onclick="navigate('pipeline')">
+        <div class="sb-icon"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Pipeline</div>
+          <div class="sb-hint">Live transactions</div>
+        </div>
+        <div class="sb-badge warn" id="exc-sb-badge">!</div>
+      </div>
+
+      <div class="sb-item" data-page="approvals" onclick="navigate('approvals')">
+        <div class="sb-icon"><i class="ti ti-circle-check" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Approvals</div>
+          <div class="sb-hint">Pending decisions</div>
+        </div>
+        <div class="sb-badge" id="appr-sb-badge">3</div>
+      </div>
+
+      <div class="sb-item" data-page="parties" onclick="navigate('parties')">
+        <div class="sb-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Parties</div>
+          <div class="sb-hint">Who Orchestra coordinates</div>
+        </div>
+      </div>
+
+      <div class="sb-item" data-page="builder" onclick="navigate('builder')">
+        <div class="sb-icon"><i class="ti ti-git-branch" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Flow builder</div>
+          <div class="sb-hint">Create & manage workflows</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-grp-lbl">Intelligence</div>
+
+      <div class="sb-item" data-page="insights" onclick="navigate('insights')">
+        <div class="sb-icon"><i class="ti ti-chart-bar" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Insights</div>
+          <div class="sb-hint">Performance & bottlenecks</div>
+        </div>
+      </div>
+
+      <div class="sb-item" data-page="audit" onclick="navigate('audit')">
+        <div class="sb-icon"><i class="ti ti-list-details" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Audit log</div>
+          <div class="sb-hint">Complete coordination record</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-item" data-page="settings" onclick="navigate('settings')">
+        <div class="sb-icon"><i class="ti ti-settings" aria-hidden="true"></i></div>
+        <div class="sb-text">
+          <div class="sb-label">Settings</div>
+          <div class="sb-hint">Team · Integrations</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-av">SM</div>
+    <div>
+      <div class="sb-user-name">Sarah Mills</div>
+      <div class="sb-user-role">Property Manager</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════
+     MAIN
+════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- Shared top bar -->
+  <div class="main-hd">
+    <div class="mh-title" id="mh-title">Pipeline</div>
+    <div class="mh-sep">/</div>
+    <div class="mh-sub" id="mh-sub">3 active transactions</div>
+    <div class="mh-right">
+      <div class="live-row"><div class="live-dot"></div>LIVE</div>
+      <div id="mh-actions">
+        <button class="hbtn prim" onclick="navigate('builder')"><i class="ti ti-plus" aria-hidden="true"></i> New flow</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exception bar -->
+  <div class="exc-bar" id="exc-bar">
+    <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+    <div class="exc-txt"><b>Pacific Maintenance Co</b> — Insurance certificate was overdue (Day 2). Docs now received and verified. Director sign-off is the final step.</div>
+    <button class="exc-act" onclick="navigate('approvals')">Review in Approvals →</button>
+    <button class="exc-close" onclick="dismissExc()">×</button>
+  </div>
+
+  <!-- Pages -->
+  <div class="pages-wrap">
+
+    <!-- ─── PIPELINE ─── -->
+    <div class="page active" id="p-pipeline">
+      <div class="metrics">
+        <div class="mc"><div class="mc-num" id="m1">0</div><div class="mc-lbl">Active transactions</div></div>
+        <div class="mc"><div class="mc-num" id="m2">$0M</div><div class="mc-lbl">In pipeline</div></div>
+        <div class="mc"><div class="mc-num" id="m3">0</div><div class="mc-lbl">Settled this month</div></div>
+        <div class="mc"><div class="mc-num" id="m4">0</div><div class="mc-lbl">Manual follow-ups today</div><div class="mc-note"><i class="ti ti-check" style="font-size:11px"></i> All coordination automated</div></div>
+      </div>
+
+      <div class="pg-scroll">
+        <div class="pg-section"><span class="pg-sec-title">Active now</span><span class="pg-sec-hint">Click any transaction to view detail</span></div>
+
+        <div class="txn-row" onclick="openPanel('sale')">
+          <div class="txn-meta">
+            <div>
+              <div class="txn-name">Property Sale</div>
+              <div class="txn-addr">4 Merriway Drive, Glenelg SA 5045 · Vendor: R. &amp; T. Okafor · Buyer: J. Hoffman · Agent: S. Mills</div>
+            </div>
+            <div class="txn-r">
+              <div class="txn-val" style="color:var(--gdk)">$1,185,000</div>
+              <div class="srow"><div class="pip pip-b"></div><span class="slbl" style="color:var(--blue)">Running</span></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="ts s-done"><div class="tn">✓</div><div class="ti"><div class="tl">Offer accepted</div><div class="to">S. Mills</div><div class="tt">Done</div></div></div>
+            <div class="tc tc-done"></div>
+            <div class="ts s-done"><div class="tn">✓</div><div class="ti"><div class="tl">Finance check</div><div class="to">NAB</div><div class="tt">Confirmed</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-act"><div class="tn">3</div><div class="ti"><div class="tl">Inspection</div><div class="to">Harrison Prop.</div><div class="tt" data-elapsed="10800">3h 0m</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">4</div><div class="ti"><div class="tl">Title search</div><div class="to">Adel. Conveyancers</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">5</div><div class="ti"><div class="tl">Exchange</div><div class="to">Both solicitors</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">6</div><div class="ti"><div class="tl">Settlement</div><div class="to">Pacific Settlement</div></div></div>
+          </div>
+        </div>
+
+        <div class="txn-row" onclick="openPanel('tenant')">
+          <div class="txn-meta">
+            <div>
+              <div class="txn-name">Tenant Onboarding</div>
+              <div class="txn-addr">Unit 14B, Harbour Tower · Pacific Properties · Tenant: A. Reyes · Manager: K. Pham</div>
+            </div>
+            <div class="txn-r">
+              <div class="txn-val" style="color:var(--t2);font-size:13px;font-weight:500">$2,600 / mo</div>
+              <div class="srow"><div class="pip pip-b"></div><span class="slbl" style="color:var(--blue)">Running</span></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="ts s-done"><div class="tn">✓</div><div class="ti"><div class="tl">KYC verification</div><div class="to">Compliance</div><div class="tt">Done</div></div></div>
+            <div class="tc tc-done"></div>
+            <div class="ts s-act"><div class="tn">2</div><div class="ti"><div class="tl">Background check</div><div class="to">VEDA Bureau</div><div class="tt" data-elapsed="21600">6h 0m</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">3</div><div class="ti"><div class="tl">Lease signing</div><div class="to">Both parties</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">4</div><div class="ti"><div class="tl">Bond lodgement</div><div class="to">Consumer Affairs</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">5</div><div class="ti"><div class="tl">Move-in</div><div class="to">A. Reyes</div></div></div>
+          </div>
+        </div>
+
+        <div class="txn-row" onclick="openPanel('contractor')">
+          <div class="txn-meta">
+            <div>
+              <div class="txn-name">Contractor Approval</div>
+              <div class="txn-addr">Pacific Maintenance Co · Annual maintenance contract · Director: M. Osei</div>
+            </div>
+            <div class="txn-r">
+              <div class="txn-val" style="color:var(--t2);font-size:13px;font-weight:500">$28,400 / yr</div>
+              <div class="srow"><div class="pip pip-a"></div><span class="slbl" style="color:var(--amber)">Stalled</span></div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="ts s-done"><div class="tn">✓</div><div class="ti"><div class="tl">Application</div><div class="to">Procurement</div><div class="tt">Done</div></div></div>
+            <div class="tc tc-done"></div>
+            <div class="ts s-done"><div class="tn">✓</div><div class="ti"><div class="tl">License check</div><div class="to">Compliance</div><div class="tt">Verified</div></div></div>
+            <div class="tc tc-done"></div>
+            <div class="ts s-stall"><div class="tn">!</div><div class="ti"><div class="tl">Insurance docs</div><div class="to">Pacific Maint.</div><div class="tt">Now received</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">4</div><div class="ti"><div class="tl">Director sign-off</div><div class="to">M. Osei</div></div></div>
+            <div class="tc tc-pend"></div>
+            <div class="ts s-wait"><div class="tn">5</div><div class="ti"><div class="tl">Engaged</div><div class="to">All parties</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── APPROVALS ─── -->
+    <div class="page" id="p-approvals">
+      <div class="filter-row">
+        <button class="fchip on" data-f="all"         onclick="fAppr(this)">All</button>
+        <button class="fchip"    data-f="inspection"  onclick="fAppr(this)">Inspections</button>
+        <button class="fchip"    data-f="lease"       onclick="fAppr(this)">Leases</button>
+        <button class="fchip"    data-f="contractor"  onclick="fAppr(this)">Contractors</button>
+      </div>
+      <div class="pg-scroll">
+        <div class="appr-list" id="appr-list">
+          <div class="appr-card" id="ac1" data-type="inspection">
+            <div class="ac-hd"><div><div class="ac-title">Building Inspection · 4 Merriway Drive</div><div class="ac-sub">Harrison Property Inspections · Report received 2h ago</div></div><span class="badge b-amber">Needs review</span></div>
+            <div class="ctx-tags"><span class="ctx-tag">Minor issue flagged</span><span class="ctx-tag">Structure: clear</span><span class="ctx-tag">Rear drainage noted</span><span class="ctx-tag">No price impact expected</span></div>
+            <div class="ac-body">Inspector flagged a minor rear boundary drainage issue — not structurally significant. Vendor and buyer have both been notified by Orchestra. Your sign-off advances the flow to title search and contract exchange.</div>
+            <div class="ac-actions"><button class="abtn approve" onclick="clearAppr('ac1')">Proceed to title</button><button class="abtn reject" onclick="clearAppr('ac1')">Renegotiate price</button><button class="abtn info">Request re-inspection</button></div>
+          </div>
+          <div class="appr-card" id="ac2" data-type="lease">
+            <div class="ac-hd"><div><div class="ac-title">Lease Agreement · Unit 14B, Harbour Tower</div><div class="ac-sub">Tenant: A. Reyes · Background check complete · 4h ago</div></div><span class="badge b-blue">New</span></div>
+            <div class="ctx-tags"><span class="ctx-tag">Credit check: Clear</span><span class="ctx-tag">2 references verified</span><span class="ctx-tag">Bond: $3,200</span><span class="ctx-tag">Move-in: 1 Aug 2026</span></div>
+            <div class="ac-body">Background and credit check returned clean. Two employment references verified by Orchestra. Tenant confirmed move-in date. Landlord sign-off is the final step before lease documents dispatch.</div>
+            <div class="ac-actions"><button class="abtn approve" onclick="clearAppr('ac2')">Approve lease</button><button class="abtn reject" onclick="clearAppr('ac2')">Decline application</button><button class="abtn info">Further checks</button></div>
+          </div>
+          <div class="appr-card" id="ac3" data-type="contractor">
+            <div class="ac-hd"><div><div class="ac-title">Contractor Engagement · Pacific Maintenance Co</div><div class="ac-sub">Insurance docs verified · Director sign-off needed · 30m ago</div></div><span class="badge b-blue">New</span></div>
+            <div class="ctx-tags"><span class="ctx-tag">License: Active</span><span class="ctx-tag">Insurance: Confirmed</span><span class="ctx-tag">$28,400 / yr</span><span class="ctx-tag">3yr existing relationship</span></div>
+            <div class="ac-body">License and public liability certificates confirmed active. Outstanding insurance docs received and verified this morning. Director sign-off is the final step before the first work order dispatches.</div>
+            <div class="ac-actions"><button class="abtn approve" onclick="clearAppr('ac3')">Approve engagement</button><button class="abtn reject" onclick="clearAppr('ac3')">Reject</button><button class="abtn info">Hold for review</button></div>
+          </div>
+        </div>
+        <div class="past-section">
+          <div class="past-lbl">Recently decided</div>
+          <div class="past-row"><span class="past-who"><b>Lease Agreement</b> · 8 Riverton Close · M. Tanaka</span><span class="past-dec dec-approve">Approved</span><span class="past-when">21 Jun</span></div>
+          <div class="past-row"><span class="past-who"><b>Building Inspection</b> · 22 Lakeview Terrace · clear</span><span class="past-dec dec-approve">Proceeded</span><span class="past-when">19 Jun</span></div>
+          <div class="past-row"><span class="past-who"><b>Finance Application</b> · 31 Elmwood Crescent · CBA</span><span class="past-dec dec-approve">Approved</span><span class="past-when">18 Jun</span></div>
+          <div class="past-row"><span class="past-who"><b>Lease Agreement</b> · Unit 8, Pacific Heights · C. Ibarra</span><span class="past-dec dec-approve">Approved</span><span class="past-when">17 Jun</span></div>
+          <div class="past-row"><span class="past-who"><b>Contractor Renewal</b> · Clean Pro Services · annual</span><span class="past-dec dec-reject">Declined</span><span class="past-when">15 Jun</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PARTIES ─── -->
+    <div class="page" id="p-parties">
+      <div class="pg-scroll">
+        <div class="parties-list">
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Agents</div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--blt);color:var(--bdk)">SM</div>
+              <div class="party-body"><div class="party-name">Sarah Mills</div><div class="party-last">Last action by Orchestra: <b>Inspection confirmation sent</b> · 2h ago</div></div>
+              <div class="party-right"><div class="party-flows">2 active flows</div><span class="party-status ps-active">Active</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Banks &amp; lenders</div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--glt);color:var(--gdk)">NA</div>
+              <div class="party-body"><div class="party-name">NAB — Home Loans</div><div class="party-last">Last action by Orchestra: <b>Pre-approval confirmed</b> · $1.2M · Today 10:47</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-active">Done</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Inspectors</div>
+            <div class="party-row stalled">
+              <div class="party-av" style="background:var(--alt);color:var(--adk)">HP</div>
+              <div class="party-body"><div class="party-name">Harrison Property Inspections</div><div class="party-last" style="color:var(--amber)">Orchestra sent <b>2 reminders</b> · Awaiting inspection report · Booked 18 Jun</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-stalled">Overdue</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Conveyancers &amp; legal</div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--plt);color:var(--pdk)">AC</div>
+              <div class="party-body"><div class="party-name">Adelaide Conveyancers</div><div class="party-last">Last action: <b>Title search queued</b> · Waiting on inspection clearance · 4 Merriway Drive</div></div>
+              <div class="party-right"><div class="party-flows">2 active flows</div><span class="party-status ps-waiting">Queued</span></div>
+            </div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--plt);color:var(--pdk)">OL</div>
+              <div class="party-body"><div class="party-name">Okafor Legal (Vendor solicitor)</div><div class="party-last">Last action: <b>Contract draft requested</b> · Waiting on inspection outcome</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-waiting">Queued</span></div>
+            </div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--plt);color:var(--pdk)">HP</div>
+              <div class="party-body"><div class="party-name">Hoffman &amp; Partners (Buyer solicitor)</div><div class="party-last">Last action: <b>Finance documents received</b> · Awaiting inspection report</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-waiting">Queued</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Settlement</div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--glt);color:var(--gdk)">PS</div>
+              <div class="party-body"><div class="party-name">Pacific Settlement Services</div><div class="party-last">Last action: <b>Settlement date pre-scheduled</b> · Awaiting contract exchange · 4 Merriway Drive</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-waiting">Queued</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Property managers</div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--blt);color:var(--bdk)">KP</div>
+              <div class="party-body"><div class="party-name">K. Pham · Pacific Properties</div><div class="party-last">Last action: <b>Background check dispatched</b> · Tenant A. Reyes · Unit 14B</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-active">Active</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Contractors</div>
+            <div class="party-row stalled">
+              <div class="party-av" style="background:var(--alt);color:var(--adk)">PM</div>
+              <div class="party-body"><div class="party-name">Pacific Maintenance Co</div><div class="party-last">Last action by Orchestra: <b>Director sign-off requested</b> after insurance docs received · 30m ago</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-stalled">Pending sign-off</span></div>
+            </div>
+          </div>
+
+          <div class="party-group">
+            <div class="party-grp-lbl">Government &amp; bureaux</div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--s2);color:var(--t2)">LT</div>
+              <div class="party-body"><div class="party-name">Land Titles Office SA</div><div class="party-last">Last action: <b>Title transfer lodged</b> · 22 Lakeview Terrace · Yesterday</div></div>
+              <div class="party-right"><div class="party-flows">0 active</div><span class="party-status ps-active">Done</span></div>
+            </div>
+            <div class="party-row">
+              <div class="party-av" style="background:var(--s2);color:var(--t2)">VD</div>
+              <div class="party-body"><div class="party-name">VEDA Credit Bureau</div><div class="party-last">Last action: <b>Background check initiated</b> · A. Reyes · Processing</div></div>
+              <div class="party-right"><div class="party-flows">1 active flow</div><span class="party-status ps-waiting">Processing</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── BUILDER ─── -->
+    <div class="page" id="p-builder">
+      <div class="pg-scroll">
+        <div style="padding:18px 24px 10px;display:flex;align-items:center;justify-content:space-between">
+          <span class="pg-sec-title">Choose a template</span>
+          <button class="hbtn" onclick="selectTemplate('blank')"><i class="ti ti-plus" aria-hidden="true"></i> Start from scratch</button>
+        </div>
+        <div class="builder-templates">
+          <div class="tpl-card selected" id="tpl-sale" onclick="selectTemplate('sale')">
+            <div class="tpl-icon"><i class="ti ti-home-move" aria-hidden="true"></i></div>
+            <div class="tpl-name">Property Sale</div>
+            <div class="tpl-desc">Offer to title transfer</div>
+            <div class="tpl-steps">6 steps · Agents, banks, inspectors, legal, settlement</div>
+          </div>
+          <div class="tpl-card" id="tpl-tenant" onclick="selectTemplate('tenant')">
+            <div class="tpl-icon"><i class="ti ti-key" aria-hidden="true"></i></div>
+            <div class="tpl-name">Tenant Onboarding</div>
+            <div class="tpl-desc">KYC through to move-in</div>
+            <div class="tpl-steps">5 steps · Compliance, references, lease, bond</div>
+          </div>
+          <div class="tpl-card" id="tpl-contractor" onclick="selectTemplate('contractor')">
+            <div class="tpl-icon"><i class="ti ti-tools" aria-hidden="true"></i></div>
+            <div class="tpl-name">Contractor Approval</div>
+            <div class="tpl-desc">License to engagement</div>
+            <div class="tpl-steps">5 steps · Compliance, insurance, director sign-off</div>
+          </div>
+        </div>
+        <div class="builder-body">
+          <div class="bdr-lbl">Flow steps</div>
+          <div class="bdr-flow" id="bdr-flow">
+            <div class="bnode sel" onclick="selBNode(this)"><div class="bn-type">Trigger</div><div class="bn-name">Offer received</div><div class="bn-own">Agent</div></div>
+            <span class="barr">›</span>
+            <div class="bnode" onclick="selBNode(this)"><div class="bn-type">Approval</div><div class="bn-name">Finance check</div><div class="bn-own">Buyer's bank</div></div>
+            <span class="barr">›</span>
+            <div class="bnode" onclick="selBNode(this)"><div class="bn-type">Task</div><div class="bn-name">Inspection</div><div class="bn-own">Inspector</div></div>
+            <span class="barr">›</span>
+            <div class="bnode" onclick="selBNode(this)"><div class="bn-type">External party</div><div class="bn-name">Title search</div><div class="bn-own">Conveyancer</div></div>
+            <span class="barr">›</span>
+            <div class="badd" onclick="addBNode()" title="Add step">+</div>
+          </div>
+          <div class="bdr-lbl">Step configuration</div>
+          <div class="cfg-panel">
+            <div class="cfg-title" id="cfg-title">Offer received</div>
+            <div class="cfg-grid">
+              <div class="cfg-field"><label>Step name</label><input class="cfg-input" id="cfg-name" type="text" value="Offer received" oninput="updBNode(this.value)"></div>
+              <div class="cfg-field"><label>Responsible party</label><input class="cfg-input" id="cfg-own" type="text" value="Agent" placeholder="Agent, bank, conveyancer…"></div>
+              <div class="cfg-field" style="grid-column:1/-1"><label>Step type</label>
+                <div class="type-pills">
+                  <button class="tpill on" onclick="selPill(this)">Trigger</button>
+                  <button class="tpill" onclick="selPill(this)">Approval</button>
+                  <button class="tpill" onclick="selPill(this)">Task</button>
+                  <button class="tpill" onclick="selPill(this)">External party</button>
+                  <button class="tpill" onclick="selPill(this)">Compliance check</button>
+                </div>
+              </div>
+              <div class="cfg-field"><label>Escalate if no response after</label><select class="cfg-select"><option>4 hours</option><option>24 hours</option><option>48 hours</option><option>3 business days</option><option>No escalation</option></select></div>
+              <div class="cfg-field"><label>Requires approval from</label><select class="cfg-select"><option>Nobody (auto-advance)</option><option>Property Manager</option><option>Director</option><option>Vendor</option><option>Buyer</option></select></div>
+            </div>
+            <div class="bdr-actions">
+              <button class="btn-launch" id="btn-launch" onclick="launchFlow()">Launch transaction</button>
+              <button class="btn-save" id="btn-save" onclick="saveTpl()">Save template</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── INSIGHTS ─── -->
+    <div class="page" id="p-insights">
+      <div class="ins-metrics">
+        <div class="im"><div class="im-num">8</div><div class="im-lbl">Settled this month</div><div class="im-trend">↑ 2 vs last month</div></div>
+        <div class="im"><div class="im-num">$6.2M</div><div class="im-lbl">Total value settled</div><div class="im-trend">↑ 18% vs May</div></div>
+        <div class="im"><div class="im-num">42d</div><div class="im-lbl">Avg settlement time</div><div class="im-trend">↓ 4d faster than last quarter</div></div>
+        <div class="im"><div class="im-num" style="color:var(--gdk)">47h</div><div class="im-lbl">Manual hours saved this month</div><div class="im-trend" style="color:var(--gdk)">Coordination automated by Orchestra</div></div>
+      </div>
+      <div class="pg-scroll">
+        <div class="ins-section">
+          <div class="ins-sec-title">Settlements by month</div>
+          <div class="chart-row"><div class="chart-month">Jan</div><div class="chart-track"><div class="chart-fill" style="width:37.5%"><span class="chart-fill-n">3</span></div></div></div>
+          <div class="chart-row"><div class="chart-month">Feb</div><div class="chart-track"><div class="chart-fill" style="width:50%"><span class="chart-fill-n">4</span></div></div></div>
+          <div class="chart-row"><div class="chart-month">Mar</div><div class="chart-track"><div class="chart-fill" style="width:50%"><span class="chart-fill-n">4</span></div></div></div>
+          <div class="chart-row"><div class="chart-month">Apr</div><div class="chart-track"><div class="chart-fill" style="width:62.5%"><span class="chart-fill-n">5</span></div></div></div>
+          <div class="chart-row"><div class="chart-month">May</div><div class="chart-track"><div class="chart-fill" style="width:75%"><span class="chart-fill-n">6</span></div></div></div>
+          <div class="chart-row"><div class="chart-month">Jun</div><div class="chart-track"><div class="chart-fill" style="width:100%"><span class="chart-fill-n">8</span></div></div></div>
+        </div>
+        <div class="ins-section">
+          <div class="ins-sec-title">Average time per step — where transactions slow down</div>
+          <div class="step-row-ins"><div class="step-lbl">Building inspection</div><div class="step-bar-wrap"><div class="step-bar" style="width:80%;background:var(--amber)"></div></div><div class="step-val">3.2 days ← longest</div></div>
+          <div class="step-row-ins"><div class="step-lbl">Contract exchange</div><div class="step-bar-wrap"><div class="step-bar" style="width:62%;background:var(--blue)"></div></div><div class="step-val">2.5 days</div></div>
+          <div class="step-row-ins"><div class="step-lbl">Finance check</div><div class="step-bar-wrap"><div class="step-bar" style="width:53%;background:var(--blue)"></div></div><div class="step-val">2.1 days</div></div>
+          <div class="step-row-ins"><div class="step-lbl">Title search</div><div class="step-bar-wrap"><div class="step-bar" style="width:45%;background:var(--blue)"></div></div><div class="step-val">1.8 days</div></div>
+          <div class="step-row-ins"><div class="step-lbl">Settlement</div><div class="step-bar-wrap"><div class="step-bar" style="width:30%;background:var(--green)"></div></div><div class="step-val">1.2 days</div></div>
+          <div class="step-row-ins"><div class="step-lbl">KYC &amp; compliance</div><div class="step-bar-wrap"><div class="step-bar" style="width:22%;background:var(--green)"></div></div><div class="step-val">0.9 days</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── AUDIT ─── -->
+    <div class="page" id="p-audit">
+      <div class="filter-row">
+        <button class="fchip on" data-f2="all"         onclick="fAudit(this)">All events</button>
+        <button class="fchip"    data-f2="routing"     onclick="fAudit(this)">Routing</button>
+        <button class="fchip"    data-f2="approval"    onclick="fAudit(this)">Approvals</button>
+        <button class="fchip"    data-f2="exception"   onclick="fAudit(this)">Exceptions</button>
+        <button class="fchip"    data-f2="completion"  onclick="fAudit(this)">Completions</button>
+      </div>
+      <div class="pg-scroll">
+        <div class="audit-rows">
+          <div class="arow" data-t="routing">   <span class="ats">Today 14:30</span><span class="aev">Reminder sent to inspector (2 of 2) — <b>4 Merriway Drive</b></span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="routing">   <span class="ats">Today 11:15</span><span class="aev">Inspection booked — <b>Harrison Property Inspections · 4 Merriway Drive</b></span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="approval">  <span class="ats">Today 10:47</span><span class="aev">Finance pre-approval confirmed — <b>NAB · $1.2M · J. Hoffman</b></span><span class="awho">NAB</span></div>
+          <div class="arow" data-t="routing">   <span class="ats">Today 09:04</span><span class="aev">Finance docs dispatched to <b>NAB</b> — 4 Merriway Drive</span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="approval">  <span class="ats">Today 09:02</span><span class="aev">Offer of <b>$1,185,000 accepted</b> — 4 Merriway Drive · Vendor: R. Okafor</span><span class="awho">S. Mills</span></div>
+          <div class="arow" data-t="routing">   <span class="ats">Today 08:30</span><span class="aev">KYC documents dispatched — <b>New tenant A. Reyes · Unit 14B</b></span><span class="awho">Orchestra</span></div>
+          <div class="arow exc" data-t="exception"><span class="ats">Yesterday</span><span class="aev exc">Exception — Insurance certificate expired · <b>Pacific Maintenance Co</b> · chasing</span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="routing">   <span class="ats">Yesterday</span><span class="aev">Title search initiated — <b>Adelaide Conveyancers · 22 Lakeview Tce</b></span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="completion"><span class="ats">Yesterday</span><span class="aev">Settlement complete — <b>22 Lakeview Terrace, Norwood · $940,000</b></span><span class="awho">System</span></div>
+          <div class="arow" data-t="completion"><span class="ats">Yesterday</span><span class="aev">Title transfer lodged — <b>22 Lakeview Terrace</b> · Land Titles Office</span><span class="awho">System</span></div>
+          <div class="arow" data-t="approval">  <span class="ats">22 Jun</span><span class="aev">Contract exchanged — <b>17 Clifford Ave, Burnside · $1,350,000</b></span><span class="awho">Both solicitors</span></div>
+          <div class="arow exc" data-t="exception"><span class="ats">21 Jun</span><span class="aev exc">Exception — Buyer solicitor unavailable · <b>8 Riverton Close</b> · rescheduled</span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="approval">  <span class="ats">21 Jun</span><span class="aev">Lease renewal signed — <b>8 Orchard St, Unley · M. Tanaka</b> · 12-month term</span><span class="awho">Landlord</span></div>
+          <div class="arow" data-t="completion"><span class="ats">20 Jun</span><span class="aev">Tenant moved in — <b>Unit 8, Pacific Heights · C. Ibarra</b></span><span class="awho">System</span></div>
+          <div class="arow" data-t="routing">   <span class="ats">20 Jun</span><span class="aev">Routine inspection dispatched — <b>14 Orchard St, Unley</b></span><span class="awho">Orchestra</span></div>
+          <div class="arow" data-t="approval">  <span class="ats">19 Jun</span><span class="aev">Bond confirmed — <b>Unit 8, Pacific Heights · $2,800</b></span><span class="awho">Consumer Affairs</span></div>
+          <div class="arow" data-t="completion"><span class="ats">18 Jun</span><span class="aev">Flow complete — <b>Tenant Onboarding · C. Ibarra · Pacific Heights</b></span><span class="awho">System</span></div>
+          <div class="arow" data-t="completion"><span class="ats">18 Jun</span><span class="aev">Flow complete — <b>Property Sale · 31 Elmwood Crescent · $785,000</b></span><span class="awho">System</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SETTINGS ─── -->
+    <div class="page" id="p-settings">
+      <div class="pg-scroll">
+        <div class="settings-body">
+          <div class="set-card">
+            <div class="set-card-hd">Team members</div>
+            <div class="team-row"><div class="team-av" style="background:var(--blt);color:var(--bdk)">SM</div><div><div class="team-name">Sarah Mills</div><div class="team-role">Property Manager · Owner</div></div><span class="team-status">Active</span></div>
+            <div class="team-row"><div class="team-av" style="background:var(--plt);color:var(--pdk)">KP</div><div><div class="team-name">K. Pham</div><div class="team-role">Property Manager</div></div><span class="team-status">Active</span></div>
+            <div class="team-row"><div class="team-av" style="background:var(--glt);color:var(--gdk)">MO</div><div><div class="team-name">M. Osei</div><div class="team-role">Director · Approvals</div></div><span class="team-status">Active</span></div>
+            <div class="invite-row"><i class="ti ti-plus" style="font-size:13px"></i> Invite team member</div>
+          </div>
+          <div class="set-card">
+            <div class="set-card-hd">Connected integrations</div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-mail"></i></div><div><div class="intg-name">Gmail</div><div class="intg-desc">Email coordination</div></div><div class="intg-right"><span class="intg-on">Connected</span></div></div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-file-text"></i></div><div><div class="intg-name">DocuSign</div><div class="intg-desc">E-signatures</div></div><div class="intg-right"><span class="intg-on">Connected</span></div></div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-building-bank"></i></div><div><div class="intg-name">PEXA</div><div class="intg-desc">Property settlement</div></div><div class="intg-right"><span class="intg-on">Connected</span></div></div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-calendar"></i></div><div><div class="intg-name">Google Calendar</div><div class="intg-desc">Inspection scheduling</div></div><div class="intg-right"><span class="intg-on">Connected</span></div></div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-home"></i></div><div><div class="intg-name">Property Tree</div><div class="intg-desc">Property management software</div></div><div class="intg-right"><button class="intg-btn">Connect →</button></div></div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-chart-bar"></i></div><div><div class="intg-name">Xero</div><div class="intg-desc">Accounting &amp; invoicing</div></div><div class="intg-right"><button class="intg-btn">Connect →</button></div></div>
+            <div class="intg-row"><div class="intg-icon"><i class="ti ti-search"></i></div><div><div class="intg-name">REA Group</div><div class="intg-desc">Listing data (read-only)</div></div><div class="intg-right"><button class="intg-btn">Connect →</button></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAYS
+════════════════════════════════════════ -->
+<div class="backdrop" id="backdrop" onclick="closePanel()"></div>
+
+<div class="rpanel" id="rpanel">
+  <div class="rp-hd">
+    <div class="rp-title" id="rp-title">Detail</div>
+    <button class="rp-close" onclick="closePanel()" aria-label="Close"><i class="ti ti-x" style="font-size:13px"></i></button>
+  </div>
+  <div class="rp-body" id="rp-body"></div>
+</div>
+
+<script>
+/* ── Panel data ── */
+const PANELS = {
+  sale: {
+    title:'Property Sale · 4 Merriway Drive',
+    prop:{ addr:'4 Merriway Drive, Glenelg SA 5045', meta:'Vendor: R. &amp; T. Okafor · Buyer: J. Hoffman · Agent: Sarah Mills · Listed 14 Jun', val:'$1,185,000' },
+    steps:[
+      {c:'ps-done',  n:'✓', t:'Offer accepted',      s:'Agent: S. Mills · Vendor notified',       st:'Done'},
+      {c:'ps-done',  n:'✓', t:'Finance pre-approval', s:'NAB · J. Hoffman · $1.2M approved',       st:'Confirmed 2h ago'},
+      {c:'ps-active',n:'3', t:'Building inspection',  s:'Harrison Property Inspections',            st:'In progress · 3h elapsed'},
+      {c:'ps-wait',  n:'4', t:'Title search',         s:'Adelaide Conveyancers',                   st:'Waiting'},
+      {c:'ps-wait',  n:'5', t:'Contract exchange',    s:'Both solicitors · Buyer &amp; vendor',    st:'Waiting'},
+      {c:'ps-wait',  n:'6', t:'Settlement',           s:'Pacific Settlement Services',             st:'Waiting'},
+    ],
+    log:[
+      {ts:'09:02',msg:'Offer of <b>$1,185,000 accepted</b> by vendor'},
+      {ts:'09:04',msg:'Finance docs dispatched to <b>NAB</b>'},
+      {ts:'10:47',msg:'<b>Pre-approval confirmed</b> — NAB · $1.2M limit'},
+      {ts:'11:15',msg:'Inspection booked — <b>Harrison Property Inspections</b>'},
+      {ts:'14:30',msg:'No report received · Reminder sent (2 of 2)',warn:true},
+    ]
+  },
+  tenant:{
+    title:'Tenant Onboarding · Unit 14B',
+    prop:{ addr:'Unit 14B, Harbour Tower · Pacific Properties', meta:'Tenant: A. Reyes · Manager: K. Pham · Move-in: 1 Aug 2026', val:'$2,600 / mo' },
+    steps:[
+      {c:'ps-done',  n:'✓',t:'KYC verification',     s:'Compliance team',    st:'Done'},
+      {c:'ps-active',n:'2',t:'Background check',     s:'VEDA Credit Bureau', st:'Processing · 6h elapsed'},
+      {c:'ps-wait',  n:'3',t:'Lease signing',        s:'Both parties',       st:'Waiting'},
+      {c:'ps-wait',  n:'4',t:'Bond lodgement',       s:'Consumer Affairs',   st:'Waiting'},
+      {c:'ps-wait',  n:'5',t:'Move-in confirmation', s:'A. Reyes',           st:'Waiting'},
+    ],
+    log:[
+      {ts:'08:30',msg:'KYC documents dispatched to tenant'},
+      {ts:'08:45',msg:'<b>KYC complete</b> — identity verified'},
+      {ts:'09:00',msg:'Background check initiated — <b>VEDA Bureau</b>'},
+      {ts:'12:15',msg:'Processing in progress · Est. 2–4 hours remaining'},
+    ]
+  },
+  contractor:{
+    title:'Contractor Approval · Pacific Maintenance',
+    prop:{ addr:'Pacific Maintenance Co · Annual contract', meta:'Director: M. Osei · Contract start: 1 Jul 2026 · 3yr relationship', val:'$28,400 / yr' },
+    steps:[
+      {c:'ps-done',  n:'✓',t:'Application received',  s:'Procurement',           st:'Done'},
+      {c:'ps-done',  n:'✓',t:'License verification',  s:'Compliance team',        st:'License active'},
+      {c:'ps-active',n:'3',t:'Insurance docs',        s:'Pacific Maintenance Co', st:'Received · Awaiting review'},
+      {c:'ps-wait',  n:'4',t:'Director sign-off',     s:'M. Osei',               st:'Waiting'},
+      {c:'ps-wait',  n:'5',t:'First work order',      s:'Orchestra dispatches',   st:'Waiting'},
+    ],
+    log:[
+      {ts:'Day 1',msg:'Application received — license check initiated'},
+      {ts:'Day 1',msg:'<b>License confirmed active</b> — ACB Registry'},
+      {ts:'Day 2',msg:'No insurance response · Reminder sent (1 of 2)',warn:true},
+      {ts:'Day 2',msg:'Second reminder sent',warn:true},
+      {ts:'Today',msg:'<b>Insurance certificates received</b> — now verified'},
+      {ts:'Today',msg:'Director approval requested — <b>M. Osei</b>'},
+    ]
+  }
+};
+
+function openPanel(key) {
+  const d = PANELS[key];
+  document.getElementById('rp-title').textContent = d.title;
+  const steps = d.steps.map(s=>`<div class="pstep ${s.c}"><div class="psn">${s.n}</div><div class="psbody"><div class="pst${s.c==='ps-wait'?' dim':''}">${s.t}</div><div class="pso">${s.s}</div><div class="pss">${s.st}</div></div></div>`).join('');
+  const log = d.log.map(l=>`<div class="ple"><span class="ple-ts">${l.ts}</span><span class="ple-msg${l.warn?' ple-warn':''}">${l.msg}</span></div>`).join('');
+  document.getElementById('rp-body').innerHTML=`<div class="rp-prop"><div class="rp-addr">${d.prop.addr}</div><div class="rp-meta">${d.prop.meta}</div><div class="rp-val">${d.prop.val}</div></div><div class="rp-sec"><div class="rp-sec-title">Transaction steps</div>${steps}</div><div class="rp-sec"><div class="rp-sec-title">Coordination log</div>${log}</div>`;
+  document.getElementById('rpanel').classList.add('open');
+  document.getElementById('backdrop').classList.add('on');
+}
+function closePanel() { document.getElementById('rpanel').classList.remove('open'); document.getElementById('backdrop').classList.remove('on'); }
+
+/* ── Navigation ── */
+const PAGE_META = {
+  pipeline:  { title:'Pipeline', sub:'3 active transactions', actions:'<button class="hbtn prim" onclick="navigate(\'builder\')"><i class="ti ti-plus"></i> New flow</button>' },
+  approvals: { title:'Approvals', sub:'3 pending decisions', actions:'' },
+  parties:   { title:'Parties', sub:'8 active contacts across 3 transactions', actions:'' },
+  builder:   { title:'Flow builder', sub:'Create and manage workflows', actions:'' },
+  insights:  { title:'Insights', sub:'June 2026 · Meridian Property Group', actions:'' },
+  audit:     { title:'Audit log', sub:'Complete coordination record · Auto-generated', actions:'' },
+  settings:  { title:'Settings', sub:'Team · Integrations', actions:'' },
+};
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p-'+page).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.page===page));
+  const m = PAGE_META[page];
+  document.getElementById('mh-title').textContent = m.title;
+  document.getElementById('mh-sub').textContent   = m.sub;
+  document.getElementById('mh-actions').innerHTML = m.actions;
+  closePanel();
+}
+
+/* ── Exception bar ── */
+function dismissExc() { document.getElementById('exc-bar').style.display='none'; document.getElementById('exc-sb-badge').style.display='none'; }
+
+/* ── Approvals ── */
+let pendingCount = 3;
+function clearAppr(id) {
+  const card = document.getElementById(id);
+  card.classList.add('clearing');
+  pendingCount--;
+  setTimeout(()=>{
+    card.remove();
+    document.getElementById('appr-sb-badge').textContent = pendingCount||'';
+    if(!pendingCount) { document.getElementById('appr-sb-badge').style.display='none'; const list=document.getElementById('appr-list'); const d=document.createElement('div'); d.style.cssText='padding:32px;text-align:center;font-size:12px;color:var(--t3);line-height:1.8'; d.innerHTML='All decisions made.<br>Orchestra is advancing every flow.'; list.appendChild(d); }
+  },300);
+}
+function fAppr(btn) {
+  document.querySelectorAll('#p-approvals .fchip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  const f=btn.dataset.f;
+  document.querySelectorAll('.appr-card').forEach(c=>{ c.style.display=(f==='all'||c.dataset.type===f)?'':'none'; });
+}
+
+/* ── Audit filter ── */
+function fAudit(btn) {
+  document.querySelectorAll('#p-audit .fchip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  const f=btn.dataset.f2;
+  document.querySelectorAll('.arow').forEach(r=>{ r.style.display=(f==='all'||r.dataset.t===f)?'':'none'; });
+}
+
+/* ── Builder ── */
+let selNode = document.querySelector('.bnode');
+let bNodeCount = 4;
+const TEMPLATES = {
+  sale:[{type:'Trigger',name:'Offer received',own:'Agent'},{type:'Approval',name:'Finance check',own:'Buyer\'s bank'},{type:'Task',name:'Inspection',own:'Inspector'},{type:'External party',name:'Title search',own:'Conveyancer'}],
+  tenant:[{type:'Trigger',name:'Application received',own:'Tenant'},{type:'Compliance check',name:'KYC verification',own:'Compliance'},{type:'Task',name:'Background check',own:'VEDA Bureau'},{type:'Approval',name:'Lease signing',own:'Both parties'},{type:'Task',name:'Bond lodgement',own:'Consumer Affairs'}],
+  contractor:[{type:'Trigger',name:'Application',own:'Procurement'},{type:'Compliance check',name:'License check',own:'Compliance'},{type:'Task',name:'Insurance docs',own:'Contractor'},{type:'Approval',name:'Director sign-off',own:'Director'},{type:'Task',name:'First work order',own:'Orchestra'}],
+};
+function selectTemplate(key) {
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected'));
+  if(key!=='blank') document.getElementById('tpl-'+key)?.classList.add('selected');
+  const nodes = key==='blank' ? [] : (TEMPLATES[key]||[]);
+  const flow = document.getElementById('bdr-flow');
+  const add = flow.querySelector('.badd');
+  flow.querySelectorAll('.bnode,.barr').forEach(el=>el.remove());
+  bNodeCount = nodes.length;
+  nodes.forEach((n,i)=>{
+    if(i>0){const arr=document.createElement('span');arr.className='barr';arr.textContent='›';flow.insertBefore(arr,add);}
+    const node=document.createElement('div');node.className='bnode';
+    node.innerHTML=`<div class="bn-type">${n.type}</div><div class="bn-name">${n.name}</div><div class="bn-own">${n.own}</div>`;
+    node.onclick=function(){selBNode(this);};
+    flow.insertBefore(node,add);
+  });
+  if(flow.querySelector('.bnode')) selBNode(flow.querySelector('.bnode'));
+}
+function selBNode(el) {
+  document.querySelectorAll('.bnode').forEach(n=>n.classList.remove('sel'));
+  el.classList.add('sel'); selNode=el;
+  const nm=el.querySelector('.bn-name').textContent;
+  const tp=el.querySelector('.bn-type').textContent;
+  const ow=el.querySelector('.bn-own').textContent;
+  document.getElementById('cfg-title').textContent=nm;
+  document.getElementById('cfg-name').value=nm;
+  document.getElementById('cfg-own').value=ow;
+  document.querySelectorAll('.tpill').forEach(p=>p.classList.toggle('on',p.textContent.trim().toLowerCase()===tp.toLowerCase()));
+}
+function updBNode(v) {
+  if(!selNode)return;
+  const d=v.trim()||'Untitled step';
+  selNode.querySelector('.bn-name').textContent=d;
+  document.getElementById('cfg-title').textContent=d;
+}
+function selPill(btn) {
+  document.querySelectorAll('.tpill').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  if(selNode) selNode.querySelector('.bn-type').textContent=btn.textContent;
+}
+function addBNode() {
+  bNodeCount++;
+  const flow=document.getElementById('bdr-flow');
+  const add=flow.querySelector('.badd');
+  const arr=document.createElement('span');arr.className='barr';arr.textContent='›';
+  const node=document.createElement('div');node.className='bnode';
+  node.innerHTML=`<div class="bn-type">Task</div><div class="bn-name">New step ${bNodeCount}</div><div class="bn-own">Unassigned</div>`;
+  node.onclick=function(){selBNode(this);};
+  flow.insertBefore(arr,add); flow.insertBefore(node,add);
+  selBNode(node);
+  setTimeout(()=>{const i=document.getElementById('cfg-name');i.focus();i.select();},50);
+}
+function launchFlow() {
+  const btn=document.getElementById('btn-launch');
+  const nm=document.getElementById('cfg-name').value.trim()||'New transaction';
+  btn.textContent='Launching…'; btn.disabled=true;
+  setTimeout(()=>{
+    navigate('pipeline');
+    btn.textContent='Launch transaction'; btn.disabled=false;
+  },1200);
+}
+function saveTpl() {
+  const btn=document.getElementById('btn-save');
+  btn.textContent='Saved ✓'; btn.style.color='var(--gdk)'; btn.style.borderColor='rgba(5,150,105,.3)';
+  setTimeout(()=>{btn.textContent='Save template';btn.style.color='';btn.style.borderColor='';},2000);
+}
+
+/* ── Count-up metrics ── */
+function countUp(el,target,pre,suf,dur) {
+  const start=Date.now(); const isF=target%1!==0;
+  function tick(){const p=Math.min((Date.now()-start)/dur,1);const e=1-Math.pow(1-p,3);const v=target*e;el.textContent=pre+(isF?v.toFixed(1):Math.round(v))+suf;if(p<1)requestAnimationFrame(tick);}
+  requestAnimationFrame(tick);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>countUp(document.getElementById('m1'),3,'','',900),200);
+  setTimeout(()=>countUp(document.getElementById('m2'),3.2,'$','M',1100),300);
+  setTimeout(()=>countUp(document.getElementById('m3'),8,'','',900),400);
+});
+
+/* ── Live timers ── */
+document.querySelectorAll('[data-elapsed]').forEach(el=>{
+  const s=parseInt(el.dataset.elapsed);
+  const h=Math.floor(s/3600); const m=Math.floor((s%3600)/60);
+  el.textContent=h>0?`${h}h ${m}m`:`${m}m`;
+});
+setInterval(()=>{
+  document.querySelectorAll('[data-elapsed]').forEach(el=>{
+    let s=parseInt(el.dataset.elapsed)+60;
+    el.dataset.elapsed=s;
+    const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);
+    el.textContent=h>0?`${h}h ${m}m`:`${m}m`;
+  });
+},60000);
+</script>
+</body>
+</html>
