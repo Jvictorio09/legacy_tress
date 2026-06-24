@@ -1601,7 +1601,7 @@
     let l=document.querySelector('.mobile-menu');
     if(l){l.remove();burger.setAttribute('aria-expanded','false');return}
     l=document.createElement('nav');l.className='mobile-menu';
-    l.innerHTML=`<a href="#services">Services</a><a href="#ritual">Healthy-Hair Ritual</a><a href="#guide">Find Your Style</a><a href="#offer">Current Offer</a><a href="#products">Products</a><a href="#alterations">Alterations</a><a href="#events">Private Events</a><a href="#speakeasy">After Hours</a><a href="#gallery">Gallery</a><a href="#reviews">Reviews</a><a href="#owner">Our Story</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a>`;
+    l.innerHTML=`<a href="#services">Services</a><a href="#ritual">Healthy-Hair Ritual</a><a href="#guide">Find Your Style</a><a href="#offer">Current Offer</a><a href="#products">Products</a><a href="#alterations">Alterations</a><a href="#events">Private Events</a><a href="#speakeasy">After Hours</a><a href="#gallery">Gallery</a><a href="#reviews">Reviews</a><a href="#owner">Our Story</a><a href="{% url 'try_on' %}">Virtual Try-On</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a>`;
     applyBookingLinks(l);
     Object.assign(l.style,{position:'fixed',inset:'0',zIndex:'130',background:'var(--ivory)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'26px',overflowY:'auto',padding:'80px 20px'});
     l.querySelectorAll('a').forEach(a=>{
