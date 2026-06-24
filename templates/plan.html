@@ -360,6 +360,32 @@
     font-size: 9pt;
     margin-bottom: 5px;
   }
+
+/* ── Mobile / responsive ───────────────────────────────── */
+@media (max-width: 640px) {
+  .page { max-width: 100%; padding: 24px 18px 32px; }
+  .cover { padding: 44px 22px; }
+  .cover-brand { font-size: 30pt; letter-spacing: 4px; }
+  .cover-divider { width: 120px; }
+
+  /* Multi-column blocks collapse to a single column */
+  .arch-grid { grid-template-columns: 1fr; gap: 12px; }
+  .two-col { grid-template-columns: 1fr; gap: 0 16px; }
+
+  /* Tables fit the screen instead of overflowing */
+  table { table-layout: fixed; width: 100%; word-break: break-word; font-size: 8.5pt; }
+  table thead th, table tbody td { padding: 6px 8px; }
+
+  /* Footer meta stacks */
+  .page-footer { flex-direction: column; gap: 6px; align-items: flex-start; }
+
+  /* Code blocks never push the page wide */
+  pre { font-size: 8pt; overflow-x: auto; }
+
+  /* Headings tightened slightly for narrow screens */
+  h1 { font-size: 17pt; }
+  h2 { font-size: 11pt; }
+}
 </style>
 </head>
 <body>

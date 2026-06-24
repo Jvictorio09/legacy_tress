@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,8 +7,8 @@
 <meta name="description" content="LegacyTress salon policies — deposits, cancellations, rescheduling, no-shows, hair and wash inclusions, extra-length pricing, kids' appointments, payments, events, and alterations.">
 <link rel="canonical" href="https://www.legacytress.com/policies.html">
 <meta name="robots" content="index,follow">
-<link rel="icon" type="image/png" href="assets/favicon.png">
-<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="icon" type="image/png" href="{% static 'assets/favicon.png' %}">
+<link rel="apple-touch-icon" href="{% static 'assets/favicon.png' %}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -61,15 +61,25 @@
 
   footer{background:var(--espresso-2);color:rgba(247,243,236,.6);padding:40px 0;text-align:center;font-size:.8rem;letter-spacing:.06em}
   footer a{color:var(--champagne-lt)}
-  @media(max-width:560px){.wrap{padding:0 22px}}
+  @media(max-width:560px){
+    .wrap{padding:0 22px}
+    .bar-in{padding:14px 18px}
+    .policy h2{font-size:1.18rem}
+    .eyebrow{flex-wrap:wrap}
+    .btn{padding:14px 30px}
+  }
+  @media(max-width:380px){
+    .bar-in{padding:12px 14px}
+    .eyebrow::before{display:none}
+  }
 </style>
 </head>
 <body>
 
 <header class="bar">
   <div class="bar-in">
-    <a href="index.html" class="logo" aria-label="LegacyTress home"><img src="assets/logo.png" alt="LegacyTress Braiding Salon"></a>
-    <a href="index.html" class="back">← Back to Home</a>
+    <a href="{% url 'index' %}" class="logo" aria-label="LegacyTress home"><img src="{% static 'assets/logo.png' %}" alt="LegacyTress Braiding Salon"></a>
+    <a href="{% url 'index' %}" class="back">← Back to Home</a>
   </div>
 </header>
 
@@ -124,7 +134,7 @@
 </section>
 
 <footer>
-  © 2026 LegacyTress · 7644 Margate Blvd, Margate, FL 33063 · <a href="index.html">Return Home</a>
+  © 2026 LegacyTress · 7644 Margate Blvd, Margate, FL 33063 · <a href="{% url 'index' %}">Return Home</a>
 </footer>
 </body>
 </html>

@@ -388,6 +388,40 @@ body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var
 .b-blue  { background:var(--blt);  color:var(--bdk);  }
 .b-green { background:var(--glt);  color:var(--gdk);  }
 .b-amber { background:var(--alt);  color:var(--adk);  }
+
+/* ── Mobile / responsive ───────────────────────────────── */
+@media (max-width:760px){
+  /* App shell stacks: sidebar becomes a horizontal top bar, main scrolls below */
+  .shell{ flex-direction:column; }
+  .sidebar{
+    width:100%; height:auto; flex-direction:row; align-items:stretch;
+    overflow-x:auto; overflow-y:hidden; flex-shrink:0;
+    border-right:none; border-bottom:1px solid var(--border);
+  }
+  .sb-logo{ border-bottom:none; border-right:1px solid var(--border);
+    position:sticky; left:0; background:var(--surface); z-index:2; flex-shrink:0; }
+  .sb-nav{ display:flex; flex-direction:row; flex:0 0 auto; padding:0; }
+  .sb-group{ display:flex; flex-direction:row; margin:0; }
+  .sb-grp-lbl{ display:none; }
+  .sb-item{ white-space:nowrap; border-left:none; border-bottom:2px solid transparent; padding:9px 14px; }
+  .sb-item.active{ border-left-color:transparent; border-bottom-color:var(--blue); }
+  .sb-hint, .sb-badge, .sb-footer{ display:none; }
+
+  /* Metric / template / settings grids collapse */
+  .metrics, .ins-metrics{ grid-template-columns:repeat(2,1fr); }
+  .builder-templates, .settings-body, .cfg-grid{ grid-template-columns:1fr; }
+
+  /* Slide-over panel fills the screen */
+  .backdrop{ left:0; }
+  .rpanel{ width:100%; }
+
+  /* Tighter header padding to reclaim space */
+  .main-hd, .exc-bar{ padding-left:16px; padding-right:16px; }
+}
+@media (max-width:480px){
+  .metrics, .ins-metrics{ grid-template-columns:1fr; }
+  body{ font-size:13.5px; }
+}
 </style>
 </head>
 <body>

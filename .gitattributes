@@ -1,0 +1,5 @@
+# Normalize line endings; keep LF for files the Linux deploy executes.
+* text=auto
+Procfile text eol=lf
+*.py text eol=lf
+.python-version text eol=lf

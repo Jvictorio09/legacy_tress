@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -22,8 +22,8 @@
 <meta name="twitter:title" content="LegacyTress — Broward County's Luxury Wellness Braiding Salon">
 <meta name="twitter:description" content="Healthy-hair protective styles, scalp care, signature products, alterations & private beauty events — in an elevated salon space. Book today.">
 <meta name="twitter:image" content="https://res.cloudinary.com/dkfxnlsib/image/upload/q_auto/f_auto/v1781688538/queen_wbjyol.png">
-<link rel="icon" type="image/png" href="assets/favicon.png">
-<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="icon" type="image/png" href="{% static 'assets/favicon.png' %}">
+<link rel="apple-touch-icon" href="{% static 'assets/favicon.png' %}">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -814,7 +814,7 @@
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
     <a href="#" class="logo" aria-label="LegacyTress — Braiding Salon home">
-      <img src="assets/logo.png" alt="LegacyTress Braiding Salon">
+      <img src="{% static 'assets/logo.png' %}" alt="LegacyTress Braiding Salon">
     </a>
     <nav class="nav-links">
       <a href="#services">Services</a>
@@ -823,6 +823,7 @@
       <a href="#events">Events</a>
       <a href="#gallery">Gallery</a>
       <a href="#reviews">Reviews</a>
+      <a href="{% url 'try_on' %}">Try-On</a>
     </nav>
     <a href="#" data-book class="nav-cta" target="_blank" rel="noopener">Book Now</a>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -1323,7 +1324,7 @@
       <div class="faq-item"><button class="faq-q" aria-expanded="false">Do you braid children's hair? <span class="pl"></span></button><div class="faq-a"><p>Yes. The Petite Knotless (X-SMALL) collection is perfect for children — gentle, patient and sized for smaller heads. Book it directly on Fresha when you reserve.</p></div></div>
       <div class="faq-item"><button class="faq-q" aria-expanded="false">How long do the braids last? <span class="pl"></span></button><div class="faq-a"><p>Most protective styles last 4–8 weeks with proper care. We include maintenance tips with every service and offer touch-up and take-down bookings when you're ready.</p></div></div>
     </div>
-    <p class="faq-ai reveal">Still have a question? Read our <a href="policies.html">full salon policies</a>, or reach us any time at 561-970-4193.</p>
+    <p class="faq-ai reveal">Still have a question? Read our <a href="{% url 'policies' %}">full salon policies</a>, or reach us any time at 561-970-4193.</p>
   </div>
 </section>
 
@@ -1384,7 +1385,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <a href="#" class="foot-logo" aria-label="LegacyTress home"><img src="assets/logo-light.png" alt="LegacyTress Braiding Salon"></a>
+        <a href="#" class="foot-logo" aria-label="LegacyTress home"><img src="{% static 'assets/logo-light.png' %}" alt="LegacyTress Braiding Salon"></a>
         <p class="tag">Margate's luxury braiding house — knotless, boho, Fulani, twists and protective styles, crafted for healthy hair and exceptional care.</p>
         <div class="foot-contact">
           7644 Margate Blvd, Margate, FL 33063<br>
@@ -1399,11 +1400,11 @@
       </div>
       <div class="foot-col">
         <h4>Explore</h4>
-        <a href="#services">Services</a><a href="#ritual">Healthy-Hair Ritual</a><a href="#products">Products</a><a href="#alterations">Alterations</a><a href="#events">Private Events</a><a href="#speakeasy">After Hours</a><a href="#gallery">Gallery</a><a href="#owner">Our Story</a>
+        <a href="#services">Services</a><a href="#ritual">Healthy-Hair Ritual</a><a href="#products">Products</a><a href="#alterations">Alterations</a><a href="#events">Private Events</a><a href="#speakeasy">After Hours</a><a href="#gallery">Gallery</a><a href="#owner">Our Story</a><a href="{% url 'try_on' %}">Virtual Color Studio</a>
       </div>
       <div class="foot-col">
         <h4>Visit</h4>
-        <a href="#visit">Directions</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a><a href="#guide">Find Your Style</a><a href="#offer">Current Offer</a><a href="#reviews">Reviews</a><a href="policies.html">Policies</a><a href="#area">Service Area</a>
+        <a href="#visit">Directions</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a><a href="#guide">Find Your Style</a><a href="#offer">Current Offer</a><a href="#reviews">Reviews</a><a href="{% url 'policies' %}">Policies</a><a href="#area">Service Area</a>
       </div>
       <div class="foot-col news">
         <h4>The List</h4>
