@@ -7,6 +7,16 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load .env locally (OPENAI_API_KEY, etc.) — file is gitignored.
+_env_file = BASE_DIR / '.env'
+if _env_file.exists():
+    for line in _env_file.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+        key, _, value = line.partition('=')
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
 # SECURITY WARNING: keep the secret key used in production secret!
 # Set DJANGO_SECRET_KEY in the Railway dashboard for production.
 SECRET_KEY = os.environ.get(
@@ -125,3 +135,11 @@ STORAGES = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AI Ethereal Boho preview (OpenAI)
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
+OPENAI_IMAGE_MODEL = os.environ.get('OPENAI_IMAGE_MODEL', 'gpt-image-1')
+BOHO_STYLE_REFERENCE_URL = os.environ.get('BOHO_STYLE_REFERENCE_URL', (
+    'https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://'
+    'assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69150d324a60b5912d8e4bb0.jpg'
+))

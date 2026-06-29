@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're In! — YouStar Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,700&family=Jost:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep: #05030f;
+  --primary: #6A52FF;
+  --primary-light: #C1B7FF;
+  --primary-dark: #4535cc;
+  --accent: #FF4D6A;
+  --accent-light: #FFBBC6;
+  --accent-mid: #ff7a8a;
+  --text-light: #d8d3ff;
+  --text-mid: #9d94e8;
+  --light-bg: #f4f2ff;
+  --light-text: #1a1440;
+  --light-muted: #5a5080;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Jost', sans-serif; background: var(--deep); color: #fff; overflow-x: hidden; font-size: 16px; }
+
+/* Enforce 16px minimum on all small text */
+p, li, span, div, a, button, label, input { font-size: max(16px, 1em); }
+.ann-bar, .hero-eyebrow, .pill, .cd-lbl, .countdown-label, .email-note, .scroll-cue,
+.section-label, .step-num, .step p, .bonus-note, .note-text, .note-role,
+.share-sub, .sbtn, .proof-item, .cta-small, footer p,
+.host-title, .share-pretext { font-size: 16px !important; }
+h1,h2,h3,h4 { font-family: 'Jost', sans-serif; font-weight: 400; }
+h1 em, h2 em, h3 em { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 400; }
+
+/* PARTICLES */
+#particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.4; }
+
+/* ANN BAR */
+.ann-bar {
+  position: relative; z-index: 100;
+  background: linear-gradient(90deg,var(--accent),var(--accent-mid),var(--accent-light),var(--accent-mid),var(--accent));
+  background-size: 300% 100%; animation: shimmer 4s linear infinite;
+  text-align: center; padding: 10px 20px;
+  font-size: 12px; font-weight: 700; letter-spacing: .08em; color: #fff;
+}
+@keyframes shimmer { 0%{background-position:0%} 100%{background-position:300%} }
+
+/* NAV */
+.nav {
+  position: absolute;
+  top: calc(37px + 56px);
+  left: 0; right: 0;
+  z-index: 101;
+  padding: 20px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: none;
+  border-bottom: none;
+}
+
+/* HERO */
+.hero {
+  position: relative; z-index: 10;
+  min-height: calc(100vh - 37px - 56px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 60px; overflow: hidden;
+  background: url('https://res.cloudinary.com/dcuswyfur/image/upload/v1776707892/Frame_3_yhyjen.png') center/cover no-repeat;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(5,3,15,.55);
+}
+
+.check-circle {
+  position: relative; width: 110px; height: 110px; margin: 0 auto 36px;
+  opacity: 0; animation: popIn .8s .2s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes popIn { 0%{transform:scale(0) rotate(-20deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
+.ring-pulse { position: absolute; inset: -10px; border: 2px solid rgba(255,77,106,.35); border-radius: 50%; animation: ringOut 2s 1s ease-out infinite; }
+.ring-pulse-2 { position: absolute; inset: -22px; border: 1px solid rgba(255,77,106,.18); border-radius: 50%; animation: ringOut 2s 1.4s ease-out infinite; }
+@keyframes ringOut { 0%{transform:scale(.85);opacity:.8} 100%{transform:scale(1.3);opacity:0} }
+
+.hero-eyebrow { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#fff; margin-bottom:16px; opacity:0; animation:fadeUp .7s .7s forwards; }
+.hero h1 { font-size:clamp(48px,7vw,92px); line-height:1.05; letter-spacing:-.5px; margin-bottom:24px; opacity:0; animation:fadeUp .7s .85s forwards; }
+.hero-sub { font-size:clamp(18px,2vw,22px); color:#fff; max-width:1000px; line-height:1.75; margin:0 auto 40px; opacity:0; animation:fadeUp .7s 1s forwards; }
+@keyframes fadeUp { 0%{opacity:0;transform:translateY(22px)} 100%{opacity:1;transform:translateY(0)} }
+
+.pills { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:36px; opacity:0; animation:fadeUp .7s 1.15s forwards; max-width:820px; margin-left:auto; margin-right:auto; }
+.pill { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.3); border-radius:40px; padding:10px 20px; font-size:15px; font-weight:700; color:#fff; backdrop-filter:blur(8px); }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+/* COUNTDOWN */
+.countdown-wrap { opacity:0; animation:fadeUp .7s 1.3s forwards; margin-bottom:32px; }
+.countdown-label { font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#fff; margin-bottom:12px; }
+.countdown { display:flex; gap:16px; justify-content:center; }
+.cd-block { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); border-radius:14px; padding:14px 20px; min-width:72px; text-align:center; backdrop-filter:blur(10px); }
+.cd-num { font-size:32px; font-weight:900; line-height:1; color:#fff; font-variant-numeric:tabular-nums; }
+.cd-lbl { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.7); margin-top:4px; }
+.cd-sep { display:flex; align-items:center; font-size:24px; font-weight:900; color:var(--accent); padding-bottom:16px; }
+
+.email-note { font-size:16px; color:rgba(255,255,255,.75); opacity:0; animation:fadeUp .7s 1.45s forwards; margin-bottom:32px; }
+
+.scroll-cue { display:flex; flex-direction:column; align-items:center; gap:6px; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6); cursor:pointer; opacity:0; animation:fadeUp .7s 1.6s forwards; transition:color .2s; }
+.scroll-cue:hover { color:#fff; }
+.scroll-cue svg { animation:bounce 1.5s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+/* SOCIAL PROOF STRIP */
+.proof-strip {
+  position: relative; z-index: 10;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  padding: 24px 40px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: wrap;
+  overflow: hidden;
+}
+.proof-strip::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.proof-item { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700; color:rgba(255,255,255,.9); position:relative; }
+.proof-item .num { font-size:22px; font-weight:900; color:#fff; }
+.proof-divider { width:1px; height:32px; background:rgba(255,255,255,.2); }
+
+/* STEPS */
+.steps { position:relative; z-index:10; background:#fff; padding:100px 40px; }
+.steps-inner { max-width:680px; margin:0 auto; }
+.section-label { font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; text-align:center; }
+.steps h2 { font-size:clamp(28px,4vw,46px); color:var(--light-text); text-align:center; margin-bottom:60px; }
+
+.steps-list { display:flex; flex-direction:column; }
+.step { display:grid; grid-template-columns:60px 1fr; gap:0 28px; opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease; }
+.step.visible { opacity:1; transform:translateY(0); }
+.step-track { display:flex; flex-direction:column; align-items:center; }
+.step-circle { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-light)); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#fff; flex-shrink:0; box-shadow:0 8px 24px rgba(255,77,106,.3); position:relative; z-index:1; transition:transform .3s, box-shadow .3s; }
+.step:hover .step-circle { transform:scale(1.08); box-shadow:0 12px 32px rgba(255,77,106,.45); }
+.step-line { width:2px; flex:1; background:linear-gradient(to bottom,rgba(255,77,106,.3),rgba(193,183,255,.15)); min-height:36px; }
+.step:last-child .step-line { display:none; }
+.step-content { padding-bottom:44px; }
+.step:last-child .step-content { padding-bottom:0; }
+.step-num { font-size:11px; font-weight:700; letter-spacing:.18em; color:var(--accent); text-transform:uppercase; margin-bottom:6px; margin-top:14px; }
+.step h3 { font-size:21px; font-weight:700; color:var(--light-text); margin-bottom:8px; }
+.step p { font-size:18px; color:var(--light-muted); line-height:1.75; }
+
+/* BONUS REVEAL */
+.bonus-section { position:relative; z-index:10; background:var(--light-bg); padding:80px 40px; }
+.bonus-inner { max-width:800px; margin:0 auto; }
+.bonus-card {
+  background:url('https://res.cloudinary.com/dcuswyfur/image/upload/v1776364246/ahahha_ugx5pk.png') center/cover no-repeat;
+  border-radius:24px; overflow:hidden; position:relative;
+  padding:56px 52px; min-height:320px;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease;
+}
+.bonus-card.visible { opacity:1; transform:translateY(0); }
+.bonus-card::before { display:none; }
+.bonus-card > * { position:relative; z-index:1; }
+.bonus-tag { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,var(--accent),var(--accent-light)); border-radius:40px; padding:6px 18px; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#fff; margin-bottom:18px; width:fit-content; }
+.bonus-card h3 { font-size:clamp(22px,3vw,34px); color:#fff; margin-bottom:12px; line-height:1.2; }
+.bonus-card p { font-size:16px; color:rgba(255,255,255,.8); max-width:480px; line-height:1.7; }
+.bonus-note { margin-top:24px; padding:20px 24px; background:rgba(255,255,255,.06); border:1px solid rgba(193,183,255,.2); border-radius:14px; font-size:14px; color:var(--text-light); line-height:1.6; font-style:italic; }
+
+/* PERSONAL NOTE */
+.note-section { position:relative; z-index:10; background:#fff; padding:80px 40px; }
+.note-inner { max-width:680px; margin:0 auto; }
+.note-card { background:var(--light-bg); border-radius:20px; padding:48px; border-left:4px solid var(--accent); position:relative; opacity:0; transform:translateY(30px); transition:opacity .6s, transform .6s; }
+.note-card.visible { opacity:1; transform:translateY(0); }
+.note-card::before { content:'"'; position:absolute; top:-10px; left:40px; font-size:80px; font-family:'Playfair Display',serif; color:rgba(255,77,106,.15); line-height:1; }
+.note-text { font-size:21px; color:var(--light-muted); line-height:1.8; margin-bottom:28px; font-style:italic; }
+.note-author { display:flex; align-items:center; gap:16px; }
+.note-avatar { width:52px; height:52px; border-radius:50%; overflow:hidden; border:2px solid rgba(255,77,106,.3); }
+.note-avatar img { width:100%; height:100%; object-fit:cover; }
+.note-name { font-weight:800; color:var(--light-text); font-size:15px; }
+.note-role { font-size:12px; color:var(--accent); font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
+
+/* SHARE */
+.share { position:relative; z-index:10; background:var(--light-bg); padding:80px 40px; text-align:center; overflow:hidden; }
+.share h2 { font-size:clamp(24px,3.5vw,44px); margin-bottom:12px; color:var(--light-text); }
+.share-sub { font-size:21px; color:var(--light-muted); max-width:480px; margin:0 auto 16px; line-height:1.7; }
+.share-pretext { font-size:13px; color:var(--light-muted); max-width:480px; margin:0 auto 36px; background:rgba(106,82,255,.06); border:1px solid rgba(106,82,255,.15); border-radius:10px; padding:12px 16px; font-style:italic; }
+.share-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.sbtn { display:inline-flex; align-items:center; gap:9px; padding:13px 22px; border-radius:50px; font-family:'Jost',sans-serif; font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; text-decoration:none; border:none; cursor:pointer; transition:transform .2s, box-shadow .2s; }
+.sbtn:hover { transform:translateY(-3px); }
+.sbtn-fb { background:#1877f2; color:#fff; box-shadow:0 6px 20px rgba(24,119,242,.3); }
+.sbtn-x  { background:#000; color:#fff; border:1px solid rgba(0,0,0,.1); }
+.sbtn-wa { background:#25d366; color:#fff; box-shadow:0 6px 20px rgba(37,211,102,.3); }
+.sbtn-copy { background:rgba(26,20,64,.06); border:1px solid rgba(106,82,255,.2); color:var(--light-text); }
+.sbtn-copy.copied { background:rgba(106,82,255,.15); border-color:rgba(106,82,255,.4); color:var(--primary); }
+
+/* CALENDAR CTA */
+.cta-section { position:relative; z-index:10; background:url('https://res.cloudinary.com/dcuswyfur/image/upload/v1776152660/youstar_middle_bgLL_yp0qrw.png') center/cover no-repeat; padding:100px 40px; text-align:center; }
+.cta-section::before { content:''; position:absolute; inset:0; background:rgba(5,3,15,.65); }
+.cta-section > * { position:relative; z-index:1; }
+.cta-section h2 { font-size:clamp(28px,4vw,52px); margin-bottom:16px; }
+.cta-section p { font-size:20px; color:var(--text-light); max-width:500px; margin:0 auto 36px; line-height:1.7; }
+.btn-primary { display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg,var(--accent),var(--accent-mid),var(--accent-light),var(--accent-mid)); background-size:250% 250%; color:#fff; font-family:'Jost',sans-serif; font-size:17px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; padding:20px 44px; border-radius:60px; border:none; cursor:pointer; text-decoration:none; animation:btnShimmer 3s ease infinite,glowAccent 2s ease-in-out infinite; transition:transform .2s; }
+.btn-primary:hover { transform:translateY(-3px) scale(1.02); }
+@keyframes btnShimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes glowAccent { 0%,100%{box-shadow:0 8px 40px rgba(255,77,106,.5)} 50%{box-shadow:0 8px 60px rgba(255,77,106,.8),0 0 80px rgba(255,187,198,.3)} }
+.cta-small { font-size:13px; color:rgba(255,255,255,.35); margin-top:16px; }
+
+/* FOOTER */
+footer { position:relative; z-index:10; background:#030209; border-top:1px solid rgba(106,82,255,.12); text-align:center; padding:40px 20px; }
+footer img { height:38px; margin-bottom:14px; opacity:.8; }
+footer p { font-size:12px; color:rgba(255,255,255,.22); line-height:1.8; }
+footer a { color:var(--primary-light); text-decoration:none; }
+
+/* RESPONSIVE */
+
+/* Tablet */
+@media(max-width:1024px){
+  .nav { padding:16px 40px; }
+  .steps-inner { max-width:600px; }
+  .note-section > div > div:first-child > div { grid-template-columns:280px 1fr !important; }
+}
+
+/* Mobile */
+@media(max-width:768px){
+  body { font-size:16px; }
+  .ann-bar { font-size:11px; padding:8px 12px; }
+  .nav { padding:14px 20px; top:31px !important; }
+  .nav img { height:32px; }
+  .countdown-strip-wrap { padding:10px 16px; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .cd-block { min-width:52px; padding:8px 10px; }
+  .cd-num { font-size:20px; }
+  .cd-lbl { font-size:10px; }
+  .cd-sep { font-size:18px; }
+  .hero { padding:120px 20px 50px; min-height:auto; }
+  .check-circle { width:80px; height:80px; margin-bottom:24px; }
+  .hero h1 { font-size:clamp(38px,10vw,56px); }
+  .hero-sub { font-size:17px; max-width:100%; }
+  .pills { flex-direction:column; align-items:center; gap:8px; max-width:100%; }
+  .pill { font-size:14px; padding:9px 16px; }
+  .email-note { font-size:14px; }
+  .countdown { gap:6px; }
+  .steps { padding:60px 20px; }
+  .steps-inner { max-width:100%; }
+  .steps h2 { margin-bottom:40px; }
+  .step { gap:0 14px; }
+  .step-circle { width:44px; height:44px; font-size:15px; }
+  .step h3 { font-size:19px; }
+  .step p { font-size:16px; }
+  .step-content { padding-bottom:32px; }
+  .bonus-section { padding:60px 20px; }
+  .bonus-card { padding:32px 24px; min-height:auto; }
+  .bonus-card h3 { font-size:clamp(20px,5vw,28px); }
+  .bonus-tag { font-size:11px; padding:5px 14px; }
+  .note-section { padding:60px 20px !important; }
+  .note-section > div { grid-template-columns:1fr !important; border-radius:20px !important; }
+  .note-section > div > div:nth-child(1) { min-height:260px !important; border-radius:20px 20px 0 0 !important; }
+  .note-section > div > div:nth-child(2) { padding:32px 24px !important; }
+  .note-section > div > div:nth-child(2) > div:last-child { flex-direction:column; align-items:flex-start; gap:12px; }
+  .share { padding:60px 20px; }
+  .share h2 { font-size:clamp(24px,7vw,36px); }
+  .share-sub { font-size:17px; }
+  .share-btns { flex-direction:column; align-items:stretch; max-width:100%; }
+  .sbtn { justify-content:center; font-size:14px; }
+  .share > div > div[style*="max-width:560px"] { margin:0 0 28px; padding:22px 20px; }
+  .final-cta-section-inner { padding:0 20px !important; }
+  .final-cta-section-inner p { font-size:17px !important; }
+  .btn-primary { width:100%; justify-content:center; font-size:16px; padding:18px 28px; }
+  footer { padding:32px 20px; }
+}
+
+/* Small mobile */
+@media(max-width:480px){
+  .hero { padding:110px 16px 40px; }
+  .hero h1 { font-size:clamp(32px,9vw,48px); }
+  .hero-sub { font-size:16px; }
+  .ann-bar { font-size:10px; }
+  .steps { padding:48px 16px; }
+  .bonus-section { padding:48px 16px; }
+  .share { padding:48px 16px; }
+  .note-section { padding:48px 16px !important; }
+  .cd-block { min-width:46px; padding:7px 8px; }
+  .cd-num { font-size:18px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div style="position:relative;">
+
+<div class="ann-bar">Your seat is confirmed · 90-Minute Masterclass · One Time Only</div>
+
+<!-- COUNTDOWN STRIP -->
+<div class="countdown-strip-wrap" style="background:rgba(5,3,15,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;position:relative;z-index:100;">
+  <span></span>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div style="text-align:center;">
+      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;" id="cd-d">00</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-top:2px;">Days</div>
+    </div>
+    <span style="font-size:20px;font-weight:900;color:var(--accent);padding-bottom:14px;">:</span>
+    <div style="text-align:center;">
+      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;" id="cd-h">00</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-top:2px;">Hours</div>
+    </div>
+    <span style="font-size:20px;font-weight:900;color:var(--accent);padding-bottom:14px;">:</span>
+    <div style="text-align:center;">
+      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;" id="cd-m">00</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-top:2px;">Mins</div>
+    </div>
+    <span style="font-size:20px;font-weight:900;color:var(--accent);padding-bottom:14px;">:</span>
+    <div style="text-align:center;">
+      <div style="font-size:22px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;" id="cd-s">00</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-top:2px;">Secs</div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1774530254/logo_s7tssn.png" alt="YouStar" style="height:40px;width:auto;">
+</nav>
+
+
+<!-- HERO -->
+<section class="hero">
+  <div class="check-circle">
+    <div class="ring-pulse"></div>
+    <div class="ring-pulse-2"></div>
+    <svg viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="58" fill="rgba(255,77,106,0.12)" stroke="rgba(255,77,106,0.45)" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="44" fill="rgba(255,77,106,0.18)"/>
+      <path d="M38 62l16 16 28-32" stroke="#FF4D6A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="80" stroke-dashoffset="80">
+        <animate attributeName="stroke-dashoffset" from="80" to="0" dur=".6s" begin=".9s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+      </path>
+    </svg>
+  </div>
+
+  <div class="hero-eyebrow">Registration Confirmed</div>
+  <h1>You're <em>In.</em><br>See You There.</h1>
+  <p class="hero-sub">Your seat is locked. Get ready for 90 minutes that could change the trajectory of your music career forever — taught live by the team behind the world's biggest artists.</p>
+
+  <div class="pills">
+    <div class="pill"><div class="dot"></div><strong>{{custom_values.youstar__event_date_ex_may_23_2026}}</strong></div>
+    <div class="pill"><div class="dot"></div><strong>{{custom_values.youstar__event_time_ex_1100_am_pdt}}</strong></div>
+    <div class="pill"><div class="dot"></div><strong>Live on Zoom</strong></div>
+    <div class="pill"><div class="dot"></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg><strong>Exclusive Bonus at the End</strong></div>
+  </div>
+
+  <p class="email-note" style="display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg> Confirmation email on its way — check spam if you don't see it within 5 minutes.</p>
+
+  <div class="scroll-cue" onclick="document.querySelector('.steps').scrollIntoView({behavior:'smooth'})">
+    Do these 3 things now
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+</div>
+
+<!-- STEPS -->
+<section class="steps">
+  <div class="steps-inner">
+    <div class="section-label">What Happens Next</div>
+    <h2>Do These 3 Things <em>Right Now</em></h2>
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-track"><div class="step-circle">1</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-num">Step 01</div>
+          <h3>Check Your Email</h3>
+          <p>Your Zoom link is on its way. <strong style="color:var(--light-text);">Add the event to your calendar right now</strong> — before you close this tab — so nothing gets in the way on the day.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-track"><div class="step-circle">2</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-num">Step 02</div>
+          <h3>Show Up Live — No Replay</h3>
+          <p>There is <strong style="color:var(--accent);">no recording, no replay, no second chance.</strong> The live Q&A, the exclusive bonus, and the breakthrough moments only happen for people in the room in real time.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-track"><div class="step-circle">3</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-num">Step 03</div>
+          <h3>Come Ready to Take Action</h3>
+          <p>Bring a notebook. Clear 90 minutes. You'll leave with a complete, personalised roadmap you can start implementing the same day — not someday.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAL NOTE -->
+<section class="note-section" style="background:#f4f2ff;padding:100px 40px;">
+  <div style="max-width:1000px;margin:0 auto;background:#fff;border-radius:28px;overflow:hidden;display:grid;grid-template-columns:320px 1fr;box-shadow:0 8px 48px rgba(106,82,255,.1);">
+
+    <div style="position:relative;overflow:hidden;min-height:460px;">
+      <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1776706270/c-1762880028942-personal_1762880028588_1762880028588_linda_septien_demi-and-linda_LE_upscale_prime_1_oxzvva.png"
+           alt="Linda Septien"
+           style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;">
+      <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fff;border-radius:40px;padding:8px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);">
+        <div style="display:flex;margin-right:4px;">
+          <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1776152444/ec1f4f8e30798100b23d7fafc4401c1a_1_iurepb.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-right:-8px;">
+          <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1776152417/gemini-image-2_create_these_two_people_together_in_same_stage_looking_at_the_camera_as_musician-2_2_snllq7.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:right;border:2px solid #fff;margin-right:-8px;">
+          <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1774615117/SafariScreenSnapz010_sharpened_ul8tqk.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid #fff;">
+        </div>
+        <span style="font-size:13px;font-weight:700;color:var(--light-text);">2,400+ Artists Registered!</span>
+      </div>
+    </div>
+
+    <div style="padding:52px 52px 48px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="display:flex;gap:4px;margin-bottom:20px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+
+      <p style="font-size:clamp(18px,2.2vw,24px);font-weight:500;color:var(--light-text);line-height:1.6;margin-bottom:24px;">
+        We built this masterclass because we've watched thousands of incredibly talented artists give up — not because they lacked talent, but because nobody showed them how the industry actually works today.
+      </p>
+
+      <p style="font-size:19px;color:var(--light-muted);line-height:1.75;margin-bottom:20px;">
+        You made a decision today that most people never make. We'll see you live, and we can't wait to show you what's possible.
+      </p>
+
+      <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1776706822/Linda_Septien_utdrks.png"
+           alt="Linda Septien signature"
+           style="height:52px;width:auto;display:block;margin-bottom:24px;object-fit:contain;object-position:left;opacity:.85;">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:20px;border-top:1px solid rgba(106,82,255,.1);">
+        <span style="font-size:15px;font-weight:700;color:var(--light-muted);">— Linda Septien, Founder & CEO of SEG</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:13px;padding:5px 14px;border:1px solid rgba(106,82,255,.25);border-radius:40px;color:var(--light-muted);">Artist Development</span>
+          <span style="font-size:13px;padding:5px 14px;border:1px solid rgba(106,82,255,.25);border-radius:40px;color:var(--light-muted);">30+ Years</span>
+          <span style="font-size:13px;padding:5px 14px;border:1px solid rgba(106,82,255,.25);border-radius:40px;color:var(--light-muted);">17,000+ Artists</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHARE -->
+<section class="share" style="position:relative;overflow:hidden;">
+  <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1776706969/Frame_1000007366_vqcibf.png"
+       alt="" aria-hidden="true"
+       style="position:absolute;bottom:-80px;right:-80px;width:65%;max-width:700px;opacity:.1;pointer-events:none;z-index:0;display:block;">
+  <div style="position:relative;z-index:1;">
+  <div class="section-label" style="color:var(--accent);">Help a Fellow Artist</div>
+  <h2>Know Someone Who<br><em>Needs to Hear This?</em></h2>
+  <p class="share-sub">The most powerful thing you can do right now is send this to one artist whose career deserves to explode.</p>
+
+  <div style="max-width:560px;margin:0 auto 36px;background:linear-gradient(135deg,#e0d7ff 0%,#f0eaff 40%,#d4f0f7 100%);border-radius:20px;padding:28px 32px;text-align:left;box-shadow:0 20px 60px rgba(106,82,255,.18);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=96&h=96&fit=crop&crop=face" alt="Profile" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+        <div>
+          <div style="font-weight:800;font-size:15px;color:#0f0f0f;line-height:1.2;">Mia Torres</div>
+          <div style="font-size:13px;color:#536471;">@mia_makes_music</div>
+        </div>
+      </div>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </div>
+    <p style="font-size:18px;color:#0f0f0f;line-height:1.65;margin-bottom:16px;">
+      Hey — I just signed up for a free masterclass on launching a music career without a label. The team trained <strong>Beyoncé, Demi Lovato, Selena Gomez</strong> and more. You need this →
+      <a href="https://youstarexperience.com" style="color:#1DA1F2;text-decoration:none;font-weight:700;">youstarexperience.com</a>
+    </p>
+    <div style="font-size:13px;color:#536471;border-top:1px solid rgba(0,0,0,.08);padding-top:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>Just now · YouStar Experience</span>
+      <div style="display:flex;gap:20px;">
+        <span><strong style="color:#0f0f0f;">2.4K</strong> likes</span>
+        <span><strong style="color:#0f0f0f;">847</strong> shares</span>
+      </div>
+    </div>
+  </div>
+  <div class="share-btns">
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://youstarexperience.com" target="_blank" class="sbtn sbtn-fb">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>Share on Facebook
+    </a>
+    <a href="https://twitter.com/intent/tweet?text=I%20just%20registered%20for%20a%20FREE%20masterclass%20on%20launching%20a%20music%20career%20without%20a%20label%20%F0%9F%8E%B5%20The%20team%20behind%20Beyonc%C3%A9%2C%20Demi%20Lovato%20%26%20Selena%20Gomez.%20%E2%86%92%20https://youstarexperience.com" target="_blank" class="sbtn sbtn-x">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X
+    </a>
+    <a href="https://wa.me/?text=Hey%20%E2%80%94%20I%20just%20signed%20up%20for%20a%20free%20masterclass%20on%20launching%20a%20music%20career%20without%20a%20label.%20The%20team%20trained%20Beyonc%C3%A9%2C%20Demi%20Lovato%2C%20Selena%20Gomez%20and%20more.%20You%20NEED%20this%20%F0%9F%8E%B5%20https://youstarexperience.com" target="_blank" class="sbtn sbtn-wa">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>WhatsApp
+    </a>
+    <button class="sbtn sbtn-copy" id="copyBtn" onclick="copyLink()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy Link
+    </button>
+  </div>
+  </div>
+</section>
+
+<!-- BONUS REVEAL -->
+<section class="bonus-section">
+  <div class="bonus-inner">
+    <div class="section-label" style="text-align:center;margin-bottom:16px;">Your Free Bonus</div>
+    <h2 style="font-size:clamp(26px,3.5vw,44px);color:var(--light-text);text-align:center;margin-bottom:36px;">Stay to the End.<br><em>You Won't Regret It.</em></h2>
+    <div class="bonus-card" style="background:url('https://res.cloudinary.com/dcuswyfur/image/upload/v1776364246/ahahha_ugx5pk.png') center/cover no-repeat;border-radius:24px;overflow:hidden;border:1px solid rgba(106,82,255,.15);box-shadow:0 20px 60px rgba(106,82,255,.12);min-height:380px;display:flex;flex-direction:column;justify-content:flex-end;padding:52px 60px;position:relative;">
+      <div style="position:absolute;inset:0;background:linear-gradient(to right, rgba(255,255,255,.92) 0%, rgba(255,255,255,.7) 50%, rgba(255,255,255,.2) 100%);pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;">
+      <div class="bonus-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> Live Attendees Only</div>
+      <h3 style="color:var(--light-text);">The 10 Models of the<br><em>World's Best Performers</em></h3>
+      <p style="color:var(--light-muted);">The distilled blueprint behind the greatest performers of our generation. Not available anywhere else. Not for sale. <strong style="color:var(--light-text);">Yours free — just for showing up live.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section style="position:relative;z-index:10;background:var(--light-bg);padding:100px 0 0;text-align:center;overflow:hidden;">
+  <div class="final-cta-section-inner" style="position:relative;z-index:1;padding:0 40px;">
+    <div class="section-label" style="color:var(--accent);">Don't Miss a Minute</div>
+    <h2 style="font-size:clamp(28px,4vw,52px);color:var(--light-text);margin-bottom:16px;">Add It to Your <em>Calendar Now</em></h2>
+    <p style="font-size:20px;color:var(--light-muted);max-width:500px;margin:0 auto 36px;line-height:1.7;">Block out the 90 minutes right now. This is your one shot — no replays, no second chances. Show up, and let us change your career.</p>
+    <a href="#" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Add to My Calendar
+    </a>
+    <p style="font-size:13px;color:var(--light-muted);margin-top:16px;">Works with Google, Apple & Outlook</p>
+  </div>
+  <div style="margin-top:60px;line-height:0;">
+    <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1776709444/youstarher_ijqyyo.png"
+         alt="YouStar Artists"
+         style="width:100%;display:block;">
+  </div>
+</section>
+
+<footer>
+  <img src="https://res.cloudinary.com/dcuswyfur/image/upload/v1774530254/logo_s7tssn.png" alt="YouStar">
+  <p>© Septien Entertainment | YouStar Experience &nbsp;·&nbsp; <a href="http://youstarexperience.com">youstarexperience.com</a></p>
+  <p style="margin-top:10px;">This webinar is for educational purposes only. Results vary. Septien Entertainment makes no guarantees of income or career outcomes.</p>
+</footer>
+
+<script>
+// Particles
+try {
+  var canvas = document.getElementById('particles');
+  if (canvas) {
+    var ctx = canvas.getContext('2d');
+    var W, H, particles = [];
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+    function P() { this.x=Math.random()*W; this.y=Math.random()*H; this.r=Math.random()*1.2+.4; this.vx=(Math.random()-.5)*.35; this.vy=(Math.random()-.5)*.35; this.a=Math.random()*.4+.1; this.c=Math.random()>.5?'106,82,255':'255,77,106'; }
+    P.prototype.tick=function(){this.x+=this.vx;this.y+=this.vy;if(this.x<0)this.x=W;if(this.x>W)this.x=0;if(this.y<0)this.y=H;if(this.y>H)this.y=0;};
+    P.prototype.draw=function(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba('+this.c+','+this.a+')';ctx.fill();};
+    for(var i=0;i<70;i++) particles.push(new P());
+    (function loop(){ctx.clearRect(0,0,W,H);particles.forEach(function(p){p.tick();p.draw();});requestAnimationFrame(loop);})();
+  }
+} catch (e) {}
+
+// Countdown — reads rendered text from first two pills only (do not modify pill HTML)
+(function () {
+  var MONTHS = { january:0, february:1, march:2, april:3, may:4, june:5, july:6, august:7, september:8, october:9, november:10, december:11 };
+  var TZ = { PDT:-420, PST:-480, MDT:-360, MST:-420, CDT:-300, CST:-360, CT:-300, EDT:-240, EST:-300, ET:-240, PT:-420, MT:-360 };
+
+  function clean(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
+  function isTag(s) { return !s || s.indexOf('{{') !== -1; }
+
+  function getPillText(n) {
+    var el = document.querySelector('.pills .pill:nth-child(' + n + ') strong');
+    return el ? clean(el.textContent) : '';
+  }
+
+  function tzMinutes(timeStr) {
+    var u = timeStr.toUpperCase(), k;
+    for (k in TZ) { if (TZ.hasOwnProperty(k) && new RegExp('\\b' + k + '\\b').test(u)) return TZ[k]; }
+    return -300;
+  }
+
+  function parseEvent(dateStr, timeStr) {
+    if (isTag(dateStr) || isTag(timeStr)) return NaN;
+    var d = dateStr.replace(/^[A-Za-z]+,\s*/, '').replace(/(\d+)(st|nd|rd|th)\b/gi, '$1');
+    var gmt = function(s) {
+      return s.replace(/\bPDT\b/gi,'GMT-0700').replace(/\bPST\b/gi,'GMT-0800')
+        .replace(/\bMDT\b/gi,'GMT-0600').replace(/\bMST\b/gi,'GMT-0700')
+        .replace(/\bCDT\b/gi,'GMT-0500').replace(/\bCST\b/gi,'GMT-0600')
+        .replace(/\bCT\b/gi,'GMT-0500').replace(/\bEDT\b/gi,'GMT-0400')
+        .replace(/\bEST\b/gi,'GMT-0500').replace(/\bET\b/gi,'GMT-0400');
+    };
+    var tries = [d + ' ' + timeStr, d + ' at ' + timeStr, d.replace(/,/g,'') + ' ' + timeStr], i, ts;
+    for (i = 0; i < tries.length; i++) {
+      ts = Date.parse(gmt(tries[i]));
+      if (!isNaN(ts)) return ts;
+    }
+    var dm = d.match(/([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})/i);
+    var tm = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (!dm || !tm) return NaN;
+    var mo = MONTHS[dm[1].toLowerCase()];
+    if (mo === undefined) return NaN;
+    var day = parseInt(dm[2],10), yr = parseInt(dm[3],10);
+    var hr = parseInt(tm[1],10), min = parseInt(tm[2],10);
+    if (tm[3].toUpperCase() === 'PM' && hr < 12) hr += 12;
+    if (tm[3].toUpperCase() === 'AM' && hr === 12) hr = 0;
+    return Date.UTC(yr, mo, day, hr, min, 0) - (tzMinutes(timeStr) * 60000);
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function run() {
+    var eventTime = parseEvent(getPillText(1), getPillText(2));
+    if (isNaN(eventTime)) return false;
+
+    var strip = document.querySelector('.countdown-strip-wrap');
+
+    function tick() {
+      var diff = eventTime - Date.now();
+      if (diff <= 0) {
+        if (strip) strip.innerHTML = '<p style="font-size:16px;font-weight:700;color:var(--accent-light);text-align:center;margin:0;">The masterclass is LIVE right now!</p>';
+        return;
+      }
+      var elD = document.getElementById('cd-d');
+      var elH = document.getElementById('cd-h');
+      var elM = document.getElementById('cd-m');
+      var elS = document.getElementById('cd-s');
+      var dd = Math.floor(diff / 86400000);
+      var hh = Math.floor((diff % 86400000) / 3600000);
+      var mm = Math.floor((diff % 3600000) / 60000);
+      var ss = Math.floor((diff % 60000) / 1000);
+      if (elD) elD.textContent = pad(dd);
+      if (elH) elH.textContent = pad(hh);
+      if (elM) elM.textContent = pad(mm);
+      if (elS) elS.textContent = pad(ss);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+    return true;
+  }
+
+  function init(n) {
+    if (run()) return;
+    if (n < 20) setTimeout(function(){ init(n + 1); }, 250);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ init(0); });
+  } else {
+    init(0);
+  }
+})();
+
+// Scroll reveal animation system
+const animStyles = document.createElement('style');
+animStyles.textContent = `
+  .sa-fade    { opacity:0; transition: opacity .7s ease, transform .7s ease; }
+  .sa-up      { opacity:0; transform:translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+  .sa-down    { opacity:0; transform:translateY(-30px); transition: opacity .7s ease, transform .7s ease; }
+  .sa-left    { opacity:0; transform:translateX(-50px); transition: opacity .7s ease, transform .7s ease; }
+  .sa-right   { opacity:0; transform:translateX(50px); transition: opacity .7s ease, transform .7s ease; }
+  .sa-scale   { opacity:0; transform:scale(.88); transition: opacity .7s ease, transform .7s cubic-bezier(.34,1.56,.64,1); }
+  .sa-flip    { opacity:0; transform:rotateX(20deg) translateY(30px); transition: opacity .8s ease, transform .8s ease; transform-origin: top center; }
+  .sa-fade.in, .sa-up.in, .sa-down.in, .sa-left.in, .sa-right.in, .sa-scale.in, .sa-flip.in {
+    opacity:1; transform:none;
+  }
+  .section-slide { opacity:0; transform:translateY(32px); transition: opacity .8s ease, transform .8s ease; }
+  .section-slide.in { opacity:1; transform:none; }
+  .highlight-reveal em {
+    background-image: linear-gradient(to right, var(--accent), var(--accent-light));
+    background-size: 0% 3px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    padding-bottom: 2px;
+    transition: background-size .7s ease .3s;
+  }
+  .highlight-reveal.in em { background-size: 100% 3px; }
+`;
+document.head.appendChild(animStyles);
+
+function prepareAnimations() {
+  document.querySelectorAll('.steps h2, .bonus-inner h2, .share h2, .note-section .section-label').forEach(el => {
+    el.classList.add('sa-up');
+  });
+  document.querySelectorAll('.section-label').forEach(el => el.classList.add('sa-fade'));
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.classList.add('sa-up');
+    el.dataset.delay = i * 160;
+  });
+  document.querySelectorAll('.bonus-card').forEach(el => el.classList.add('sa-scale'));
+  document.querySelectorAll('.bonus-inner h2').forEach(el => el.classList.add('highlight-reveal'));
+  document.querySelectorAll('.note-section > div > div:first-child').forEach(el => el.classList.add('sa-left'));
+  document.querySelectorAll('.note-section > div > div:last-child').forEach(el => el.classList.add('sa-right'));
+  document.querySelectorAll('.note-section svg[viewBox="0 0 24 24"]').forEach((el, i) => {
+    el.classList.add('sa-scale');
+    el.dataset.delay = i * 80;
+  });
+  document.querySelectorAll('.share h2').forEach(el => el.classList.add('sa-up'));
+  document.querySelectorAll('.share-sub').forEach(el => el.classList.add('sa-up'));
+  document.querySelectorAll('.share-btns').forEach(el => el.classList.add('sa-up'));
+  document.querySelectorAll('.share > div > div[style*="max-width:560px"]').forEach(el => {
+    el.classList.add('sa-scale');
+    el.dataset.delay = 150;
+  });
+  document.querySelectorAll('.sbtn').forEach((el, i) => {
+    el.classList.add('sa-up');
+    el.dataset.delay = i * 80;
+  });
+  document.querySelectorAll('.final-cta-section-inner .section-label').forEach(el => el.classList.add('sa-fade'));
+  document.querySelectorAll('.final-cta-section-inner h2').forEach(el => el.classList.add('sa-up'));
+  document.querySelectorAll('.final-cta-section-inner p').forEach(el => el.classList.add('sa-up'));
+  document.querySelectorAll('.final-cta-section-inner .btn-primary').forEach(el => {
+    el.classList.add('sa-scale');
+    el.dataset.delay = 200;
+  });
+  document.querySelectorAll('.final-cta-section-inner + div img').forEach(el => el.classList.add('sa-up'));
+  document.querySelectorAll('section').forEach(el => el.classList.add('section-slide'));
+}
+
+prepareAnimations();
+
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const delay = parseInt(e.target.dataset.delay || 0);
+      setTimeout(() => e.target.classList.add('in'), delay);
+      scrollObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll(
+  '.sa-fade, .sa-up, .sa-down, .sa-left, .sa-right, .sa-scale, .sa-flip, .section-slide, .highlight-reveal'
+).forEach(el => scrollObserver.observe(el));
+
+// FIX: Reveal elements already in viewport on page load
+setTimeout(() => {
+  document.querySelectorAll(
+    '.sa-fade, .sa-up, .sa-down, .sa-left, .sa-right, .sa-scale, .sa-flip, .section-slide, .highlight-reveal'
+  ).forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      const delay = parseInt(el.dataset.delay || 0);
+      setTimeout(() => el.classList.add('in'), delay);
+    }
+  });
+}, 100);
+
+// Copy link
+function copyLink() {
+  navigator.clipboard.writeText('https://youstarexperience.com').then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Copied!`;
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link`; }, 2500);
+  });
+}
+</script>
+</body>
+</html>

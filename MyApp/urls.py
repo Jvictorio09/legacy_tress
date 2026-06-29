@@ -8,4 +8,6 @@ urlpatterns = [
     path('orchestra/', views.OrchestraView.as_view(), name='orchestra'),
     path('plan/', views.PlanView.as_view(), name='plan'),
     path('try-on/', views.TryOnView.as_view(), name='try_on'),
+    path('try-on/ethereal-boho/', views.BohoTryOnView.as_view(), name='boho_try_on'),
+    path('api/ethereal-boho/generate/', views.BohoGenerateView.as_view(), name='boho_generate'),
 ]

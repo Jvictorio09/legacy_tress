@@ -824,6 +824,7 @@
       <a href="#gallery">Gallery</a>
       <a href="#reviews">Reviews</a>
       <a href="{% url 'try_on' %}">Try-On</a>
+      <a href="{% url 'boho_try_on' %}">Ethereal Boho AI</a>
     </nav>
     <a href="#" data-book class="nav-cta" target="_blank" rel="noopener">Book Now</a>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -948,6 +949,7 @@
         <div class="ph"><div class="arch"><img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69150d324a60b5912d8e4bb0.jpg" alt="The Ethereal Boho braids"><div class="arch-frame"></div></div></div>
         <div class="body"><h3>The Ethereal Boho</h3><p class="meta">Mid-back · 6 hr · curl ends</p>
           <div class="price"><b>$400</b><small>from</small></div>
+          <a href="{% url 'boho_try_on' %}" class="bk" style="margin-bottom:8px;display:inline-block">Preview on you with AI →</a>
           <a href="#" data-book="22694942" class="bk" target="_blank" rel="noopener">Book this style →</a></div>
       </div>
       <div class="svc reveal" data-d="2">
@@ -1181,7 +1183,8 @@
       <span class="eyebrow center">Your Style Concierge</span>
       <h2>Not sure <em>what to book?</em></h2>
       <p>Tell us a little about your hair, your lifestyle and your budget, and we'll recommend the right style, prep service and add-ons — with a price range and a direct booking link.</p>
-      <a href="#" data-book class="btn btn--gold" target="_blank" rel="noopener">Start My Consultation</a>
+          <a class="btn btn--ghost" href="{% url 'boho_try_on' %}" style="margin-top:10px">Try The Ethereal Boho with AI</a>
+          <a href="#" data-book class="btn btn--gold" target="_blank" rel="noopener">Start My Consultation</a>
       <div class="conc-steps">
         <div class="step"><span class="n">i</span><p>Share your hair profile</p></div>
         <div class="step"><span class="n">ii</span><p>Tell us your goal &amp; budget</p></div>
