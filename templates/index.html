@@ -190,18 +190,52 @@
   header.nav:not(.scrolled) .nav-cta{border-color:var(--line-light-gold)}
   header.nav:not(.scrolled) .burger span{background:var(--ivory)}
   header.nav.scrolled{background:rgba(248,244,235,.9);backdrop-filter:blur(18px) saturate(1.25);box-shadow:0 1px 0 var(--line-gold);padding:13px 0}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between}
-  .logo{display:block;line-height:0}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{display:block;line-height:0;flex-shrink:0}
   .logo img{height:50px;width:auto;transition:height .45s var(--ease)}
   .nav.scrolled .logo img{height:40px}
-  .nav-links{display:flex;gap:34px;align-items:center}
-  .nav-links a{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:400;position:relative;opacity:.82;transition:opacity .3s}
-  .nav-links a::after{content:"";position:absolute;left:0;bottom:-7px;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
+  .nav-links{display:flex;gap:28px;align-items:center;flex:1;justify-content:center}
+  .nav-links a{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:400;position:relative;opacity:.82;transition:opacity .3s;white-space:nowrap;padding:8px 0}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
   .nav-links a:hover{opacity:1}.nav-links a:hover::after{width:100%}
-  .nav-cta{padding:11px 24px;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;border:1px solid var(--line-gold);border-radius:2px;transition:.4s var(--ease)}
+  .nav-actions{display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .nav-cta{padding:11px 24px;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;border:1px solid var(--line-gold);border-radius:2px;transition:.4s var(--ease);white-space:nowrap}
   .nav-cta:hover{background:var(--forest);color:var(--ivory);border-color:var(--forest)}
-  .burger{display:none;flex-direction:column;gap:6px;background:none;border:0;cursor:pointer;padding:6px}
-  .burger span{width:26px;height:1.5px;background:var(--forest);transition:.3s}
+  .burger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:6px;background:none;border:0;cursor:pointer;width:44px;height:44px;padding:0;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+  .burger span{display:block;width:26px;height:1.5px;background:var(--forest);transition:transform .3s var(--ease),opacity .25s}
+  .burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+  .burger.open span:nth-child(2){opacity:0}
+  .burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+  .nav-overlay{position:fixed;inset:0;z-index:125;background:rgba(16,34,23,.48);opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
+  body.nav-open .nav-overlay{opacity:1;pointer-events:auto}
+  body.nav-open{overflow:hidden}
+  .nav-drawer{
+    position:fixed;top:0;right:0;bottom:0;z-index:130;width:min(100%,340px);
+    background:var(--paper);border-left:1px solid var(--line-gold);
+    transform:translateX(100%);transition:transform .45s var(--ease);
+    display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:calc(18px + env(safe-area-inset-top,0px)) 0 calc(24px + env(safe-area-inset-bottom,0px));
+  }
+  body.nav-open .nav-drawer{transform:translateX(0)}
+  .nav-drawer__head{display:flex;align-items:center;justify-content:space-between;padding:8px 22px 18px;border-bottom:1px solid var(--line-soft)}
+  .nav-drawer__label{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-deep);font-weight:600}
+  .nav-drawer__close{width:44px;height:44px;border:0;background:transparent;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent}
+  .nav-drawer__close::before,.nav-drawer__close::after{content:"";position:absolute;top:50%;left:50%;width:22px;height:1.5px;background:var(--forest);transform-origin:center}
+  .nav-drawer__close::before{transform:translate(-50%,-50%) rotate(45deg)}
+  .nav-drawer__close::after{transform:translate(-50%,-50%) rotate(-45deg)}
+  .nav-drawer__links{display:flex;flex-direction:column;padding:8px 0}
+  .nav-drawer__links a{
+    display:flex;align-items:center;min-height:48px;padding:12px 28px;
+    font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--forest);
+    border-bottom:1px solid var(--line-soft);transition:background .25s;
+  }
+  .nav-drawer__links a:hover,.nav-drawer__links a:focus-visible{background:rgba(198,163,92,.08)}
+  .nav-drawer__cta{
+    margin:24px 28px 0;padding:15px 24px;text-align:center;
+    font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+    background:var(--forest);color:var(--ivory);border-radius:2px;
+  }
+  .nav-drawer__cta:hover{background:var(--forest-2)}
 
   /* ---------- HERO ---------- */
   .hero{position:relative;min-height:94vh;display:flex;align-items:center;padding:140px 0 100px;overflow:hidden;
@@ -707,10 +741,17 @@
     .proof-grid{grid-template-columns:repeat(3,1fr)}
     .hero-grid{gap:40px}
     .menu-row-leader{max-width:40px}
+    .nav-links{gap:18px}
+    .nav-links a{font-size:.72rem;letter-spacing:.12em}
+  }
+  @media(max-width:980px){
+    .nav-links a.nav-link--secondary{display:none}
   }
   @media(max-width:860px){
     section{padding:92px 0}
-    .nav-links{display:none}.burger{display:flex}
+    .nav-links,.nav-cta{display:none}
+    .burger{display:flex}
+    .nav-inner{min-height:44px}
     .hero-grid,.why-top,.tryon-grid,.ap-grid,.owner-grid,.prod-grid,.feature-grid{grid-template-columns:1fr;gap:46px}
     /* mobile hero: image as a top-down backdrop with a vertical scrim so copy always reads */
     .hero{min-height:auto;padding:108px 0 64px;
@@ -813,23 +854,46 @@
 
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
-    <a href="#" class="logo" aria-label="LegacyTress — Braiding Salon home">
+    <a href="{% url 'index' %}" class="logo" aria-label="LegacyTress — Braiding Salon home">
       <img src="{% static 'assets/logo.png' %}" alt="LegacyTress Braiding Salon">
     </a>
-    <nav class="nav-links">
+    <nav class="nav-links" aria-label="Main navigation">
       <a href="#services">Services</a>
       <a href="#ritual">Healthy Hair</a>
-      <a href="#alterations">Alterations</a>
-      <a href="#events">Events</a>
+      <a href="#alterations" class="nav-link--secondary">Alterations</a>
+      <a href="#events" class="nav-link--secondary">Events</a>
       <a href="#gallery">Gallery</a>
       <a href="#reviews">Reviews</a>
       <a href="{% url 'try_on' %}">Try-On</a>
-      <a href="{% url 'boho_try_on' %}">Ethereal Boho AI</a>
+      <a href="{% url 'boho_try_on' %}">Boho AI</a>
     </nav>
-    <a href="#" data-book class="nav-cta" target="_blank" rel="noopener">Book Now</a>
-    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <div class="nav-actions">
+      <a href="#" data-book class="nav-cta" target="_blank" rel="noopener">Book Now</a>
+      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+<nav class="nav-drawer" id="navDrawer" aria-label="Mobile navigation" aria-hidden="true">
+  <div class="nav-drawer__head">
+    <span class="nav-drawer__label">Menu</span>
+    <button type="button" class="nav-drawer__close" id="navClose" aria-label="Close menu"></button>
+  </div>
+  <div class="nav-drawer__links">
+    <a href="#services">Services</a>
+    <a href="#ritual">Healthy Hair</a>
+    <a href="#alterations">Alterations</a>
+    <a href="#events">Private Events</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#reviews">Reviews</a>
+    <a href="{% url 'try_on' %}">Virtual Try-On</a>
+    <a href="{% url 'boho_try_on' %}">Ethereal Boho AI</a>
+    <a href="#owner">Our Story</a>
+    <a href="{% url 'policies' %}">Policies</a>
+  </div>
+  <a href="#" data-book class="nav-drawer__cta" target="_blank" rel="noopener">Book Now</a>
+</nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -1600,19 +1664,27 @@
   }));
 
   const burger=document.getElementById('burger');
-  burger.addEventListener('click',()=>{
-    let l=document.querySelector('.mobile-menu');
-    if(l){l.remove();burger.setAttribute('aria-expanded','false');return}
-    l=document.createElement('nav');l.className='mobile-menu';
-    l.innerHTML=`<a href="#services">Services</a><a href="#ritual">Healthy-Hair Ritual</a><a href="#guide">Find Your Style</a><a href="#offer">Current Offer</a><a href="#products">Products</a><a href="#alterations">Alterations</a><a href="#events">Private Events</a><a href="#speakeasy">After Hours</a><a href="#gallery">Gallery</a><a href="#reviews">Reviews</a><a href="#owner">Our Story</a><a href="{% url 'try_on' %}">Virtual Try-On</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a>`;
-    applyBookingLinks(l);
-    Object.assign(l.style,{position:'fixed',inset:'0',zIndex:'130',background:'var(--ivory)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'26px',overflowY:'auto',padding:'80px 20px'});
-    l.querySelectorAll('a').forEach(a=>{
-      Object.assign(a.style,{fontFamily:"'Playfair Display',serif",fontSize:'1.5rem',color:'var(--forest)',letterSpacing:'.02em'});
-      a.addEventListener('click',()=>{l.remove();burger.setAttribute('aria-expanded','false')});
-    });
-    document.body.appendChild(l);burger.setAttribute('aria-expanded','true');
-  });
+  const navDrawer=document.getElementById('navDrawer');
+  const navOverlay=document.getElementById('navOverlay');
+  const navClose=document.getElementById('navClose');
+
+  function setNavOpen(open){
+    document.body.classList.toggle('nav-open',open);
+    burger.classList.toggle('open',open);
+    burger.setAttribute('aria-expanded',open?'true':'false');
+    burger.setAttribute('aria-label',open?'Close menu':'Open menu');
+    navDrawer.setAttribute('aria-hidden',open?'false':'true');
+    navOverlay.setAttribute('aria-hidden',open?'false':'true');
+  }
+
+  function closeNav(){setNavOpen(false)}
+
+  burger.addEventListener('click',()=>setNavOpen(!document.body.classList.contains('nav-open')));
+  navClose.addEventListener('click',closeNav);
+  navOverlay.addEventListener('click',closeNav);
+  navDrawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeNav));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNav()});
+  applyBookingLinks(navDrawer);
 
 </script>
 </body>

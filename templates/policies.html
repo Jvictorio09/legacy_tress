@@ -30,12 +30,6 @@
   .eyebrow{font-size:.77rem;letter-spacing:.42em;text-transform:uppercase;font-weight:500;color:var(--champagne-dk);display:inline-flex;align-items:center;gap:14px}
   .eyebrow::before{content:"";width:30px;height:1px;background:var(--champagne)}
 
-  header.bar{position:sticky;top:0;z-index:50;background:rgba(247,243,236,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
-  .bar-in{max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
-  .bar-in .logo img{height:40px;width:auto;display:block}
-  .back{font-size:.79rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;border-bottom:1px solid var(--champagne);padding-bottom:4px;transition:.3s var(--ease)}
-  .back:hover{color:var(--champagne-dk)}
-
   .head{padding:90px 0 50px;border-bottom:1px solid var(--line);text-align:center}
   .head h1{font-size:clamp(2.3rem,5vw,3.6rem);margin:22px auto 0}
   .head h1 em{font-style:italic;color:var(--champagne-dk)}
@@ -63,25 +57,18 @@
   footer a{color:var(--champagne-lt)}
   @media(max-width:560px){
     .wrap{padding:0 22px}
-    .bar-in{padding:14px 18px}
     .policy h2{font-size:1.18rem}
     .eyebrow{flex-wrap:wrap}
     .btn{padding:14px 30px}
   }
   @media(max-width:380px){
-    .bar-in{padding:12px 14px}
     .eyebrow::before{display:none}
   }
 </style>
 </head>
 <body>
 
-<header class="bar">
-  <div class="bar-in">
-    <a href="{% url 'index' %}" class="logo" aria-label="LegacyTress home"><img src="{% static 'assets/logo.png' %}" alt="LegacyTress Braiding Salon"></a>
-    <a href="{% url 'index' %}" class="back">← Back to Home</a>
-  </div>
-</header>
+{% include 'partials/subpage_nav.html' %}
 
 <section class="head">
   <div class="wrap">
