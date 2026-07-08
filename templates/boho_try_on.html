@@ -3,30 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Try The Ethereal Boho · LegacyTress</title>
-<meta name="description" content="Snap a selfie and see yourself in The Ethereal Boho — mid-back boho braids with curl ends at LegacyTress, Margate FL.">
+<title>AI Braid Preview · LegacyTress</title>
+<meta name="description" content="Snap a selfie and preview any LegacyTress braid style with AI — knotless, boho, Fulani, passion twist, French curl and more. Margate, FL.">
 <link rel="icon" type="image/png" href="{% static 'assets/favicon.png' %}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ivory:#F7F3EA; --paper:#FEFCF6; --canvas:#EFE9DA;
-    --forest:#1B3A2A; --ink:#243528; --ink-mute:#5A6358;
-    --meta:#86836f; --gold:#C6A35C; --gold-deep:#9C7A38; --gold-soft:#E3CE9B;
+    --forest:#1B3A2A; --ink:#243528; --ink-mute:#3E4A42;
+    --meta:#4A4740; --gold:#C6A35C; --gold-deep:#9C7A38; --gold-soft:#E3CE9B;
     --line:rgba(27,58,42,.14); --line-gold:rgba(198,163,92,.42);
     --shadow:0 40px 100px -50px rgba(16,34,23,.46);
     --ease-out:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Jost',system-ui,sans-serif;color:var(--ink);background:radial-gradient(120% 90% at 50% -10%,var(--paper),var(--ivory) 55%,var(--canvas));min-height:100vh;line-height:1.5}
+  body{font-family:'Jost',system-ui,sans-serif;color:var(--ink);font-weight:400;background:radial-gradient(120% 90% at 50% -10%,var(--paper),var(--ivory) 55%,var(--canvas));min-height:100vh;line-height:1.5}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
   .head{text-align:center;padding:46px 0 24px}
-  .eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin-bottom:14px}
+  .eyebrow{font-size:.86rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin-bottom:14px}
   h1{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(2rem,5vw,3rem);line-height:1.08;color:var(--forest)}
   h1 em{font-style:italic;color:var(--gold-deep)}
-  .sub{max-width:580px;margin:16px auto 0;color:var(--ink-mute);font-weight:300}
+  .sub{
+    max-width:620px;margin:20px auto 0;
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(1.28rem,3vw,1.45rem);
+    line-height:1.62;color:var(--ink-mute);font-weight:400;
+  }
   .studio{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;margin:28px 0 40px}
   @media(max-width:860px){.studio{grid-template-columns:1fr}}
   .stage{position:relative;border-radius:20px;overflow:hidden;background:#0d1a12;aspect-ratio:3/4;box-shadow:var(--shadow);border:1px solid var(--line-gold)}
@@ -47,19 +52,45 @@
     position:absolute;left:50%;bottom:14%;transform:translateX(-50%);
     padding:8px 14px;border-radius:999px;
     background:rgba(13,26,18,.72);color:var(--gold-soft);
-    font-size:.76rem;letter-spacing:.04em;text-align:center;white-space:nowrap;
+    font-size:.88rem;letter-spacing:.04em;text-align:center;white-space:nowrap;
     border:1px solid rgba(198,163,92,.35);
   }
   .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--gold-soft);padding:30px;z-index:2}
   .placeholder svg{width:46px;height:46px;opacity:.8;margin-bottom:16px}
-  .placeholder p{font-weight:300;font-size:.96rem;color:#d8d2c0;max-width:280px}
+  .placeholder p{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.12rem;line-height:1.58;color:#d8d2c0;max-width:300px}
   .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
-  .panel h2{font-family:'Playfair Display',serif;font-weight:500;font-size:1.25rem;color:var(--forest);margin-bottom:6px}
-  .panel .hint{font-size:.82rem;color:var(--meta);margin-bottom:18px}
+  .panel h2{font-family:'Playfair Display',serif;font-weight:500;font-size:1.35rem;color:var(--forest);margin-bottom:6px}
+  .panel .hint{font-size:clamp(.98rem,2.2vw,1.08rem);line-height:1.55;color:var(--ink-mute);margin-bottom:18px;font-weight:400}
   .ref{display:flex;gap:14px;align-items:center;padding:14px;background:var(--ivory);border:1px solid var(--line);border-radius:12px;margin-bottom:20px}
   .ref img{width:64px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0}
-  .ref b{display:block;font-size:.88rem;color:var(--forest);margin-bottom:2px}
-  .ref span{font-size:.78rem;color:var(--meta)}
+  .ref b{display:block;font-size:1rem;color:var(--forest);margin-bottom:4px}
+  .ref span{font-size:.92rem;line-height:1.5;color:var(--ink-mute)}
+  .style-picker{margin-bottom:20px}
+  .style-picker__label{font-size:.86rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin-bottom:10px}
+  .style-cats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .style-cat{
+    padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--ivory);color:var(--ink-mute);font-size:.82rem;font-weight:500;
+    cursor:pointer;transition:.2s var(--ease-out);font-family:inherit;
+  }
+  .style-cat:hover,.style-cat.active{background:var(--forest);color:var(--ivory);border-color:var(--forest)}
+  .style-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+    max-height:280px;overflow-y:auto;padding-right:4px;
+    scrollbar-width:thin;
+  }
+  .style-card{
+    display:flex;gap:10px;align-items:center;text-align:left;
+    padding:10px;border-radius:12px;border:1px solid var(--line);
+    background:var(--ivory);cursor:pointer;transition:.2s var(--ease-out);
+    font-family:inherit;width:100%;
+  }
+  .style-card:hover{border-color:var(--gold)}
+  .style-card.active{border-color:var(--gold);background:rgba(198,163,92,.12);box-shadow:0 0 0 1px var(--gold)}
+  .style-card img{width:44px;height:54px;object-fit:cover;border-radius:6px;flex-shrink:0}
+  .style-card__name{display:block;font-size:.88rem;font-weight:500;color:var(--forest);line-height:1.25}
+  .style-card__meta{font-size:.78rem;color:var(--meta);margin-top:3px;display:block}
+  @media(max-width:480px){.style-grid{grid-template-columns:1fr}}
   .actions{display:flex;flex-direction:column;gap:11px;margin-top:8px}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:999px;font-family:'Jost',sans-serif;font-weight:500;font-size:.9rem;cursor:pointer;border:1px solid transparent;transition:.22s var(--ease-out)}
   .btn--forest{background:var(--forest);color:var(--ivory)}
@@ -69,15 +100,23 @@
   .btn--ghost{background:transparent;color:var(--forest);border-color:var(--line-gold)}
   .btn--ghost:hover{background:var(--forest);color:var(--ivory)}
   .btn[disabled]{opacity:.45;cursor:not-allowed;pointer-events:none}
-  .status{font-size:.78rem;color:var(--meta);text-align:center;margin-top:14px;min-height:1.2em}
+  .status{font-size:.98rem;color:var(--meta);text-align:center;margin-top:14px;min-height:1.2em}
   .status.err{color:#a6432f}
+  .camera-note{font-size:.9rem;color:var(--ink-mute);margin-top:10px;line-height:1.5}
+  .camera-note strong{color:var(--forest);font-weight:500}
   .status.ok{color:var(--forest)}
-  .loading{position:absolute;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(13,26,18,.82);color:#fff;text-align:center;padding:24px}
+  .loading{position:absolute;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(13,26,18,.82);color:#fff;text-align:center;padding:24px;font-size:1.05rem;line-height:1.55}
   .loading.on{display:flex}
+  .loading .loading-sub{font-size:.95rem;opacity:.85;margin-top:8px;display:block}
   .spinner{width:42px;height:42px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .disclaimer{max-width:640px;margin:0 auto 50px;text-align:center;font-size:.78rem;color:var(--meta);font-weight:300;line-height:1.6}
-  footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--meta);font-size:.82rem}
+  .disclaimer{
+    max-width:640px;margin:0 auto 50px;text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(1.05rem,2.4vw,1.18rem);line-height:1.65;
+    color:var(--ink-mute);font-weight:400;
+  }
+  footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--meta);font-size:.98rem}
   footer a{color:var(--gold-deep)}
   input[type=file]{display:none}
 </style>
@@ -88,8 +127,8 @@
   <main class="wrap">
     <div class="head">
       <div class="eyebrow">AI Style Preview</div>
-      <h1>See yourself in <em>The Ethereal Boho</em></h1>
-      <p class="sub">Take a clear front-facing selfie with your face centered in the frame — our AI keeps your look and swaps in mid-back boho braids with soft curl ends.</p>
+      <h1>Preview any <em>braid style</em> on you</h1>
+      <p class="sub">Choose a style from our full menu, snap a front-facing selfie, and see an AI preview before you book. All {{ braid_styles|length }} braid services are available for testing.</p>
     </div>
 
     <div class="studio">
@@ -99,10 +138,10 @@
           <div class="face-guide__ring" aria-hidden="true"></div>
           <p class="face-guide__tip">Center your face in the circle</p>
         </div>
-        <img id="resultImg" class="preview" alt="Your Ethereal Boho preview" hidden>
+        <img id="resultImg" class="preview" alt="Your braid style preview" hidden>
         <div class="loading" id="loading">
           <div class="spinner"></div>
-          <p>Creating your Ethereal Boho preview…<br><span style="font-size:.82rem;opacity:.8;margin-top:8px;display:block">High-fidelity mode — usually 30–60 seconds</span></p>
+          <p id="loadingText">Creating your preview…<br><span class="loading-sub">High-fidelity mode — usually 30–60 seconds</span></p>
         </div>
         <div class="placeholder" id="placeholder">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.2a1 1 0 0 0 .83-.45l.94-1.4A1 1 0 0 1 9.3 3.7h5.4a1 1 0 0 1 .83.45l.94 1.4a1 1 0 0 0 .83.45h1.2A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.4"/></svg>
@@ -111,14 +150,20 @@
       </div>
 
       <div class="panel">
-        <h2>The Ethereal Boho</h2>
-        <p class="hint">Mid-back · 6 hr · curl ends · from $400 · face-centered selfies work best</p>
+        <h2 id="styleTitle">The Ethereal Boho</h2>
+        <p class="hint" id="styleHint">Mid-back · 6 hr · from $400 · face-centered selfies work best</p>
+
+        <div class="style-picker">
+          <div class="style-picker__label">Choose a braid style</div>
+          <div class="style-cats" id="styleCats" role="tablist" aria-label="Style categories"></div>
+          <div class="style-grid" id="styleGrid" role="listbox" aria-label="Braid styles"></div>
+        </div>
 
         <div class="ref">
-          <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69150d324a60b5912d8e4bb0.jpg" alt="The Ethereal Boho reference style">
+          <img id="styleRefImg" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69150d324a60b5912d8e4bb0.jpg" alt="Selected braid style reference">
           <div>
-            <b>Signature boho braids</b>
-            <span>Powered by OpenAI — your selfie is edited into our Ethereal Boho style.</span>
+            <b id="styleRefName">Signature boho braids</b>
+            <span id="styleRefDesc">Powered by OpenAI — your selfie is edited into the style you select.</span>
           </div>
         </div>
 
@@ -126,10 +171,11 @@
           <button class="btn btn--forest" id="cameraBtn" type="button">Open Camera</button>
           <button class="btn btn--ghost" id="captureBtn" type="button" disabled>Take Photo</button>
           <button class="btn btn--ghost" id="uploadBtn" type="button">Upload a Photo</button>
-          <button class="btn btn--gold" id="generateBtn" type="button" disabled>Generate My Boho Look</button>
-          <a class="btn btn--ghost" id="bookBtn" href="#" data-book="22694942" target="_blank" rel="noopener" style="display:none">Book The Ethereal Boho →</a>
+          <button class="btn btn--gold" id="generateBtn" type="button" disabled>Generate My Preview</button>
+          <a class="btn btn--ghost" id="bookBtn" href="#" target="_blank" rel="noopener" style="display:none">Book This Style →</a>
         </div>
         <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif">
+        <p class="camera-note" id="cameraNote" hidden></p>
         <div class="status" id="status"></div>
       </div>
     </div>
@@ -141,11 +187,18 @@
     <div class="wrap">© 2026 LegacyTress · <a href="{% url 'try_on' %}">Virtual Color Studio</a> · <a href="{% url 'index' %}">Home</a></div>
   </footer>
 
+  {{ braid_styles|json_script:"braid-styles-data" }}
   <script>
+    const BOOKING_URL = 'https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking?menu=true&dppub=true&cartId=6573ce45-8ba1-4c60-b9f8-d6f22b37a5b0';
+
+    const STYLES = JSON.parse(document.getElementById('braid-styles-data').textContent);
+    const CATEGORIES = [...new Set(STYLES.map(function (s) { return s.category; }))];
+
     const video = document.getElementById('video');
     const resultImg = document.getElementById('resultImg');
     const placeholder = document.getElementById('placeholder');
     const loading = document.getElementById('loading');
+    const loadingText = document.getElementById('loadingText');
     const cameraBtn = document.getElementById('cameraBtn');
     const captureBtn = document.getElementById('captureBtn');
     const uploadBtn = document.getElementById('uploadBtn');
@@ -154,10 +207,139 @@
     const fileInput = document.getElementById('fileInput');
     const statusEl = document.getElementById('status');
     const faceGuide = document.getElementById('faceGuide');
+    const styleCats = document.getElementById('styleCats');
+    const styleGrid = document.getElementById('styleGrid');
+    const styleTitle = document.getElementById('styleTitle');
+    const styleHint = document.getElementById('styleHint');
+    const styleRefImg = document.getElementById('styleRefImg');
+    const styleRefName = document.getElementById('styleRefName');
+    const cameraNote = document.getElementById('cameraNote');
 
     let stream = null;
     let captureBlob = null;
     let previewUrl = null;
+    let selectedStyleId = '22694942';
+    let activeCategory = 'All';
+
+    bookBtn.href = BOOKING_URL;
+
+    function hasGetUserMedia() {
+      return !!(
+        (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ||
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia
+      );
+    }
+
+    function getCameraBlockReason() {
+      if (!window.isSecureContext) {
+        var host = location.hostname;
+        if (location.protocol === 'http:' && host !== 'localhost' && host !== '127.0.0.1' && host !== '[::1]') {
+          return 'Your browser blocks the camera on plain HTTP unless you use <strong>http://127.0.0.1</strong> on this computer. Open that address, use HTTPS in production, or tap <strong>Upload a Photo</strong>.';
+        }
+        return 'Camera access needs a secure page (HTTPS or localhost). Use <strong>Upload a Photo</strong> instead.';
+      }
+      if (!hasGetUserMedia()) {
+        return 'This browser window does not expose the camera API — common in IDE previews and some in-app browsers. Open the page in <strong>Chrome, Edge, or Safari</strong>, or use <strong>Upload a Photo</strong>.';
+      }
+      return null;
+    }
+
+    function requestCameraStream() {
+      var constraints = {
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
+      };
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        return navigator.mediaDevices.getUserMedia(constraints);
+      }
+      var legacy = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+      if (!legacy) {
+        return Promise.reject(new Error('UNSUPPORTED'));
+      }
+      return new Promise(function (resolve, reject) {
+        legacy.call(navigator, constraints, resolve, reject);
+      });
+    }
+
+    function initCameraUi() {
+      var reason = getCameraBlockReason();
+      if (reason) {
+        cameraBtn.disabled = true;
+        cameraBtn.title = 'Camera unavailable in this browser';
+        cameraNote.hidden = false;
+        cameraNote.innerHTML = reason;
+        return;
+      }
+      cameraNote.hidden = true;
+    }
+
+    function getStyle(id) {
+      return STYLES.find(function (s) { return s.id === id; }) || STYLES[0];
+    }
+
+    function applyStyle(style) {
+      selectedStyleId = style.id;
+      styleTitle.textContent = style.name;
+      styleHint.textContent = style.time + ' · from $' + style.price + ' · face-centered selfies work best';
+      styleRefImg.src = style.image;
+      styleRefImg.alt = style.name + ' reference';
+      styleRefName.textContent = style.category + ' · ' + style.name;
+      bookBtn.textContent = 'Book ' + style.name.split('(')[0].trim() + ' →';
+    }
+
+    function renderStyleCards() {
+      const items = activeCategory === 'All'
+        ? STYLES
+        : STYLES.filter(function (s) { return s.category === activeCategory; });
+
+      styleGrid.innerHTML = items.map(function (style) {
+        const active = style.id === selectedStyleId ? ' active' : '';
+        const ariaSelected = style.id === selectedStyleId ? 'true' : 'false';
+        return '<button type="button" class="style-card' + active + '" role="option" aria-selected="' + ariaSelected + '" data-style-id="' + style.id + '">' +
+          '<img src="' + style.image + '" alt="">' +
+          '<span><span class="style-card__name">' + style.name + '</span>' +
+          '<span class="style-card__meta">' + style.time + ' · $' + style.price + '</span></span>' +
+          '</button>';
+      }).join('');
+    }
+
+    function renderCategories() {
+      const cats = ['All'].concat(CATEGORIES);
+      styleCats.innerHTML = cats.map(function (cat) {
+        const active = cat === activeCategory ? ' active' : '';
+        return '<button type="button" class="style-cat' + active + '" data-cat="' + cat + '" role="tab">' + cat + '</button>';
+      }).join('');
+    }
+
+    styleCats.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-cat]');
+      if (!btn) return;
+      activeCategory = btn.getAttribute('data-cat');
+      styleCats.querySelectorAll('.style-cat').forEach(function (el) {
+        el.classList.toggle('active', el.getAttribute('data-cat') === activeCategory);
+      });
+      renderStyleCards();
+    });
+
+    styleGrid.addEventListener('click', function (e) {
+      const card = e.target.closest('[data-style-id]');
+      if (!card) return;
+      const style = getStyle(card.getAttribute('data-style-id'));
+      applyStyle(style);
+      styleGrid.querySelectorAll('.style-card').forEach(function (el) {
+        const on = el.getAttribute('data-style-id') === style.id;
+        el.classList.toggle('active', on);
+        el.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      setStatus('Selected: ' + style.name + '. Take or upload a photo, then generate.', 'ok');
+    });
+
+    renderCategories();
+    renderStyleCards();
+    applyStyle(getStyle(selectedStyleId));
+    initCameraUi();
 
     function setStatus(msg, type) {
       statusEl.textContent = msg || '';
@@ -226,15 +408,15 @@
       try {
         resetCapture();
         stopCamera();
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          setStatus('Camera not supported here. Please upload a photo instead.', 'err');
+        var blockReason = getCameraBlockReason();
+        if (blockReason) {
+          cameraNote.hidden = false;
+          cameraNote.innerHTML = blockReason;
+          setStatus('Camera unavailable here — upload a photo instead.', 'err');
           return;
         }
         setStatus('Starting camera…');
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } },
-          audio: false
-        });
+        stream = await requestCameraStream();
         video.srcObject = stream;
         video.hidden = false;
         placeholder.style.display = 'none';
@@ -258,7 +440,7 @@
       captureBlob = blob;
       showPreview(blob);
       generateBtn.disabled = false;
-      setStatus('Photo captured! Tap Generate My Boho Look.', 'ok');
+      setStatus('Photo captured! Tap Generate My Preview.', 'ok');
     }
 
     async function captureFromVideo() {
@@ -319,10 +501,13 @@
 
       generateBtn.disabled = true;
       loading.classList.add('on');
+      const style = getStyle(selectedStyleId);
+      loadingText.innerHTML = 'Creating your ' + style.name.split('(')[0].trim() + ' preview…<br><span class="loading-sub">High-fidelity mode — usually 30–60 seconds</span>';
       setStatus('Generating your preview…');
 
       const form = new FormData();
       form.append('photo', captureBlob, 'selfie.jpg');
+      form.append('style', selectedStyleId);
 
       try {
         const res = await fetch('{% url "boho_generate" %}', {
@@ -340,7 +525,8 @@
         resultImg.hidden = false;
         placeholder.style.display = 'none';
         bookBtn.style.display = 'inline-flex';
-        setStatus('Your Ethereal Boho preview is ready!', 'ok');
+        const resultName = (data.style && data.style.name) ? data.style.name : style.name;
+        setStatus('Your ' + resultName + ' preview is ready!', 'ok');
       } catch (err) {
         setStatus(err.message || 'Could not generate preview. Try again.', 'err');
         generateBtn.disabled = false;

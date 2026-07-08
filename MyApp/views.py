@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from .boho_ai import BohoPreviewError, generate_ethereal_boho_preview
+from .boho_ai import BohoPreviewError, generate_braid_preview, get_braid_style_catalog
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {'image/jpeg', 'image/png', 'image/webp', 'image/gif'}
@@ -33,6 +33,11 @@ class TryOnView(TemplateView):
 class BohoTryOnView(TemplateView):
     template_name = 'boho_try_on.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['braid_styles'] = get_braid_style_catalog()
+        return context
+
 
 @method_decorator(csrf_protect, name='dispatch')
 class BohoGenerateView(View):
@@ -49,8 +54,10 @@ class BohoGenerateView(View):
         if photo.size > MAX_UPLOAD_BYTES:
             return JsonResponse({'ok': False, 'error': 'Photo is too large. Please use an image under 10 MB.'}, status=400)
 
+        style_id = (request.POST.get('style') or '').strip()
+
         try:
-            image_url = generate_ethereal_boho_preview(photo)
+            image_url, style = generate_braid_preview(photo, style_id or None)
         except BohoPreviewError as exc:
             return JsonResponse({'ok': False, 'error': str(exc)}, status=503)
         except Exception:
@@ -59,4 +66,4 @@ class BohoGenerateView(View):
                 status=500,
             )
 
-        return JsonResponse({'ok': True, 'image_url': image_url})
+        return JsonResponse({'ok': True, 'image_url': image_url, 'style': style})
