@@ -17,8 +17,8 @@ except ImportError:  # pragma: no cover - optional in minimal deploys
 _BASE_PRESERVE = (
     'Preserve the same person exactly: same face shape, facial features, skin tone, '
     'expression, glasses, accessories, pose, camera angle, clothing, and background. '
-    'Change ONLY the hairstyle to {style}. '
-    'Keep everything else exactly the same. Photorealistic salon-quality result.'
+    'Change ONLY the hairstyle to match this exact style: {style}. '
+    'Do not alter the face, body, or background. Photorealistic salon-quality result.'
 )
 
 _IMG = {
@@ -38,7 +38,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 275,
         'image': _IMG['knotless'],
-        'hair': 'sleek smedium knotless box braids, shoulder to mid-back length, neat parts, natural density',
+        'hair': (
+            'smedium-size knotless box braids, shoulder to mid-back length, flat feed-in roots '
+            'with no starter knot, clean box-part grid, fully braided three-strand plait shafts '
+            'from scalp to ends, no loose curls or curly leave-out pieces, sleek uniform density'
+        ),
     },
     {
         'id': '22618100',
@@ -47,7 +51,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '4 hr',
         'price': 255,
         'image': _IMG['detail'],
-        'hair': 'classic medium knotless braids, shoulder length, clean scalp parts, polished salon finish',
+        'hair': (
+            'medium-size knotless box braids, shoulder length, flat feed-in roots without a '
+            'starter knot, crisp box sections, fully braided smooth three-strand plaits root to '
+            'tip, no boho curls or loose texture, polished clean scalp parts'
+        ),
     },
     {
         'id': '22694942',
@@ -56,7 +64,12 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 400,
         'image': _IMG['boho'],
-        'hair': 'long ethereal bohemian knotless braids, mid-back length, soft curly boho ends and face-framing pieces',
+        'hair': (
+            'mid-back length knotless box braids with soft wavy boho curls woven through the '
+            'shafts and at the ends, braids still clearly visible between loose curly pieces, '
+            'face-framing curly tendrils, flat knotless roots, romantic textured finish not a '
+            'uniform straight braid'
+        ),
     },
     {
         'id': '22618012',
@@ -65,7 +78,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 300,
         'image': _IMG['french'],
-        'hair': 'small delicate knotless braids, fine parts, mid-back length, lightweight and elegant',
+        'hair': (
+            'small-size knotless box braids, mid-back length, fine box-part sections, flat '
+            'feed-in knotless technique, fully braided straight three-strand plaits throughout '
+            'with no loose curls or boho texture, lightweight elegant uniform look'
+        ),
     },
     {
         'id': '24054136',
@@ -74,7 +91,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '7 hr',
         'price': 700,
         'image': _IMG['boho'],
-        'hair': 'small bohemian knotless braids with luxe curly boho pieces throughout, waist-length, island-inspired fullness',
+        'hair': (
+            'small knotless braid base almost fully concealed by dense waist-length wet-and-wavy '
+            'human-hair curls fed along each braid, extra-volume sew-in-wig illusion with loose '
+            'curls dominating the style, synthetic plaits barely visible, not sparse boho accents'
+        ),
     },
     {
         'id': '24054131',
@@ -83,7 +104,12 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 600,
         'image': _IMG['boho'],
-        'hair': 'smedium bohemian knotless braids with flowing curly boho accents, mid-back to waist length, voluminous',
+        'hair': (
+            'smedium knotless braid base mostly hidden under dense mid-back to waist-length '
+            'human-hair curls throughout each braid, voluminous curly fullness resembling a '
+            'sew-in weave, loose curls far outnumber visible plaits, high-density island-inspired '
+            'volume not light boho accents'
+        ),
     },
     {
         'id': '26354770',
@@ -92,7 +118,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 700,
         'image': _IMG['petite'],
-        'hair': 'extra-small petite knotless braids with human-hair blend, neat micro parts, mid-back length, child-friendly scale',
+        'hair': (
+            'extra-small micro knotless box braids, mid-back length, human-hair blend extensions, '
+            'tiny precise box parts, flat feed-in roots, fully braided smooth shafts with no '
+            'curls, child-friendly petite scale and lightweight density'
+        ),
     },
     {
         'id': '26512318',
@@ -101,7 +131,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 500,
         'image': _IMG['petite'],
-        'hair': 'extra-small petite knotless braids, fine neat parts, mid-back length, lightweight protective style',
+        'hair': (
+            'extra-small micro knotless box braids, mid-back length, tiny neat box sections, '
+            'flat knotless feed-in technique, fully braided uniform three-strand plaits root to '
+            'tip, no boho curls, lightweight protective micro density'
+        ),
     },
     {
         'id': '22694961',
@@ -110,7 +144,12 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '7 hr',
         'price': 525,
         'image': _IMG['boho'],
-        'hair': 'romantic waist-length bohemian knotless braids with soft curly ends and wispy face-framing tendrils',
+        'hair': (
+            'waist-length knotless box braids with loose wavy boho curls scattered through the '
+            'length and at the ends, visible braid shafts between curly pieces, wispy '
+            'face-framing tendrils, soft romantic texture throughout, not a sleek straight braid '
+            'style'
+        ),
     },
     {
         'id': '22824921',
@@ -119,7 +158,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 500,
         'image': _IMG['detail'],
-        'hair': 'fluffy afro two-strand twists with human hair blend, mid-back length, natural texture, springy ends',
+        'hair': (
+            'soft fluffy two-strand twists with human-hair blend, mid-back length, springy natural '
+            'kinky texture with light volume, individual rope twists not three-strand box braids, '
+            'neat parts, not passion-twist water-wave curls'
+        ),
     },
     {
         'id': '22696365',
@@ -128,7 +171,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 350,
         'image': _IMG['detail'],
-        'hair': 'afro kinky two-strand twists, shoulder to mid-back, textured springy coils, full-bodied protective style',
+        'hair': (
+            'afro kinky bulk hair two-strand twists, shoulder to mid-back, tight 4C-like coil '
+            'texture, dense springy twisted ropes not loose passion curls, full-bodied protective '
+            'twist rows with natural matte finish'
+        ),
     },
     {
         'id': '23868539',
@@ -137,7 +184,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 300,
         'image': _IMG['detail'],
-        'hair': 'marley hair two-strand twists, shoulder to mid-back, rope-like texture, neat parts',
+        'hair': (
+            'marley hair two-strand twists, shoulder to mid-back, coarse rope-like dread-style '
+            'texture, tighter denser definition than passion twists, neat square sections, matte '
+            'kinky twist strands not wavy water-wave hair'
+        ),
     },
     {
         'id': '22697168',
@@ -146,7 +197,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 450,
         'image': _IMG['knotless'],
-        'hair': 'fulani-inspired braids with center braid, decorative beads or cuffs, curly boho pieces at ends, mid-back length',
+        'hair': (
+            'fulani braid pattern with center cornrow front to crown, face-framing side cornrows, '
+            'individual mid-back hanging braids in back, decorative beads or cuffs, loose curly '
+            'boho pieces at braid ends, tribal cornrow-to-box-braid transition'
+        ),
     },
     {
         'id': '22697157',
@@ -155,7 +210,12 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '4 hr',
         'price': 300,
         'image': _IMG['knotless'],
-        'hair': 'knotless fulani braids with tribal-inspired parts, center cornrow detail, mid-back length, clean scalp',
+        'hair': (
+            'knotless fulani pattern with flat center cornrow hairline to crown, face-framing side '
+            'cornrows, knotless individual braids hanging mid-back, clean scalp-visible cornrow '
+            'detail in front, no loose boho curls, sleek tribal front transitioning to knotless '
+            'box braids back'
+        ),
     },
     {
         'id': '24664196',
@@ -164,7 +224,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 450,
         'image': _IMG['boho'],
-        'hair': 'passion twists with boho curly pieces mixed in, mid-back length, soft bohemian texture',
+        'hair': (
+            'mid-back two-strand passion twists using water-wave hair with soft fluffy springy '
+            'spiral texture, loose boho curly pieces mixed throughout, voluminous bohemian twist '
+            'look not sleek three-strand braids'
+        ),
     },
     {
         'id': '22696431',
@@ -173,7 +237,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '4 hr',
         'price': 300,
         'image': _IMG['boho'],
-        'hair': 'silky passion twists, shoulder to mid-back, springy curled ends, neat parts',
+        'hair': (
+            'shoulder to mid-back two-strand passion twists made with water-wave hair, soft fluffy '
+            'springy corkscrew twist texture, full volume individual twist ropes, neat parts, not '
+            'marley-rope texture and not three-strand box braids'
+        ),
     },
     {
         'id': '24655148',
@@ -182,7 +250,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '4 hr',
         'price': 350,
         'image': _IMG['detail'],
-        'hair': 'knotless braids blended with sew-in boho curly pieces, mid-back length, seamless fusion look',
+        'hair': (
+            'knotless braids at perimeter with dense mid-back sewn-in curly weave volume fused '
+            'into the style, boho curly human-hair pieces blended seamlessly through braids like '
+            'a curly sew-in hybrid, fuller than standard boho braids alone'
+        ),
     },
     {
         'id': '23613184',
@@ -191,7 +263,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 400,
         'image': _IMG['detail'],
-        'hair': 'fulani braids with sew-in curly accent hair, decorative tribal parts, mid-back length',
+        'hair': (
+            'fulani cornrow pattern at front with center part and face-framing tribal cornrows, '
+            'mid-back fusion of individual braids and sewn-in curly weave accent hair for added '
+            'volume, decorative tribal parts visible at hairline'
+        ),
     },
     {
         'id': '22694901',
@@ -200,7 +276,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 525,
         'image': _IMG['boho'],
-        'hair': 'full boho bob braids, chin to collarbone length, curly boho ends, face-framing volume',
+        'hair': (
+            'short boho bob of knotless braids chin to collarbone length only, not long mid-back '
+            'hair, curly boho ends and face-framing volume, compact bob silhouette with scattered '
+            'loose curls at tips'
+        ),
     },
     {
         'id': '22694876',
@@ -209,7 +289,10 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '4 hr',
         'price': 450,
         'image': _IMG['boho'],
-        'hair': 'mid-length boho bob braids, jaw-length with soft curly boho pieces, chic and full',
+        'hair': (
+            'jaw-length mid boho bob knotless braids, shorter than shoulder length, soft curly '
+            'boho pieces at the ends, chic compact bob shape not long braids'
+        ),
     },
     {
         'id': '26146214',
@@ -218,7 +301,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 400,
         'image': _IMG['french'],
-        'hair': 'knotless braids with luxurious french curl ends, mid-back length, bouncy spiral curls at tips',
+        'hair': (
+            'mid-back knotless braid shafts transitioning into long defined corkscrew French curls '
+            'at the ends plus loose boho curly pieces scattered through the length, bouncy spiral '
+            'tips with romantic texture'
+        ),
     },
     {
         'id': '22618370',
@@ -227,7 +314,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '4 hr',
         'price': 315,
         'image': _IMG['french'],
-        'hair': 'knotless braids with classic french curl ends, shoulder to mid-back, defined spiral tips',
+        'hair': (
+            'shoulder to mid-back knotless box braid shafts that smoothly transition into long '
+            'defined corkscrew French spiral curls at the tips, flat knotless roots, no loose boho '
+            'curls mid-shaft, clean uniform braid-to-curl gradient'
+        ),
     },
     {
         'id': '27851770',
@@ -236,7 +327,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '3 hr',
         'price': 300,
         'image': _IMG['detail'],
-        'hair': 'feather-light crochet braids, fluffy textured curls, shoulder to mid-back, soft volume',
+        'hair': (
+            'feather crochet install of loose curly human hair lying flat against the scalp like '
+            'natural growth, soft voluminous curls with no visible box braids or three-strand '
+            'plaits, lightweight knotless crochet finish shoulder to mid-back'
+        ),
     },
     {
         'id': '25995983',
@@ -245,7 +340,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 355,
         'image': _IMG['knotless'],
-        'hair': 'small knotless boho braids in salt-and-pepper gray blend, mid-back length, curly boho ends',
+        'hair': (
+            'small knotless boho braids mid-back length in salt-and-pepper gray blend, visible '
+            'braid shafts with loose curly boho ends scattered through, blended black-and-silver '
+            'gray tones, not solid jet black hair'
+        ),
     },
     {
         'id': '25995971',
@@ -254,7 +353,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 300,
         'image': _IMG['knotless'],
-        'hair': 'smedium knotless braids in elegant silver-gray tones, mid-back length, polished mature look',
+        'hair': (
+            'smedium fully braided knotless box braids mid-back length in elegant silver-gray '
+            'tones, flat knotless roots, no loose boho curls, uniform polished mature gray '
+            'protective style'
+        ),
     },
     {
         'id': '25995906',
@@ -263,7 +366,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '5 hr',
         'price': 255,
         'image': _IMG['boho'],
-        'hair': 'medium boho braids in blended gray tones, mid-back length, soft curly boho ends',
+        'hair': (
+            'medium knotless boho braids mid-back length in blended gray tones, visible braid '
+            'shafts with soft curly boho ends and face-framing gray curls, salt-and-pepper boho '
+            'texture not solid black braids'
+        ),
     },
     {
         'id': '25552085',
@@ -272,7 +379,11 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'time': '6 hr',
         'price': 400,
         'image': _IMG['detail'],
-        'hair': 'dramatic shadow-root gray knotless braids, deep charcoal roots fading to silver-gray, mid-back length',
+        'hair': (
+            'mid-back knotless box braids with dramatic shadow-root coloring, deep charcoal black '
+            'roots gradually fading to silver-gray mid-length and ends, ombré gray transition, '
+            'fully braided shafts without boho loose curls'
+        ),
     },
 ]
 
