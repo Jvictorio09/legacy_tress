@@ -11,7 +11,7 @@
     display:flex;align-items:center;justify-content:space-between;gap:12px;
     min-height:44px;
   }
-  .sub-nav__logo img{height:38px;width:auto;display:block}
+  .sub-nav__logo img{height:56px;width:auto;display:block}
   .sub-nav__links{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;justify-content:flex-end}
   .sub-nav__links a{
     font-size:.92rem;letter-spacing:.12em;text-transform:uppercase;
@@ -59,13 +59,13 @@
   }
   @media(max-width:380px){
     .sub-nav__inner{padding:0 16px}
-    .sub-nav__logo img{height:34px}
+    .sub-nav__logo img{height:48px}
   }
 </style>
 <header class="sub-nav">
   <div class="sub-nav__inner">
     <a href="{% url 'index' %}" class="sub-nav__logo" aria-label="LegacyTress home">
-      <img src="{% static 'assets/logo.png' %}" alt="LegacyTress Braiding Salon">
+      <img src="{% static 'assets/logo_transparent_dark.png' %}" alt="LegacyTress Braiding Salon">
     </a>
     <nav class="sub-nav__links" aria-label="Page navigation">
       <a href="{% url 'index' %}#services">Services</a>
