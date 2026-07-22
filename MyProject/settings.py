@@ -143,3 +143,9 @@ BOHO_STYLE_REFERENCE_URL = os.environ.get('BOHO_STYLE_REFERENCE_URL', (
     'https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://'
     'assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69150d324a60b5912d8e4bb0.jpg'
 ))
+
+# AI Hair Concierge (OpenAI chat + realtime voice)
+OPENAI_CHAT_MODEL = os.environ.get('OPENAI_CHAT_MODEL', 'gpt-4o-mini')
+OPENAI_REALTIME_MODEL = os.environ.get('OPENAI_REALTIME_MODEL', 'gpt-realtime')
+# Warm female voice for the concierge (GA realtime voices include coral, shimmer, sage, marin).
+OPENAI_CONCIERGE_VOICE = os.environ.get('OPENAI_CONCIERGE_VOICE', 'coral')

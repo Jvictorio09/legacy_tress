@@ -1,9 +1,12 @@
+import json
+
 from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
+from .ai_concierge import ConciergeError, create_chat_reply, create_realtime_session
 from .boho_ai import BohoPreviewError, generate_braid_preview, get_braid_style_catalog
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
@@ -67,3 +70,44 @@ class BohoGenerateView(View):
             )
 
         return JsonResponse({'ok': True, 'image_url': image_url, 'style': style})
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class AIConciergeChatView(View):
+    """Text chat with the LegacyTress AI Hair Concierge."""
+
+    def post(self, request):
+        try:
+            body = json.loads(request.body.decode('utf-8') or '{}')
+        except (ValueError, UnicodeDecodeError):
+            return JsonResponse({'ok': False, 'error': 'Invalid request.'}, status=400)
+
+        try:
+            reply = create_chat_reply(body.get('messages'))
+        except ConciergeError as exc:
+            return JsonResponse({'ok': False, 'error': str(exc)}, status=503)
+        except Exception:
+            return JsonResponse(
+                {'ok': False, 'error': 'Something went wrong. Please try again.'},
+                status=500,
+            )
+
+        return JsonResponse({'ok': True, 'reply': reply})
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class AIConciergeRealtimeSessionView(View):
+    """Mint a short-lived ephemeral key for a browser WebRTC voice call."""
+
+    def post(self, request):
+        try:
+            session = create_realtime_session()
+        except ConciergeError as exc:
+            return JsonResponse({'ok': False, 'error': str(exc)}, status=503)
+        except Exception:
+            return JsonResponse(
+                {'ok': False, 'error': 'Could not start a voice session. Please try again.'},
+                status=500,
+            )
+
+        return JsonResponse({'ok': True, **session})

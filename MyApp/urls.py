@@ -10,4 +10,6 @@ urlpatterns = [
     path('try-on/', views.TryOnView.as_view(), name='try_on'),
     path('try-on/ethereal-boho/', views.BohoTryOnView.as_view(), name='boho_try_on'),
     path('api/ethereal-boho/generate/', views.BohoGenerateView.as_view(), name='boho_generate'),
+    path('api/ai-concierge/chat/', views.AIConciergeChatView.as_view(), name='ai_concierge_chat'),
+    path('api/ai-concierge/realtime-session/', views.AIConciergeRealtimeSessionView.as_view(), name='ai_concierge_realtime'),
 ]

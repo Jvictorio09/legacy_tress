@@ -1,0 +1,595 @@
+{% load static %}
+{# LegacyTress AI Hair Concierge — floating chat + live voice widget #}
+<style>
+  .lt-concierge{
+    --lt-panel-bg:#101b16;
+    --lt-panel-bg-2:#0a120e;
+    --lt-surface:#17241d;
+    --lt-surface-2:#1f2f26;
+    --lt-line:rgba(227,206,155,.16);
+    --lt-text:#F2EEE2;
+    --lt-muted:#a9b3a8;
+    --lt-gold:#C6A35C;
+    --lt-gold-deep:#9C7A38;
+    --lt-gold-soft:#E3CE9B;
+    --lt-forest:#1B3A2A;
+    --lt-online:#37d67a;
+    position:fixed;right:22px;bottom:22px;z-index:150;
+    right:calc(22px + env(safe-area-inset-right,0px));
+    bottom:calc(22px + env(safe-area-inset-bottom,0px));
+    font-family:'Jost',system-ui,-apple-system,Segoe UI,sans-serif;
+  }
+  .lt-concierge *{box-sizing:border-box}
+
+  /* Launcher */
+  .lt-fab{
+    display:inline-flex;align-items:center;gap:10px;cursor:pointer;
+    padding:14px 20px 14px 16px;border:0;border-radius:999px;
+    color:#1b140a;font-size:.95rem;font-weight:600;letter-spacing:.02em;
+    background:linear-gradient(135deg,var(--lt-gold-soft),var(--lt-gold) 55%,var(--lt-gold-deep));
+    box-shadow:0 14px 34px rgba(16,27,22,.42),0 2px 8px rgba(156,122,56,.4);
+    transition:transform .25s ease,box-shadow .25s ease,opacity .25s ease;
+  }
+  .lt-fab:hover{transform:translateY(-2px);box-shadow:0 20px 44px rgba(16,27,22,.5)}
+  .lt-fab svg{width:22px;height:22px;flex:none}
+  .lt-fab__label{white-space:nowrap}
+  .lt-concierge[data-open="true"] .lt-fab{opacity:0;pointer-events:none;transform:scale(.85)}
+
+  /* Panel */
+  .lt-panel{
+    position:absolute;right:0;bottom:0;width:380px;max-width:calc(100vw - 32px);
+    height:600px;max-height:calc(100dvh - 40px);
+    display:flex;flex-direction:column;overflow:hidden;
+    border-radius:22px;border:1px solid var(--lt-line);
+    background:radial-gradient(120% 90% at 80% 0%,#1a2c22 0%,var(--lt-panel-bg) 45%,var(--lt-panel-bg-2) 100%);
+    color:var(--lt-text);
+    box-shadow:0 30px 70px rgba(6,12,9,.6),0 4px 18px rgba(0,0,0,.35);
+    transform:translateY(16px) scale(.96);opacity:0;pointer-events:none;
+    transform-origin:bottom right;
+    transition:transform .32s cubic-bezier(.2,.8,.25,1),opacity .28s ease;
+  }
+  .lt-concierge[data-open="true"] .lt-panel{transform:none;opacity:1;pointer-events:auto}
+
+  .lt-view{position:absolute;inset:0;display:none;flex-direction:column;min-height:0}
+  .lt-view.is-active{display:flex}
+  .lt-body{display:flex;flex-direction:column;flex:1;min-height:0}
+
+  /* Header bar */
+  .lt-bar{
+    display:flex;align-items:center;gap:12px;padding:16px 16px;
+    border-bottom:1px solid var(--lt-line);
+  }
+  .lt-bar__logo{height:22px;width:auto;display:block}
+  .lt-bar__title{font-weight:600;letter-spacing:.02em;font-size:1rem}
+  .lt-bar__spacer{flex:1}
+  .lt-iconbtn{
+    width:34px;height:34px;border:0;border-radius:50%;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.06);color:var(--lt-text);transition:background .2s;
+  }
+  .lt-iconbtn:hover{background:rgba(255,255,255,.14)}
+  .lt-iconbtn svg{width:16px;height:16px}
+
+  /* Home view */
+  .lt-home{align-items:center;justify-content:center;text-align:center;padding:34px 26px;gap:0;flex:1}
+  .lt-avatar{
+    position:relative;width:96px;height:96px;border-radius:50%;margin-bottom:18px;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 40%,#22362a,#0c150f);
+    border:1px solid var(--lt-line);
+    box-shadow:inset 0 0 22px rgba(0,0,0,.5);
+  }
+  .lt-avatar img{width:66px;height:auto}
+  .lt-avatar__dot{
+    position:absolute;top:6px;right:8px;width:14px;height:14px;border-radius:50%;
+    background:var(--lt-online);border:2px solid var(--lt-panel-bg);
+    box-shadow:0 0 0 3px rgba(55,214,122,.25);
+  }
+  .lt-home__name{font-family:'Cormorant Garamond','Playfair Display',serif;font-size:1.7rem;font-weight:600;letter-spacing:.01em}
+  .lt-home__role{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--lt-gold-soft);margin-top:4px}
+  .lt-home__actions{display:flex;flex-direction:column;gap:12px;width:100%;margin-top:28px}
+  .lt-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:15px 18px;border:0;border-radius:14px;cursor:pointer;
+    font-size:.98rem;font-weight:600;letter-spacing:.01em;transition:transform .2s,box-shadow .2s,background .2s;
+  }
+  .lt-btn svg{width:18px;height:18px}
+  .lt-btn--ghost{background:var(--lt-surface);color:var(--lt-text);border:1px solid var(--lt-line)}
+  .lt-btn--ghost:hover{background:var(--lt-surface-2)}
+  .lt-btn--gold{
+    color:#1b140a;
+    background:linear-gradient(135deg,var(--lt-gold-soft),var(--lt-gold) 55%,var(--lt-gold-deep));
+    box-shadow:0 10px 26px rgba(156,122,56,.35);
+  }
+  .lt-btn--gold:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(156,122,56,.45)}
+  .lt-home__tag{margin-top:22px;font-size:.8rem;color:var(--lt-muted);line-height:1.5}
+
+  /* Chat view */
+  .lt-chat__hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 16px 6px}
+  .lt-chat__hero .lt-avatar{width:64px;height:64px;margin-bottom:10px}
+  .lt-chat__hero .lt-avatar img{width:42px}
+  .lt-chat__hero-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600}
+  .lt-chat__hero-role{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--lt-gold-soft);margin-top:2px}
+  .lt-msgs{
+    flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+    padding:16px 12px 10px 18px;display:flex;flex-direction:column;gap:12px;
+    scroll-behavior:smooth;overscroll-behavior:contain;
+    scrollbar-width:thin;scrollbar-color:rgba(198,163,92,.5) transparent;
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 100%);
+            mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 100%);
+  }
+  .lt-msgs::-webkit-scrollbar{width:10px}
+  .lt-msgs::-webkit-scrollbar-track{background:transparent;margin:6px 0}
+  .lt-msgs::-webkit-scrollbar-thumb{
+    background:linear-gradient(var(--lt-gold-soft),var(--lt-gold-deep));
+    border-radius:999px;border:3px solid transparent;background-clip:padding-box;
+    min-height:36px;
+  }
+  .lt-msgs::-webkit-scrollbar-thumb:hover{
+    background:linear-gradient(var(--lt-gold-soft),var(--lt-gold));background-clip:padding-box;
+  }
+  .lt-msg{max-width:82%;padding:11px 14px;border-radius:16px;font-size:.9rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+  .lt-msg--bot{align-self:flex-start;background:var(--lt-surface);border:1px solid var(--lt-line);border-bottom-left-radius:5px}
+  .lt-msg--user{align-self:flex-end;color:#1b140a;border-bottom-right-radius:5px;
+    background:linear-gradient(135deg,var(--lt-gold-soft),var(--lt-gold))}
+  .lt-book-btn{
+    display:inline-flex;align-items:center;gap:8px;margin-top:11px;align-self:flex-start;
+    padding:11px 18px;border-radius:999px;text-decoration:none;cursor:pointer;
+    color:#1b140a;font-weight:600;font-size:.86rem;letter-spacing:.01em;
+    background:linear-gradient(135deg,var(--lt-gold-soft),var(--lt-gold) 55%,var(--lt-gold-deep));
+    box-shadow:0 8px 20px rgba(156,122,56,.32);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .lt-book-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(156,122,56,.42)}
+  .lt-book-btn svg{width:15px;height:15px;flex:none}
+  #ltVoiceBook{align-self:center;margin:16px 0 2px;animation:ltbookin .4s ease both}
+  @keyframes ltbookin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .lt-msg--bot{display:flex;flex-direction:column}
+  .lt-typing{align-self:flex-start;display:inline-flex;gap:5px;padding:13px 16px;background:var(--lt-surface);border:1px solid var(--lt-line);border-radius:16px;border-bottom-left-radius:5px}
+  .lt-typing span{width:7px;height:7px;border-radius:50%;background:var(--lt-gold-soft);opacity:.5;animation:ltbounce 1.2s infinite}
+  .lt-typing span:nth-child(2){animation-delay:.2s}
+  .lt-typing span:nth-child(3){animation-delay:.4s}
+  @keyframes ltbounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+  .lt-composer{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--lt-line);background:rgba(10,18,14,.5)}
+  .lt-input{
+    flex:1;border:1px solid var(--lt-line);background:var(--lt-surface);color:var(--lt-text);
+    padding:13px 16px;border-radius:999px;font:inherit;font-size:.92rem;outline:none;transition:border-color .2s;
+  }
+  .lt-input:focus{border-color:var(--lt-gold)}
+  .lt-input::placeholder{color:var(--lt-muted)}
+  .lt-send{
+    width:44px;height:44px;flex:none;border:0;border-radius:50%;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;color:#1b140a;
+    background:linear-gradient(135deg,var(--lt-gold-soft),var(--lt-gold) 60%,var(--lt-gold-deep));
+    transition:transform .2s,opacity .2s;
+  }
+  .lt-send:hover{transform:scale(1.05)}
+  .lt-send:disabled{opacity:.5;cursor:default;transform:none}
+  .lt-send svg{width:18px;height:18px}
+
+  /* Voice view */
+  .lt-voice{align-items:center;text-align:center;padding:26px 24px;flex:1;justify-content:flex-start;gap:0}
+  .lt-voice .lt-avatar{width:104px;height:104px;margin:10px 0 16px}
+  .lt-voice .lt-avatar img{width:70px}
+  .lt-voice.is-live .lt-avatar{animation:ltpulse 2.4s ease-in-out infinite}
+  @keyframes ltpulse{0%,100%{box-shadow:inset 0 0 22px rgba(0,0,0,.5),0 0 0 0 rgba(198,163,92,.35)}50%{box-shadow:inset 0 0 22px rgba(0,0,0,.5),0 0 0 16px rgba(198,163,92,0)}}
+  .lt-voice__name{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600}
+  .lt-voice__role{font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--lt-gold-soft);margin-top:3px}
+  .lt-voice__hint{color:var(--lt-muted);font-size:.88rem;line-height:1.55;margin:16px 0 20px;max-width:280px}
+  .lt-steps{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;align-self:stretch}
+  .lt-step{display:flex;align-items:center;gap:11px;font-size:.86rem;color:var(--lt-muted)}
+  .lt-step__dot{width:10px;height:10px;border-radius:50%;background:#3a4740;flex:none}
+  .lt-step.is-active{color:var(--lt-text);font-weight:600}
+  .lt-step.is-active .lt-step__dot{background:var(--lt-gold)}
+  .lt-step.is-done .lt-step__dot{background:var(--lt-online)}
+  .lt-voice__footer{margin-top:auto;padding-top:18px;display:flex;align-items:center;justify-content:center;gap:16px;align-self:stretch}
+  .lt-round{
+    width:52px;height:52px;border:1px solid var(--lt-line);border-radius:50%;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;background:var(--lt-surface);color:var(--lt-text);
+    transition:background .2s,transform .15s;
+  }
+  .lt-round:hover{background:var(--lt-surface-2)}
+  .lt-round.is-muted{background:var(--lt-gold-deep);color:#1b140a;border-color:transparent}
+  .lt-round svg{width:20px;height:20px}
+  .lt-end{
+    display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border:0;border-radius:999px;cursor:pointer;
+    color:#fff;font-weight:600;background:linear-gradient(135deg,#c0463f,#8f2a25);box-shadow:0 8px 22px rgba(143,42,37,.4);
+  }
+  .lt-end svg{width:18px;height:18px}
+  .lt-voice__err{color:#f0a9a3;font-size:.82rem;margin-top:12px;min-height:1em}
+
+  @media (max-width:440px){
+    .lt-concierge{right:14px;bottom:14px;left:14px}
+    .lt-panel{width:auto;left:0;right:0;height:min(600px,calc(100dvh - 28px))}
+    .lt-fab{margin-left:auto}
+    .lt-concierge{display:flex;justify-content:flex-end}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .lt-panel,.lt-fab,.lt-btn{transition:none}
+    .lt-voice.is-live .lt-avatar{animation:none}
+  }
+</style>
+
+<div class="lt-concierge" id="ltConcierge" data-open="false">
+  <button class="lt-fab" id="ltFab" type="button" aria-label="Open LegacyTress AI Hair Concierge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    <span class="lt-fab__label">Hair Concierge</span>
+  </button>
+
+  <section class="lt-panel" id="ltPanel" role="dialog" aria-modal="false" aria-label="LegacyTress AI Hair Concierge">
+
+    <!-- HOME -->
+    <div class="lt-view lt-view--home is-active" data-view="home">
+      <div class="lt-bar">
+        <img class="lt-bar__logo" src="{% static 'assets/logo-light.png' %}" alt="LegacyTress">
+        <span class="lt-bar__title">Concierge</span>
+        <span class="lt-bar__spacer"></span>
+        <button class="lt-iconbtn" type="button" data-action="close" aria-label="Minimize">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="lt-body lt-home">
+        <div class="lt-avatar"><img src="{% static 'assets/logo-light.png' %}" alt="LegacyTress"><span class="lt-avatar__dot"></span></div>
+        <div class="lt-home__name">LegacyTress</div>
+        <div class="lt-home__role">AI Hair Concierge</div>
+        <div class="lt-home__actions">
+          <button class="lt-btn lt-btn--ghost" type="button" data-action="open-chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Start Chat
+          </button>
+          <button class="lt-btn lt-btn--gold" type="button" data-action="open-voice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></svg>
+            Audio Call
+          </button>
+        </div>
+        <p class="lt-home__tag">One place for styles, healthy-hair advice &amp; booking.</p>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="lt-view lt-view--chat" data-view="chat">
+      <div class="lt-bar">
+        <button class="lt-iconbtn" type="button" data-action="home" aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <img class="lt-bar__logo" src="{% static 'assets/logo-light.png' %}" alt="LegacyTress">
+        <span class="lt-bar__title">LegacyTress</span>
+        <span class="lt-bar__spacer"></span>
+        <button class="lt-iconbtn" type="button" data-action="close" aria-label="Minimize">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="lt-chat__hero">
+        <div class="lt-avatar"><img src="{% static 'assets/logo-light.png' %}" alt="LegacyTress"><span class="lt-avatar__dot"></span></div>
+        <div class="lt-chat__hero-name">LegacyTress</div>
+        <div class="lt-chat__hero-role">AI Hair Concierge</div>
+      </div>
+      <div class="lt-msgs" id="ltMsgs" aria-live="polite"></div>
+      <form class="lt-composer" id="ltForm">
+        <input class="lt-input" id="ltInput" type="text" autocomplete="off" placeholder="Type message" aria-label="Type your message">
+        <button class="lt-send" id="ltSend" type="submit" aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- VOICE -->
+    <div class="lt-view lt-view--voice" data-view="voice">
+      <div class="lt-bar">
+        <button class="lt-iconbtn" type="button" data-action="home" aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <img class="lt-bar__logo" src="{% static 'assets/logo-light.png' %}" alt="LegacyTress">
+        <span class="lt-bar__title">LegacyTress</span>
+        <span class="lt-bar__spacer"></span>
+        <button class="lt-iconbtn" type="button" data-action="close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="lt-body lt-voice" id="ltVoice">
+        <div class="lt-avatar"><img src="{% static 'assets/logo-light.png' %}" alt="LegacyTress"><span class="lt-avatar__dot"></span></div>
+        <div class="lt-voice__name">LegacyTress</div>
+        <div class="lt-voice__role">AI Hair Concierge</div>
+        <p class="lt-voice__hint" id="ltVoiceHint">Tap the button below to allow microphone access. Voice calls need microphone access from your browser.</p>
+        <button class="lt-btn lt-btn--gold" id="ltConnect" type="button" style="width:auto;padding:14px 24px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></svg>
+          Allow microphone &amp; connect
+        </button>
+        <ul class="lt-steps">
+          <li class="lt-step" data-step="session"><span class="lt-step__dot"></span>Session started</li>
+          <li class="lt-step" data-step="connecting"><span class="lt-step__dot"></span>Connecting to AI…</li>
+          <li class="lt-step" data-step="ready"><span class="lt-step__dot"></span>Ready to talk</li>
+        </ul>
+        <div class="lt-voice__err" id="ltVoiceErr"></div>
+        <a class="lt-book-btn" id="ltVoiceBook" target="_blank" rel="noopener" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Book on Fresha
+        </a>
+        <div class="lt-voice__footer" id="ltVoiceFooter" hidden>
+          <button class="lt-round" id="ltMute" type="button" aria-label="Mute microphone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></svg>
+          </button>
+          <button class="lt-end" id="ltEnd" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.53.51 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 5.06 2h3a2 2 0 0 1 2 1.72c.13.86.3 1.71.51 2.53a2 2 0 0 1-.45 2.11L8.86 9.69"/><path d="m2 2 20 20"/></svg>
+            End
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <audio id="ltAudio" autoplay></audio>
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('ltConcierge');
+  if(!root) return;
+  var CSRF = "{{ csrf_token }}";
+  var CHAT_URL = "{% url 'ai_concierge_chat' %}";
+  var SESSION_URL = "{% url 'ai_concierge_realtime' %}";
+  var REALTIME_CALLS_URL = "https://api.openai.com/v1/realtime/calls";
+  var BOOK_URL = "https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking?menu=true&dppub=true&cartId=6573ce45-8ba1-4c60-b9f8-d6f22b37a5b0";
+
+  var fab = document.getElementById('ltFab');
+  var panel = document.getElementById('ltPanel');
+  var views = {};
+  root.querySelectorAll('.lt-view[data-view]').forEach(function(v){ views[v.getAttribute('data-view')] = v; });
+
+  function setView(name){
+    Object.keys(views).forEach(function(k){ views[k].classList.toggle('is-active', k===name); });
+  }
+  function open(view){
+    root.setAttribute('data-open','true');
+    if(view) setView(view);
+  }
+  function close(){ root.setAttribute('data-open','false'); }
+
+  fab.addEventListener('click', function(){ open('home'); });
+
+  root.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-action]');
+    if(!btn) return;
+    var action = btn.getAttribute('data-action');
+    if(action==='close') close();
+    else if(action==='home'){ setView('home'); }
+    else if(action==='open-chat'){ setView('chat'); ensureGreeting(); setTimeout(function(){ input && input.focus(); },80); }
+    else if(action==='open-voice'){ setView('voice'); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape' && root.getAttribute('data-open')==='true') close();
+  });
+
+  /* ---------------- Chat ---------------- */
+  var msgsEl = document.getElementById('ltMsgs');
+  var form = document.getElementById('ltForm');
+  var input = document.getElementById('ltInput');
+  var sendBtn = document.getElementById('ltSend');
+  var history = [];       // API history: {role, content}
+  var greeted = false;
+  var GREETING = "Welcome to LegacyTress. I'm your AI Hair Concierge. I can help you explore our braiding collections, preview a look with our AI try-on, or book your visit. How can I help today?";
+
+  function makeBookButton(){
+    var a = document.createElement('a');
+    a.className = 'lt-book-btn';
+    a.href = BOOK_URL;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Book on Fresha';
+    return a;
+  }
+
+  function addBubble(text, who){
+    var el = document.createElement('div');
+    el.className = 'lt-msg lt-msg--' + who;
+
+    if(who === 'bot'){
+      var clean = text || '';
+      var wantsBook = false;
+      // The model signals a booking CTA with [[BOOK]]; also strip any raw URL it may emit.
+      if(/\[\[\s*book\s*\]\]/i.test(clean)){ wantsBook = true; clean = clean.replace(/\[\[\s*book\s*\]\]/ig, ''); }
+      if(clean.indexOf(BOOK_URL) !== -1){ wantsBook = true; clean = clean.split(BOOK_URL).join(''); }
+      clean = clean.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+
+      var span = document.createElement('span');
+      span.textContent = clean;
+      el.appendChild(span);
+      if(wantsBook){ el.appendChild(makeBookButton()); }
+    } else {
+      el.textContent = text;
+    }
+
+    msgsEl.appendChild(el);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return el;
+  }
+  function ensureGreeting(){
+    if(greeted) return;
+    greeted = true;
+    addBubble(GREETING, 'bot');
+  }
+  function showTyping(){
+    var el = document.createElement('div');
+    el.className = 'lt-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    msgsEl.appendChild(el);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return el;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var text = (input.value||'').trim();
+    if(!text) return;
+    input.value = '';
+    sendBtn.disabled = true;
+    addBubble(text, 'user');
+    history.push({role:'user', content:text});
+    var typing = showTyping();
+
+    fetch(CHAT_URL, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'X-CSRFToken':CSRF },
+      body: JSON.stringify({ messages: history })
+    }).then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(res){
+        typing.remove();
+        if(!res.ok || !res.d.ok) throw new Error(res.d.error || 'Something went wrong.');
+        addBubble(res.d.reply, 'bot');
+        history.push({role:'assistant', content:res.d.reply});
+      })
+      .catch(function(err){
+        typing.remove();
+        addBubble(err.message || 'Sorry, I could not reply just now. Please try again.', 'bot');
+      })
+      .finally(function(){ sendBtn.disabled = false; input.focus(); });
+  });
+
+  /* ---------------- Voice (WebRTC Realtime) ---------------- */
+  var voiceEl = document.getElementById('ltVoice');
+  var connectBtn = document.getElementById('ltConnect');
+  var hintEl = document.getElementById('ltVoiceHint');
+  var errEl = document.getElementById('ltVoiceErr');
+  var footer = document.getElementById('ltVoiceFooter');
+  var muteBtn = document.getElementById('ltMute');
+  var endBtn = document.getElementById('ltEnd');
+  var audioEl = document.getElementById('ltAudio');
+  var voiceBook = document.getElementById('ltVoiceBook');
+  if(voiceBook) voiceBook.href = BOOK_URL;
+  var BOOK_RE = /\b(book|booking|appointment|reserve|reservation|schedul|availabilit|fresha|price|prices|pricing)\b/i;
+  function showVoiceBook(text){
+    if(voiceBook && voiceBook.hidden && text && BOOK_RE.test(text)){ voiceBook.hidden = false; }
+  }
+  var steps = {};
+  voiceEl.querySelectorAll('.lt-step').forEach(function(s){ steps[s.getAttribute('data-step')] = s; });
+
+  var pc = null, micStream = null, connecting = false;
+
+  function setStep(name, state){
+    var s = steps[name]; if(!s) return;
+    s.classList.remove('is-active','is-done');
+    if(state) s.classList.add(state);
+  }
+  function resetSteps(){ Object.keys(steps).forEach(function(k){ setStep(k, null); }); }
+
+  connectBtn.addEventListener('click', startCall);
+
+  function startCall(){
+    if(connecting) return;
+    connecting = true;
+    errEl.textContent = '';
+    connectBtn.disabled = true;
+    hintEl.textContent = 'Connecting you to your concierge…';
+    setStep('session','is-active');
+
+    var micPromise = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
+      ? navigator.mediaDevices.getUserMedia({ audio:true })
+      : Promise.reject(new Error('Microphone is not available in this browser.'));
+
+    var ephemeral = null, model = null;
+
+    micPromise.then(function(stream){
+      micStream = stream;
+      setStep('session','is-done');
+      setStep('connecting','is-active');
+      return fetch(SESSION_URL, { method:'POST', headers:{ 'X-CSRFToken':CSRF } });
+    }).then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(res){
+        if(!res.ok || !res.d.ok) throw new Error(res.d.error || 'Could not start a voice session.');
+        ephemeral = res.d.client_secret; model = res.d.model;
+        return negotiate(ephemeral);
+      })
+      .then(function(){
+        setStep('connecting','is-done');
+        setStep('ready','is-active');
+        hintEl.textContent = "You're connected. Start speaking with your concierge.";
+        connectBtn.style.display = 'none';
+        footer.hidden = false;
+        voiceEl.classList.add('is-live');
+      })
+      .catch(function(err){
+        errEl.textContent = err.message || 'Could not connect. Please try again.';
+        hintEl.textContent = 'Voice calls need microphone access from your browser.';
+        cleanup();
+        connectBtn.disabled = false;
+        connectBtn.style.display = '';
+        resetSteps();
+      })
+      .finally(function(){ connecting = false; });
+  }
+
+  function negotiate(ephemeralKey){
+    pc = new RTCPeerConnection();
+    pc.ontrack = function(e){ audioEl.srcObject = e.streams[0]; };
+    pc.onconnectionstatechange = function(){
+      if(pc && (pc.connectionState==='failed' || pc.connectionState==='closed')){
+        if(voiceEl.classList.contains('is-live')){ endCall(true); }
+      }
+    };
+    micStream.getTracks().forEach(function(t){ pc.addTrack(t, micStream); });
+
+    var dc = pc.createDataChannel('oai-events');
+    dc.onopen = function(){
+      try{
+        dc.send(JSON.stringify({
+          type:'response.create',
+          response:{ instructions:'Greet the guest warmly as the LegacyTress AI Hair Concierge in one short sentence and ask how you can help with their hair or booking today.' }
+        }));
+      }catch(_){}
+    };
+    // Reveal the booking button when booking is mentioned by either party.
+    dc.onmessage = function(evt){
+      var msg; try{ msg = JSON.parse(evt.data); }catch(_){ return; }
+      var t = msg.type || '';
+      if(t.indexOf('transcript') !== -1){ showVoiceBook(msg.delta || msg.transcript || ''); }
+    };
+
+    return pc.createOffer().then(function(offer){
+      return pc.setLocalDescription(offer).then(function(){ return offer; });
+    }).then(function(offer){
+      return fetch(REALTIME_CALLS_URL, {
+        method:'POST',
+        body: offer.sdp,
+        headers:{ 'Authorization':'Bearer '+ephemeralKey, 'Content-Type':'application/sdp' }
+      });
+    }).then(function(r){
+      if(!r.ok) throw new Error('Voice connection was refused. Please try again.');
+      return r.text();
+    }).then(function(answer){
+      return pc.setRemoteDescription({ type:'answer', sdp:answer });
+    });
+  }
+
+  muteBtn.addEventListener('click', function(){
+    if(!micStream) return;
+    var track = micStream.getAudioTracks()[0];
+    if(!track) return;
+    track.enabled = !track.enabled;
+    muteBtn.classList.toggle('is-muted', !track.enabled);
+    muteBtn.setAttribute('aria-label', track.enabled ? 'Mute microphone' : 'Unmute microphone');
+  });
+
+  endBtn.addEventListener('click', function(){ endCall(false); });
+
+  function cleanup(){
+    if(pc){ try{ pc.close(); }catch(_){} pc = null; }
+    if(micStream){ micStream.getTracks().forEach(function(t){ t.stop(); }); micStream = null; }
+    if(audioEl){ audioEl.srcObject = null; }
+  }
+  function endCall(auto){
+    cleanup();
+    voiceEl.classList.remove('is-live');
+    footer.hidden = true;
+    if(voiceBook) voiceBook.hidden = true;
+    resetSteps();
+    connectBtn.style.display = '';
+    connectBtn.disabled = false;
+    muteBtn.classList.remove('is-muted');
+    hintEl.textContent = auto
+      ? 'The call ended. Tap below to reconnect.'
+      : 'Tap the button below to allow microphone access. Voice calls need microphone access from your browser.';
+  }
+
+  window.addEventListener('pagehide', cleanup);
+})();
+</script>
