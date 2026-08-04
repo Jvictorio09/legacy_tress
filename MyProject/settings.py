@@ -30,6 +30,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'legacytress-production.up.railway.app',
+    'legacytress.com',
+    'www.legacytress.com',
 ]
 # Railway injects the live public domain at runtime — trust it automatically.
 RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
@@ -39,6 +41,8 @@ if RAILWAY_PUBLIC_DOMAIN and RAILWAY_PUBLIC_DOMAIN not in ALLOWED_HOSTS:
 # HTTPS origins allowed to submit forms / log into the admin.
 CSRF_TRUSTED_ORIGINS = [
     'https://legacytress-production.up.railway.app',
+    'https://legacytress.com',
+    'https://www.legacytress.com',
 ]
 if RAILWAY_PUBLIC_DOMAIN:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_PUBLIC_DOMAIN}')
