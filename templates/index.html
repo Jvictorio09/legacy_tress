@@ -1925,7 +1925,6 @@
       btn.setAttribute('aria-label',item.alt);
       btn.dataset.index=String(i);
       btn.innerHTML=`<img src="${item.src}" alt="" width="92" height="123" loading="lazy" decoding="async">`;
-      btn.addEventListener('click',()=>select(i,{lock:true}));
       thumbs.appendChild(btn);
     });
 
@@ -1955,7 +1954,13 @@
       timer=setTimeout(()=>select((index+1)%ITEMS.length,{lock:false}),INTERVAL);
     };
 
-    const select=(i,{lock})=>{
+    const scrollThumbIntoStrip=(el)=>{
+      if(!el||!thumbs)return;
+      const left=el.offsetLeft-(thumbs.clientWidth-el.offsetWidth)/2;
+      thumbs.scrollTo({left:Math.max(0,left),behavior:reduce?'auto':'smooth'});
+    };
+
+    const select=(i,{lock,scrollStrip})=>{
       index=((i%ITEMS.length)+ITEMS.length)%ITEMS.length;
       imgs.forEach((el,n)=>el.classList.toggle('is-active',n===index));
       thumbBtns.forEach((el,n)=>{
@@ -1965,10 +1970,7 @@
       });
       titleEl.innerHTML=ITEMS[index].title;
       countEl.textContent=`${pad(index+1)} / ${pad(ITEMS.length)}`;
-      const activeThumb=thumbBtns[index];
-      if(activeThumb&&activeThumb.scrollIntoView){
-        activeThumb.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'center',block:'nearest'});
-      }
+      if(scrollStrip)scrollThumbIntoStrip(thumbBtns[index]);
       if(lock){
         playing=false;
         syncAutoBtn();
@@ -1984,13 +1986,17 @@
       if(playing)schedule();
       else stop();
     });
-    prevBtn.addEventListener('click',()=>select(index-1,{lock:true}));
-    nextBtn.addEventListener('click',()=>select(index+1,{lock:true}));
+    prevBtn.addEventListener('click',()=>select(index-1,{lock:true,scrollStrip:true}));
+    nextBtn.addEventListener('click',()=>select(index+1,{lock:true,scrollStrip:true}));
     stage.addEventListener('click',e=>{
       if(e.target.closest('button'))return;
       playing=false;
       syncAutoBtn();
       stop();
+    });
+
+    thumbBtns.forEach(btn=>{
+      btn.addEventListener('click',()=>select(Number(btn.dataset.index),{lock:true,scrollStrip:true}));
     });
 
     document.addEventListener('visibilitychange',()=>{
@@ -1999,7 +2005,7 @@
     });
 
     syncAutoBtn();
-    select(0,{lock:false});
+    select(0,{lock:false,scrollStrip:false});
   })();
 
   const nav=document.getElementById('nav');
