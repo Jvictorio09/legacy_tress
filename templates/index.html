@@ -562,11 +562,20 @@
 
   /* ---------- GALLERY (showcase + thumbs) ---------- */
   .gallery{background:var(--canvas);overflow:hidden}
-  .gal-showcase{max-width:1080px;margin:0 auto}
+  .gal-showcase{
+    max-width:1080px;margin:0 auto;
+    display:flex;flex-direction:column;align-items:center;
+  }
   .gal-stage{
     position:relative;border-radius:4px;overflow:hidden;
-    background:var(--forest-2);aspect-ratio:4/5;max-height:min(78vh,860px);
+    background:var(--forest-2);aspect-ratio:4/5;
+    width:min(100%,420px);
+    max-height:min(78vh,860px);
+    margin:0 auto;
     box-shadow:0 28px 60px rgba(16,34,23,.18);
+  }
+  @media(min-width:700px){
+    .gal-stage{width:min(100%,calc(min(78vh,860px)*0.8))}
   }
   .gal-stage__frame{position:absolute;inset:0}
   .gal-stage__img{
@@ -612,6 +621,7 @@
   @keyframes galProgress{from{width:0%}to{width:100%}}
   .gal-controls{
     display:flex;align-items:center;justify-content:center;gap:18px;margin-top:22px;
+    width:100%;
   }
   .gal-btn{
     font-family:'Jost',sans-serif;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;
@@ -620,11 +630,12 @@
   }
   .gal-btn:hover{border-color:var(--gold);color:var(--gold-deep)}
   .gal-btn[aria-pressed="true"]{background:var(--forest);color:var(--ivory);border-color:var(--forest)}
-  .gal-thumbs-wrap{margin-top:28px;position:relative}
+  .gal-thumbs-wrap{margin-top:28px;position:relative;width:100%;max-width:720px}
   .gal-thumbs{
     display:flex;gap:12px;overflow-x:auto;padding:6px 4px 14px;
     scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
     scrollbar-width:thin;scrollbar-color:var(--gold) transparent;
+    justify-content:safe center;
   }
   .gal-thumb{
     flex:0 0 auto;width:92px;aspect-ratio:3/4;border-radius:3px;overflow:hidden;
@@ -871,9 +882,10 @@
     .proof-grid{grid-template-columns:repeat(2,1fr)}
     .ap-card,.conc-card,.ticket{padding:48px 32px}
     .owner-media{max-width:380px}
-    .gal-stage{max-height:min(70vh,720px);aspect-ratio:3/4}
+    .gal-stage{max-height:min(70vh,720px);aspect-ratio:3/4;width:min(100%,360px)}
     .gal-stage__meta{padding:22px 20px 20px}
     .gal-thumb{width:78px}
+    .gal-thumbs-wrap{max-width:100%}
     .foot-grid{grid-template-columns:1fr 1fr}
   }
   @media(max-width:560px){
