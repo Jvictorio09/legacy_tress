@@ -560,37 +560,87 @@
   .conc-steps .step:hover .n{background:var(--gold);color:var(--forest-2);border-color:var(--gold)}
   .conc-steps .step p{font-size:.94rem;color:rgba(247,243,234,.9);margin:0;font-family:'Jost',sans-serif;font-weight:400}
 
-  /* ---------- GALLERY ---------- */
-  .gallery{background:var(--canvas)}
-  .gal-mosaic{
-    display:grid;
-    grid-template-columns:repeat(12,minmax(0,1fr));
-    grid-auto-rows:minmax(140px,18vw);
-    gap:14px;
+  /* ---------- GALLERY (showcase + thumbs) ---------- */
+  .gallery{background:var(--canvas);overflow:hidden}
+  .gal-showcase{max-width:1080px;margin:0 auto}
+  .gal-stage{
+    position:relative;border-radius:4px;overflow:hidden;
+    background:var(--forest-2);aspect-ratio:4/5;max-height:min(78vh,860px);
+    box-shadow:0 28px 60px rgba(16,34,23,.18);
   }
-  .gal-mosaic a{
-    position:relative;overflow:hidden;border-radius:3px;background:var(--canvas-dk);
-    display:block;isolation:isolate;
+  .gal-stage__frame{position:absolute;inset:0}
+  .gal-stage__img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transform:scale(1.04);
+    transition:opacity 1s var(--ease),transform 6s var(--ease-out);
+    will-change:opacity,transform;
   }
-  .gal-mosaic img{
-    width:100%;height:100%;object-fit:cover;display:block;
-    transition:transform 1.2s var(--ease),filter .6s var(--ease);
+  .gal-stage__img.is-active{opacity:1;transform:scale(1)}
+  .gal-stage__veil{
+    position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:
+      linear-gradient(180deg,rgba(16,34,23,.08) 0%,transparent 28%),
+      linear-gradient(0deg,rgba(16,34,23,.78) 0%,rgba(16,34,23,.18) 42%,transparent 62%);
   }
-  .gal-mosaic a:hover img{transform:scale(1.05);filter:brightness(.92)}
-  .gal-mosaic .lbl{
-    position:absolute;left:0;right:0;bottom:0;padding:22px 18px 16px;
-    background:linear-gradient(to top,rgba(16,34,23,.78),transparent);
-    color:var(--ivory);font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;
-    opacity:0;transform:translateY(8px);transition:opacity .45s var(--ease),transform .45s var(--ease);
-    pointer-events:none;
+  .gal-stage__meta{
+    position:absolute;left:0;right:0;bottom:0;z-index:3;
+    display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+    padding:28px 30px 26px;color:var(--ivory);
   }
-  .gal-mosaic a:hover .lbl,.gal-mosaic a:focus-visible .lbl{opacity:1;transform:none}
-  .gal-mosaic a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-  .gal-mosaic .g-feature{grid-column:span 6;grid-row:span 2}
-  .gal-mosaic .g-tall{grid-column:span 3;grid-row:span 2}
-  .gal-mosaic .g-mid{grid-column:span 3;grid-row:span 1}
-  .gal-mosaic .g-wide{grid-column:span 6;grid-row:span 1}
-  .gal-cta{text-align:center;margin-top:48px}
+  .gal-stage__kicker{
+    font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-soft);
+    margin-bottom:8px;
+  }
+  .gal-stage__title{
+    font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(1.7rem,3.2vw,2.55rem);
+    line-height:1.1;margin:0;
+  }
+  .gal-stage__title em{font-style:italic;color:var(--gold-soft)}
+  .gal-stage__count{
+    font-size:.84rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(247,243,234,.72);
+    white-space:nowrap;padding-bottom:6px;
+  }
+  .gal-progress{
+    position:absolute;left:0;right:0;top:0;height:2px;z-index:4;
+    background:rgba(247,243,234,.12);
+  }
+  .gal-progress > i{
+    display:block;height:100%;width:0%;background:var(--gold);
+    transform-origin:left center;
+  }
+  .gal-progress.is-running > i{animation:galProgress 5s linear forwards}
+  @keyframes galProgress{from{width:0%}to{width:100%}}
+  .gal-controls{
+    display:flex;align-items:center;justify-content:center;gap:18px;margin-top:22px;
+  }
+  .gal-btn{
+    font-family:'Jost',sans-serif;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--forest);background:transparent;border:1px solid var(--line);
+    padding:12px 18px;cursor:pointer;border-radius:2px;transition:.35s var(--ease);
+  }
+  .gal-btn:hover{border-color:var(--gold);color:var(--gold-deep)}
+  .gal-btn[aria-pressed="true"]{background:var(--forest);color:var(--ivory);border-color:var(--forest)}
+  .gal-thumbs-wrap{margin-top:28px;position:relative}
+  .gal-thumbs{
+    display:flex;gap:12px;overflow-x:auto;padding:6px 4px 14px;
+    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;scrollbar-color:var(--gold) transparent;
+  }
+  .gal-thumb{
+    flex:0 0 auto;width:92px;aspect-ratio:3/4;border-radius:3px;overflow:hidden;
+    border:2px solid transparent;padding:0;cursor:pointer;background:var(--canvas-dk);
+    scroll-snap-align:center;position:relative;isolation:isolate;
+    transition:border-color .35s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease);
+  }
+  .gal-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
+  .gal-thumb:hover{transform:translateY(-3px)}
+  .gal-thumb:hover img{transform:scale(1.06)}
+  .gal-thumb.is-active{
+    border-color:var(--gold);
+    box-shadow:0 10px 24px rgba(16,34,23,.16);
+  }
+  .gal-thumb:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .gal-cta{text-align:center;margin-top:36px}
 
   /* ---------- PROOF ---------- */
   .proof{background:var(--ivory)}
@@ -821,9 +871,9 @@
     .proof-grid{grid-template-columns:repeat(2,1fr)}
     .ap-card,.conc-card,.ticket{padding:48px 32px}
     .owner-media{max-width:380px}
-    .gal-mosaic{grid-auto-rows:minmax(160px,28vw);gap:12px}
-    .gal-mosaic .g-feature,.gal-mosaic .g-wide{grid-column:span 6}
-    .gal-mosaic .g-tall,.gal-mosaic .g-mid{grid-column:span 3}
+    .gal-stage{max-height:min(70vh,720px);aspect-ratio:3/4}
+    .gal-stage__meta{padding:22px 20px 20px}
+    .gal-thumb{width:78px}
     .foot-grid{grid-template-columns:1fr 1fr}
   }
   @media(max-width:560px){
@@ -849,10 +899,9 @@
     .menu-row-name{flex:1 1 100%}
     .menu-row-meta{flex-direction:row;align-items:baseline;gap:10px;min-width:0}
     .menu-row-cta{margin-left:auto}
-    .gal-mosaic{grid-auto-rows:minmax(150px,42vw);gap:10px}
-    .gal-mosaic .g-feature,.gal-mosaic .g-wide,.gal-mosaic .g-tall,.gal-mosaic .g-mid{grid-column:span 6;grid-row:span 1}
-    .gal-mosaic .g-feature,.gal-mosaic .g-tall{grid-row:span 2;min-height:280px}
-    .gal-mosaic .lbl{opacity:1;transform:none;font-size:.72rem;padding:16px 14px 12px}
+    .gal-stage{aspect-ratio:3/4;max-height:62vh}
+    .gal-controls{flex-wrap:wrap;gap:10px}
+    .gal-thumb{width:70px}
     /* hero: full-width stacked CTAs, tighter padding */
     .hero{padding:100px 0 58px}
     .hero .wrap{padding-left:22px;padding-right:22px}
@@ -886,6 +935,8 @@
     .reveal{opacity:1;transform:none}
     .final::before{background-attachment:scroll}
     .menu-collection.active{animation:none}
+    .gal-stage__img{transform:none!important}
+    .gal-progress > i{animation:none!important;width:100%!important}
   }
 </style>
 </head>
@@ -1334,66 +1385,34 @@
     <div class="sec-head center reveal">
       <div class="top"><span class="eyebrow center">The Portfolio</span></div>
       <h2>The work <em>speaks for itself.</em></h2>
-      <p>Real finishes from the LegacyTress chair — knotless, boho, Fulani, twists, and the craft behind every install.</p>
+      <p>Watch finishes rotate through the showcase — or tap any thumbnail to hold the look you love.</p>
     </div>
-    <div class="gal-mosaic reveal" aria-label="LegacyTress braid portfolio">
-      <a class="g-feature" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/01-ethereal-boho.jpg' %}" alt="Ethereal Boho braids with curly ends" loading="lazy" width="1200" height="1600">
-        <span class="lbl">Ethereal Boho</span>
-      </a>
-      <a class="g-tall" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/02-classic-knotless.jpg' %}" alt="Classic medium knotless braids" loading="lazy" width="940" height="1400">
-        <span class="lbl">Classic Knotless</span>
-      </a>
-      <a class="g-tall" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/04-fulani-boho.jpg' %}" alt="Fulani cornrows with boho length" loading="lazy" width="800" height="1400">
-        <span class="lbl">Fulani Boho</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/05-boho-highlights.jpg' %}" alt="Boho braids with blonde highlights" loading="lazy" width="809" height="1400">
-        <span class="lbl">Boho Highlights</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/08-passion-twist.jpg' %}" alt="Passion twists in copper" loading="lazy" width="1050" height="1400">
-        <span class="lbl">Passion Twist</span>
-      </a>
-      <a class="g-wide" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/10-salon-floor.jpg' %}" alt="LegacyTress stylists braiding on the salon floor" loading="lazy" width="1050" height="1400">
-        <span class="lbl">In the Studio</span>
-      </a>
-      <a class="g-tall" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/03-delicate-knotless.jpg' %}" alt="Delicate small knotless braids" loading="lazy" width="802" height="1400">
-        <span class="lbl">Delicate Knotless</span>
-      </a>
-      <a class="g-tall" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/06-blonde-knotless.jpg' %}" alt="Long blonde-blend knotless braids" loading="lazy" width="799" height="1400">
-        <span class="lbl">Blonde Knotless</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/09-precision-parts.jpg' %}" alt="Precision scalp parts during a braiding appointment" loading="lazy" width="806" height="1400">
-        <span class="lbl">Precision Parts</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/12-goddess-volume.jpg' %}" alt="Voluminous goddess curly braids" loading="lazy" width="801" height="1400">
-        <span class="lbl">Goddess Volume</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/11-copper-boho.jpg' %}" alt="Copper boho braids mid-back length" loading="lazy" width="1050" height="1400">
-        <span class="lbl">Copper Boho</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/07-boho-curls.jpg' %}" alt="Boho braids with soft curly ends and crown" loading="lazy" width="1050" height="1400">
-        <span class="lbl">Boho Curls</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/14-island-boho.jpg' %}" alt="Full boho curly braid install" loading="lazy" width="1050" height="1400">
-        <span class="lbl">Island Boho</span>
-      </a>
-      <a class="g-mid" href="https://www.instagram.com/legacytress" target="_blank" rel="noopener">
-        <img src="{% static 'assets/gallery/13-in-chair.jpg' %}" alt="Client receiving knotless braids in the salon chair" loading="lazy" width="802" height="1400">
-        <span class="lbl">Chair Side</span>
-      </a>
+
+    <div class="gal-showcase reveal" id="gal-showcase" data-interval="5000">
+      <div class="gal-stage" id="gal-stage" role="region" aria-roledescription="carousel" aria-label="Braid finish showcase">
+        <div class="gal-progress" id="gal-progress" aria-hidden="true"><i></i></div>
+        <div class="gal-stage__frame" id="gal-frame"></div>
+        <div class="gal-stage__veil" aria-hidden="true"></div>
+        <div class="gal-stage__meta">
+          <div>
+            <div class="gal-stage__kicker" id="gal-kicker">Featured finish</div>
+            <h3 class="gal-stage__title" id="gal-title">Ethereal <em>Boho</em></h3>
+          </div>
+          <div class="gal-stage__count" id="gal-count" aria-live="polite">01 / 14</div>
+        </div>
+      </div>
+
+      <div class="gal-controls">
+        <button type="button" class="gal-btn" id="gal-prev" aria-label="Previous finish">Prev</button>
+        <button type="button" class="gal-btn" id="gal-auto" aria-pressed="true" aria-label="Pause or resume autoplay">Autoplay on</button>
+        <button type="button" class="gal-btn" id="gal-next" aria-label="Next finish">Next</button>
+      </div>
+
+      <div class="gal-thumbs-wrap">
+        <div class="gal-thumbs" id="gal-thumbs" role="tablist" aria-label="Choose a finish"></div>
+      </div>
     </div>
+
     <div class="gal-cta reveal"><a href="https://www.instagram.com/legacytress" target="_blank" rel="noopener" class="tlink">Follow @legacytress</a></div>
   </div>
 </section>
@@ -1777,6 +1796,135 @@
   };
   initReveal();
   requestAnimationFrame(()=>requestAnimationFrame(initReveal));
+
+  /* Portfolio showcase: autoplay every 5s; clicking a thumb locks that finish */
+  (()=>{
+    const root=document.getElementById('gal-showcase');
+    if(!root)return;
+    const ITEMS=[
+      {src:"{% static 'assets/gallery/01-ethereal-boho.jpg' %}",title:'Ethereal <em>Boho</em>',alt:'Ethereal Boho braids with curly ends'},
+      {src:"{% static 'assets/gallery/02-classic-knotless.jpg' %}",title:'Classic <em>Knotless</em>',alt:'Classic medium knotless braids'},
+      {src:"{% static 'assets/gallery/03-delicate-knotless.jpg' %}",title:'Delicate <em>Knotless</em>',alt:'Delicate small knotless braids'},
+      {src:"{% static 'assets/gallery/04-fulani-boho.jpg' %}",title:'Fulani <em>Boho</em>',alt:'Fulani cornrows with boho length'},
+      {src:"{% static 'assets/gallery/05-boho-highlights.jpg' %}",title:'Boho <em>Highlights</em>',alt:'Boho braids with blonde highlights'},
+      {src:"{% static 'assets/gallery/06-blonde-knotless.jpg' %}",title:'Blonde <em>Knotless</em>',alt:'Long blonde-blend knotless braids'},
+      {src:"{% static 'assets/gallery/07-boho-curls.jpg' %}",title:'Boho <em>Curls</em>',alt:'Boho braids with soft curly ends'},
+      {src:"{% static 'assets/gallery/08-passion-twist.jpg' %}",title:'Passion <em>Twist</em>',alt:'Passion twists in copper'},
+      {src:"{% static 'assets/gallery/09-precision-parts.jpg' %}",title:'Precision <em>Parts</em>',alt:'Precision scalp parts during braiding'},
+      {src:"{% static 'assets/gallery/10-salon-floor.jpg' %}",title:'In the <em>Studio</em>',alt:'Stylists braiding on the salon floor'},
+      {src:"{% static 'assets/gallery/11-copper-boho.jpg' %}",title:'Copper <em>Boho</em>',alt:'Copper boho braids mid-back length'},
+      {src:"{% static 'assets/gallery/12-goddess-volume.jpg' %}",title:'Goddess <em>Volume</em>',alt:'Voluminous goddess curly braids'},
+      {src:"{% static 'assets/gallery/13-in-chair.jpg' %}",title:'Chair <em>Side</em>',alt:'Client receiving knotless braids'},
+      {src:"{% static 'assets/gallery/14-island-boho.jpg' %}",title:'Island <em>Boho</em>',alt:'Full boho curly braid install'}
+    ];
+    const frame=document.getElementById('gal-frame');
+    const thumbs=document.getElementById('gal-thumbs');
+    const titleEl=document.getElementById('gal-title');
+    const countEl=document.getElementById('gal-count');
+    const progress=document.getElementById('gal-progress');
+    const autoBtn=document.getElementById('gal-auto');
+    const prevBtn=document.getElementById('gal-prev');
+    const nextBtn=document.getElementById('gal-next');
+    const stage=document.getElementById('gal-stage');
+    const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVAL=Number(root.dataset.interval)||5000;
+    let index=0;
+    let playing=!reduce;
+    let timer=null;
+    const pad=n=>String(n).padStart(2,'0');
+
+    ITEMS.forEach((item,i)=>{
+      const img=document.createElement('img');
+      img.className='gal-stage__img'+(i===0?' is-active':'');
+      img.src=item.src;img.alt=item.alt;img.width=1200;img.height=1600;
+      if(i)img.loading='lazy';
+      img.decoding='async';
+      frame.appendChild(img);
+
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='gal-thumb'+(i===0?' is-active':'');
+      btn.setAttribute('role','tab');
+      btn.setAttribute('aria-selected',i===0?'true':'false');
+      btn.setAttribute('aria-label',item.alt);
+      btn.dataset.index=String(i);
+      btn.innerHTML=`<img src="${item.src}" alt="" width="92" height="123" loading="lazy" decoding="async">`;
+      btn.addEventListener('click',()=>select(i,{lock:true}));
+      thumbs.appendChild(btn);
+    });
+
+    const imgs=[...frame.querySelectorAll('.gal-stage__img')];
+    const thumbBtns=[...thumbs.querySelectorAll('.gal-thumb')];
+
+    const restartProgress=()=>{
+      progress.classList.remove('is-running');
+      void progress.offsetWidth;
+      if(playing&&!reduce)progress.classList.add('is-running');
+    };
+
+    const syncAutoBtn=()=>{
+      autoBtn.setAttribute('aria-pressed',playing?'true':'false');
+      autoBtn.textContent=playing?'Autoplay on':'Paused';
+    };
+
+    const stop=()=>{
+      if(timer){clearTimeout(timer);timer=null}
+      progress.classList.remove('is-running');
+    };
+
+    const schedule=()=>{
+      stop();
+      if(!playing||reduce)return;
+      restartProgress();
+      timer=setTimeout(()=>select((index+1)%ITEMS.length,{lock:false}),INTERVAL);
+    };
+
+    const select=(i,{lock})=>{
+      index=((i%ITEMS.length)+ITEMS.length)%ITEMS.length;
+      imgs.forEach((el,n)=>el.classList.toggle('is-active',n===index));
+      thumbBtns.forEach((el,n)=>{
+        const on=n===index;
+        el.classList.toggle('is-active',on);
+        el.setAttribute('aria-selected',on?'true':'false');
+      });
+      titleEl.innerHTML=ITEMS[index].title;
+      countEl.textContent=`${pad(index+1)} / ${pad(ITEMS.length)}`;
+      const activeThumb=thumbBtns[index];
+      if(activeThumb&&activeThumb.scrollIntoView){
+        activeThumb.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'center',block:'nearest'});
+      }
+      if(lock){
+        playing=false;
+        syncAutoBtn();
+        stop();
+      }else{
+        schedule();
+      }
+    };
+
+    autoBtn.addEventListener('click',()=>{
+      playing=!playing;
+      syncAutoBtn();
+      if(playing)schedule();
+      else stop();
+    });
+    prevBtn.addEventListener('click',()=>select(index-1,{lock:true}));
+    nextBtn.addEventListener('click',()=>select(index+1,{lock:true}));
+    stage.addEventListener('click',e=>{
+      if(e.target.closest('button'))return;
+      playing=false;
+      syncAutoBtn();
+      stop();
+    });
+
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden)stop();
+      else if(playing)schedule();
+    });
+
+    syncAutoBtn();
+    select(0,{lock:false});
+  })();
 
   const nav=document.getElementById('nav');
   const onScroll=()=>nav.classList.toggle('scrolled',scrollY>40);
