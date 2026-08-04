@@ -32,6 +32,85 @@ _IMG = {
 # All braid styles from the live Fresha menu — for AI preview testing.
 BRAID_STYLE_CATALOG: list[dict] = [
     {
+        'id': '28493769',
+        'name': 'Natural Twist',
+        'category': 'Kids',
+        'time': '3 hr',
+        'price': 110,
+        'image': _IMG['petite'],
+        'hair': (
+            'soft natural two-strand twists on a child or petite head scale, shoulder length, '
+            'using the persons own natural hair texture without heavy extensions, neat parts, '
+            'lightweight protective kids style, not box braids and not passion-twist water-wave curls'
+        ),
+    },
+    {
+        'id': '24054136',
+        'name': 'Small Bora-Bora Bohemian',
+        'category': 'Bora-Bora',
+        'time': '10 hr',
+        'price': 700,
+        'image': _IMG['boho'],
+        'hair': (
+            'small knotless braid base almost fully concealed by dense waist-length wet-and-wavy '
+            'human-hair curls fed along each braid, extra-volume sew-in-wig illusion with loose '
+            'curls dominating the style, synthetic plaits barely visible, not sparse boho accents'
+        ),
+    },
+    {
+        'id': '24054131',
+        'name': 'Smedium Bora-Bora Bohemian',
+        'category': 'Bora-Bora',
+        'time': '8 hr',
+        'price': 600,
+        'image': _IMG['boho'],
+        'hair': (
+            'smedium knotless braid base mostly hidden under dense mid-back to waist-length '
+            'human-hair curls throughout each braid, voluminous curly fullness resembling a '
+            'sew-in weave, loose curls far outnumber visible plaits, high-density island-inspired '
+            'volume not light boho accents'
+        ),
+    },
+    {
+        'id': '26354770',
+        'name': 'The Petite Knotless (X-SMALL W/HUMAN HAIR)',
+        'category': 'Knotless',
+        'time': '9 hr',
+        'price': 700,
+        'image': _IMG['petite'],
+        'hair': (
+            'extra-small micro knotless box braids, mid-back length, human-hair blend extensions, '
+            'tiny precise box parts, flat feed-in roots, fully braided smooth shafts with no '
+            'curls, child-friendly petite scale and lightweight density'
+        ),
+    },
+    {
+        'id': '26512318',
+        'name': 'The Petite Knotless (X-SMALL)',
+        'category': 'Knotless',
+        'time': '8 hr',
+        'price': 500,
+        'image': _IMG['petite'],
+        'hair': (
+            'extra-small micro knotless box braids, mid-back length, tiny neat box sections, '
+            'flat knotless feed-in technique, fully braided uniform three-strand plaits root to '
+            'tip, no boho curls, lightweight protective micro density'
+        ),
+    },
+    {
+        'id': '22618012',
+        'name': 'The Delicate Knotless (SMALL)',
+        'category': 'Knotless',
+        'time': '6 hr',
+        'price': 300,
+        'image': _IMG['french'],
+        'hair': (
+            'small-size knotless box braids, mid-back length, fine box-part sections, flat '
+            'feed-in knotless technique, fully braided straight three-strand plaits throughout '
+            'with no loose curls or boho texture, lightweight elegant uniform look'
+        ),
+    },
+    {
         'id': '22618040',
         'name': 'The Signature Knotless (SMEDIUM)',
         'category': 'Knotless',
@@ -72,76 +151,10 @@ BRAID_STYLE_CATALOG: list[dict] = [
         ),
     },
     {
-        'id': '22618012',
-        'name': 'The Delicate Knotless (SMALL)',
-        'category': 'Knotless',
-        'time': '6 hr',
-        'price': 300,
-        'image': _IMG['french'],
-        'hair': (
-            'small-size knotless box braids, mid-back length, fine box-part sections, flat '
-            'feed-in knotless technique, fully braided straight three-strand plaits throughout '
-            'with no loose curls or boho texture, lightweight elegant uniform look'
-        ),
-    },
-    {
-        'id': '24054136',
-        'name': 'Small Bora-Bora Bohemian',
-        'category': 'Bora-Bora',
-        'time': '7 hr',
-        'price': 700,
-        'image': _IMG['boho'],
-        'hair': (
-            'small knotless braid base almost fully concealed by dense waist-length wet-and-wavy '
-            'human-hair curls fed along each braid, extra-volume sew-in-wig illusion with loose '
-            'curls dominating the style, synthetic plaits barely visible, not sparse boho accents'
-        ),
-    },
-    {
-        'id': '24054131',
-        'name': 'Smedium Bora-Bora Bohemian',
-        'category': 'Bora-Bora',
-        'time': '6 hr',
-        'price': 600,
-        'image': _IMG['boho'],
-        'hair': (
-            'smedium knotless braid base mostly hidden under dense mid-back to waist-length '
-            'human-hair curls throughout each braid, voluminous curly fullness resembling a '
-            'sew-in weave, loose curls far outnumber visible plaits, high-density island-inspired '
-            'volume not light boho accents'
-        ),
-    },
-    {
-        'id': '26354770',
-        'name': 'The Petite Knotless (X-SMALL W/HUMAN HAIR)',
-        'category': 'Knotless',
-        'time': '6 hr',
-        'price': 700,
-        'image': _IMG['petite'],
-        'hair': (
-            'extra-small micro knotless box braids, mid-back length, human-hair blend extensions, '
-            'tiny precise box parts, flat feed-in roots, fully braided smooth shafts with no '
-            'curls, child-friendly petite scale and lightweight density'
-        ),
-    },
-    {
-        'id': '26512318',
-        'name': 'The Petite Knotless (X-SMALL)',
-        'category': 'Knotless',
-        'time': '5 hr',
-        'price': 500,
-        'image': _IMG['petite'],
-        'hair': (
-            'extra-small micro knotless box braids, mid-back length, tiny neat box sections, '
-            'flat knotless feed-in technique, fully braided uniform three-strand plaits root to '
-            'tip, no boho curls, lightweight protective micro density'
-        ),
-    },
-    {
         'id': '22694961',
         'name': 'The Romantic Boho (WAIST-LENGTH)',
         'category': 'Boho',
-        'time': '7 hr',
+        'time': '6 hr',
         'price': 525,
         'image': _IMG['boho'],
         'hair': (
@@ -155,7 +168,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '22824921',
         'name': 'Afro Twist W/ Human Hair',
         'category': 'Twists',
-        'time': '6 hr',
+        'time': '7 hr',
         'price': 500,
         'image': _IMG['detail'],
         'hair': (
@@ -168,7 +181,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '22696365',
         'name': 'Afro Kinky Twist',
         'category': 'Twists',
-        'time': '5 hr',
+        'time': '4 hr',
         'price': 350,
         'image': _IMG['detail'],
         'hair': (
@@ -194,7 +207,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '22697168',
         'name': 'Boho Fulani Braids',
         'category': 'Fulani',
-        'time': '5 hr',
+        'time': '4 hr',
         'price': 450,
         'image': _IMG['knotless'],
         'hair': (
@@ -221,7 +234,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '24664196',
         'name': 'Boho Passion Twist',
         'category': 'Passion Twist',
-        'time': '5 hr',
+        'time': '6 hr',
         'price': 450,
         'image': _IMG['boho'],
         'hair': (
@@ -247,7 +260,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '24655148',
         'name': 'Boho Knotless Sew-In',
         'category': 'Fusion',
-        'time': '4 hr',
+        'time': '3 hr 30 min',
         'price': 350,
         'image': _IMG['detail'],
         'hair': (
@@ -260,7 +273,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '23613184',
         'name': 'Fulani Sew-In',
         'category': 'Fusion',
-        'time': '5 hr',
+        'time': '3 hr',
         'price': 400,
         'image': _IMG['detail'],
         'hair': (
@@ -270,23 +283,10 @@ BRAID_STYLE_CATALOG: list[dict] = [
         ),
     },
     {
-        'id': '22694901',
-        'name': 'Boho Bob (FULL)',
-        'category': 'Boho Bob',
-        'time': '5 hr',
-        'price': 525,
-        'image': _IMG['boho'],
-        'hair': (
-            'short boho bob of knotless braids chin to collarbone length only, not long mid-back '
-            'hair, curly boho ends and face-framing volume, compact bob silhouette with scattered '
-            'loose curls at tips'
-        ),
-    },
-    {
         'id': '22694876',
         'name': 'Boho Bob (MID)',
         'category': 'Boho Bob',
-        'time': '4 hr',
+        'time': '6 hr',
         'price': 450,
         'image': _IMG['boho'],
         'hair': (
@@ -298,7 +298,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '26146214',
         'name': 'Boho French Curls',
         'category': 'French',
-        'time': '5 hr',
+        'time': '4 hr',
         'price': 400,
         'image': _IMG['french'],
         'hair': (
@@ -311,7 +311,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '22618370',
         'name': 'Knotless French Braids',
         'category': 'French',
-        'time': '4 hr',
+        'time': '5 hr',
         'price': 315,
         'image': _IMG['french'],
         'hair': (
@@ -324,7 +324,7 @@ BRAID_STYLE_CATALOG: list[dict] = [
         'id': '27851770',
         'name': 'Feather Crochet',
         'category': 'Crochet',
-        'time': '3 hr',
+        'time': '6 hr',
         'price': 300,
         'image': _IMG['detail'],
         'hair': (
@@ -336,8 +336,8 @@ BRAID_STYLE_CATALOG: list[dict] = [
     {
         'id': '25995983',
         'name': 'Small Miracle Knotless Boho Braids',
-        'category': 'Gray',
-        'time': '6 hr',
+        'category': 'Crochet',
+        'time': '4 hr',
         'price': 355,
         'image': _IMG['knotless'],
         'hair': (
@@ -349,8 +349,8 @@ BRAID_STYLE_CATALOG: list[dict] = [
     {
         'id': '25995971',
         'name': 'Miracle Knotless Braids (S-MEDIUM)',
-        'category': 'Gray',
-        'time': '5 hr',
+        'category': 'Crochet',
+        'time': '3 hr 15 min',
         'price': 300,
         'image': _IMG['knotless'],
         'hair': (
@@ -362,8 +362,8 @@ BRAID_STYLE_CATALOG: list[dict] = [
     {
         'id': '25995906',
         'name': 'Medium Miracle Boho Braids',
-        'category': 'Gray',
-        'time': '5 hr',
+        'category': 'Crochet',
+        'time': '3 hr',
         'price': 255,
         'image': _IMG['boho'],
         'hair': (

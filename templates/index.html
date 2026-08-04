@@ -78,7 +78,7 @@
     { "@type": "Question", "name": "What braiding services does LegacyTress offer?", "acceptedAnswer": { "@type": "Answer", "text": "Our Fresha menu includes knotless, boho, Fulani, passion twist, fusion sew-in, French curl, crochet and gray collections — plus braid refresh, wash services, touch-ups, take-downs and LegacyTress retail." } },
     { "@type": "Question", "name": "What makes LegacyTress a luxury braiding experience?", "acceptedAnswer": { "@type": "Answer", "text": "Beyond expert braiding, every client enjoys a personalized consultation and thoughtful touches such as a complimentary mini charcuterie board and refreshments, so each appointment feels like elevated self-care." } },
     { "@type": "Question", "name": "Do you offer Afterpay or payment plans?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every service can be split into four payments with Afterpay via Square. Reserve your chair with a small deposit and settle the rest in-studio." } },
-    { "@type": "Question", "name": "Do you braid children's hair?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Our Petite Knotless styles are ideal for children and smaller heads. Book The Petite Knotless (X-SMALL) on Fresha and we'll plan the time accordingly." } },
+    { "@type": "Question", "name": "Do you braid children's hair?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Kids styles on Fresha include Natural Twist plus The Petite Knotless (X-SMALL) for smaller heads. Book on Fresha and we'll plan the time accordingly." } },
     { "@type": "Question", "name": "How long do the braids last?", "acceptedAnswer": { "@type": "Answer", "text": "Most protective styles last 4 to 8 weeks with proper care. We include maintenance tips with every service and offer touch-up and take-down bookings." } }
   ]
 }
@@ -1202,7 +1202,7 @@
       <div class="prod-item"><span class="badge">Available Now</span><h4>LegacyTress Oil</h4><small>Rosemary + castor · scalp &amp; shine</small></div>
       <div class="prod-item"><span class="badge">Coming Soon</span><h4>LegacyTress Shampoo</h4><small>Gentle, hydrating cleanse</small></div>
       <div class="prod-item"><span class="badge">Coming Soon</span><h4>LegacyTress Conditioner</h4><small>Strength &amp; moisture</small></div>
-      <div class="prod-item"><span class="badge">Coming Soon</span><h4>Boho Mist</h4><small>Refresh &amp; revive braids</small></div>
+      <div class="prod-item"><span class="badge">From $15</span><h4>Boho Mist</h4><small>Refresh &amp; revive braids</small></div>
     </div>
   </div>
 </section>
@@ -1433,7 +1433,7 @@
       <div class="faq-item"><button class="faq-q" aria-expanded="false">What makes LegacyTress a luxury experience? <span class="pl"></span></button><div class="faq-a"><p>Beyond expert braiding, every appointment includes a personalised consultation and thoughtful touches — like a complimentary mini charcuterie board and refreshments — so your visit feels like elevated self-care from start to finish.</p></div></div>
       <div class="faq-item"><button class="faq-q" aria-expanded="false">How should I prepare my hair before my appointment? <span class="pl"></span></button><div class="faq-a"><p>Come with clean, blow-dried, detangled hair unless your service includes a wash. We'll send full prep instructions when you book.</p></div></div>
       <div class="faq-item"><button class="faq-q" aria-expanded="false">Do you offer Afterpay or payment plans? <span class="pl"></span></button><div class="faq-a"><p>Yes. Every service can be split into four payments with Afterpay via Square. You'll pay a small deposit to reserve your chair, then settle the rest in-studio.</p></div></div>
-      <div class="faq-item"><button class="faq-q" aria-expanded="false">Do you braid children's hair? <span class="pl"></span></button><div class="faq-a"><p>Yes. The Petite Knotless (X-SMALL) collection is perfect for children — gentle, patient and sized for smaller heads. Book it directly on Fresha when you reserve.</p></div></div>
+      <div class="faq-item"><button class="faq-q" aria-expanded="false">Do you braid children's hair? <span class="pl"></span></button><div class="faq-a"><p>Yes. Book Natural Twist or The Petite Knotless (X-SMALL) on Fresha — gentle, patient appointments sized for smaller heads.</p></div></div>
       <div class="faq-item"><button class="faq-q" aria-expanded="false">How long do the braids last? <span class="pl"></span></button><div class="faq-a"><p>Most protective styles last 4–8 weeks with proper care. We include maintenance tips with every service and offer touch-up and take-down bookings when you're ready.</p></div></div>
     </div>
     <p class="faq-ai reveal">Still have a question? Read our <a href="{% url 'policies' %}">full salon policies</a>, or reach us any time at 561-970-4193.</p>
@@ -1529,16 +1529,25 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 LegacyTress — All Rights Reserved.</span>
-      <span>Open 7 days · Mon–Sat 6:00 AM–6:00 PM · Sun 8:30 AM–6:00 PM</span>
+      <span>Open 7 days · Mon–Sat 6:00 AM–6:00 PM · Sun 8:00 AM–6:00 PM</span>
     </div>
   </div>
 </footer>
 
 <script>
   const BOOKING={
+    base:'https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking',
     default:'https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking?menu=true&dppub=true&cartId=6573ce45-8ba1-4c60-b9f8-d6f22b37a5b0'
   };
-  const applyBookingLinks=(root=document)=>root.querySelectorAll('[data-book]').forEach(a=>{a.href=BOOKING.default});
+  const bookingUrl=offerId=>{
+    if(!offerId)return BOOKING.default;
+    const url=new URL(BOOKING.base);
+    url.searchParams.set('menu','true');
+    url.searchParams.set('dppub','true');
+    url.searchParams.set('offerItemId',offerId);
+    return url.toString();
+  };
+  const applyBookingLinks=(root=document)=>root.querySelectorAll('[data-book]').forEach(a=>{a.href=bookingUrl(a.dataset.book||'')});
 
   const MENU_IMG={
     knotless:'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69272023c3c18212c2317c66.jpg',
@@ -1550,81 +1559,83 @@
     store:'https://res.cloudinary.com/dkfxnlsib/image/upload/q_auto/f_auto/v1781688538/queen_wbjyol.png'
   };
   const MENU_TABS=[
-    {id:'featured',label:'Featured',title:'Featured'},
-    {id:'wash',label:'Wash & Refresh',title:'Braid Refresh & Wash Service',desc:'Gently cleanses your scalp, removes buildup and refreshes your braids — with deep conditioning to restore moisture and softness.'},
-    {id:'borabora',label:'Bora-Bora',title:'The Bora-Bora Collection'},
-    {id:'knotless',label:'Knotless',title:'The Knotless Collection'},
-    {id:'boho',label:'Boho',title:'The Boho Braid Collection'},
-    {id:'twists',label:'Twists',title:'The Twists Collection'},
-    {id:'fulani',label:'Fulani',title:'The Fulani Collection'},
-    {id:'passion',label:'Passion',title:'The Passion Twist Collection'},
-    {id:'fusion',label:'Fusion',title:'The Fusion Collection'},
-    {id:'bohobob',label:'Boho Bob',title:'The Boho Bob Collection'},
-    {id:'french',label:'French',title:'The French Braid Collection'},
-    {id:'crochet',label:'Crochet',title:'The Crochet Collection'},
-    {id:'gray',label:'Gray',title:'The Gray Collection'},
-    {id:'latefee',label:'Late Fee',title:'Late Fee Policy'},
-    {id:'touchups',label:'Touch-Ups',title:'Touch-Ups'},
-    {id:'takedown',label:'Take-Down',title:'Take-Down Service'},
-    {id:'store',label:'Legacy Store',title:'The Legacy Store'}
+    {id:'featured',label:"Featured",title:"Featured"},
+    {id:'kids',label:"Kids",title:"Kids Styles"},
+    {id:'wash',label:"Wash & Refresh",title:"Braid Refresh & Wash Service",desc:"Gently cleanses your scalp, removes buildup and refreshes your braids \u2014 with deep conditioning to restore moisture and softness."},
+    {id:'borabora',label:"Bora-Bora",title:"The Bora-Bora Collection"},
+    {id:'knotless',label:"Knotless",title:"The Knotless Collection"},
+    {id:'boho',label:"Boho",title:"The Boho Braid Collection"},
+    {id:'twists',label:"Twists",title:"The Twists Collection"},
+    {id:'fulani',label:"Fulani",title:"The Fulani Collection"},
+    {id:'passion',label:"Passion",title:"The Passion Twist Collection"},
+    {id:'fusion',label:"Fusion",title:"The Fusion Collection"},
+    {id:'bohobob',label:"Boho Bob",title:"The Boho Bob Collection"},
+    {id:'french',label:"French",title:"The French Braid Collection"},
+    {id:'crochet',label:"Crochet",title:"The Crochet Collection"},
+    {id:'gray',label:"Gray",title:"The Gray Collection"},
+    {id:'latefee',label:"Late Fee",title:"Late Fee Policy"},
+    {id:'touchups',label:"Touch-Ups",title:"Touch-Ups"},
+    {id:'takedown',label:"Take-Down",title:"Take-Down Service"},
+    {id:'store',label:"Legacy Store",title:"The Legacy Store"},
   ];
   const SERVICE_CATALOG=[
-    {tab:'featured',cat:'Featured',id:'22618040',name:'The Signature Knotless (SMEDIUM)',time:'5 hr',price:275,img:MENU_IMG.knotless},
-    {tab:'featured',cat:'Featured',id:'22618100',name:'The Classic Knotless (MEDIUM)',time:'4 hr',price:255,img:MENU_IMG.detail},
-    {tab:'featured',cat:'Featured',id:'22694942',name:'The Ethereal Boho (MID-BACK)',time:'6 hr',price:400,img:MENU_IMG.boho},
-    {tab:'featured',cat:'Featured',id:'22618012',name:'The Delicate Knotless (SMALL)',time:'6 hr',price:300,img:MENU_IMG.french},
-    {tab:'featured',cat:'Featured',id:'27495837',name:'Strength & Shine Rosemary Green Tea Rinse + Deep Conditioning Hair Mask',time:'30 min',price:75,img:MENU_IMG.care},
-    {tab:'featured',cat:'Featured',id:'24665607',name:'Boho Hair Bundles',time:'5 min',price:75,img:MENU_IMG.store},
-    {tab:'wash',cat:'Wash & Refresh',id:'27495837',name:'Strength & Shine Rosemary Green Tea Rinse + Deep Conditioning Hair Mask',time:'30 min',price:75,img:MENU_IMG.care},
-    {tab:'wash',cat:'Wash & Refresh',id:'27203887',name:'Signature Braid Cleanse & Treatment',time:'1 hr',price:150,img:MENU_IMG.care},
-    {tab:'wash',cat:'Wash & Refresh',id:'27203878',name:'Regular Wash, Shampoo & Deep Conditioning',time:'1 hr',price:50,img:MENU_IMG.care},
-    {tab:'borabora',cat:'Bora-Bora',id:'24054136',name:'Small Bora-Bora Bohemian',time:'7 hr',price:700,img:MENU_IMG.boho},
-    {tab:'borabora',cat:'Bora-Bora',id:'24054131',name:'Smedium Bora-Bora Bohemian',time:'6 hr',price:600,img:MENU_IMG.boho},
-    {tab:'knotless',cat:'Knotless',id:'26354770',name:'The Petite Knotless (X-SMALL W/HUMAN HAIR)',time:'6 hr',price:700,img:MENU_IMG.petite},
-    {tab:'knotless',cat:'Knotless',id:'26512318',name:'The Petite Knotless (X-SMALL)',time:'5 hr',price:500,img:MENU_IMG.petite},
-    {tab:'knotless',cat:'Knotless',id:'22618012',name:'The Delicate Knotless (SMALL)',time:'6 hr',price:300,img:MENU_IMG.french},
-    {tab:'knotless',cat:'Knotless',id:'22618040',name:'The Signature Knotless (SMEDIUM)',time:'5 hr',price:275,img:MENU_IMG.knotless},
-    {tab:'knotless',cat:'Knotless',id:'22618100',name:'The Classic Knotless (MEDIUM)',time:'4 hr',price:255,img:MENU_IMG.detail},
-    {tab:'boho',cat:'Boho',id:'22694942',name:'The Ethereal Boho (MID-BACK)',time:'6 hr',price:400,img:MENU_IMG.boho},
-    {tab:'boho',cat:'Boho',id:'22694961',name:'The Romantic Boho (WAIST-LENGTH)',time:'7 hr',price:525,img:MENU_IMG.boho},
-    {tab:'twists',cat:'Twists',id:'22824921',name:'Afro Twist W/ Human Hair',time:'6 hr',price:500,img:MENU_IMG.detail},
-    {tab:'twists',cat:'Twists',id:'22696365',name:'Afro Kinky Twist',time:'5 hr',price:350,img:MENU_IMG.detail},
-    {tab:'twists',cat:'Twists',id:'23868539',name:'Marley Twist',time:'5 hr',price:300,img:MENU_IMG.detail},
-    {tab:'fulani',cat:'Fulani',id:'22697168',name:'Boho Fulani Braids',time:'5 hr',price:450,img:MENU_IMG.knotless},
-    {tab:'fulani',cat:'Fulani',id:'22697157',name:'Knotless Fulani Braids',time:'4 hr',price:300,img:MENU_IMG.knotless},
-    {tab:'passion',cat:'Passion Twist',id:'24664196',name:'Boho Passion Twist',time:'5 hr',price:450,img:MENU_IMG.boho},
-    {tab:'passion',cat:'Passion Twist',id:'22696431',name:'Passion Twist',time:'4 hr',price:300,img:MENU_IMG.boho},
-    {tab:'fusion',cat:'Fusion',id:'24655148',name:'Boho Knotless Sew-In',time:'4 hr',price:350,img:MENU_IMG.detail},
-    {tab:'fusion',cat:'Fusion',id:'23613184',name:'Fulani Sew-In',time:'5 hr',price:400,img:MENU_IMG.detail},
-    {tab:'bohobob',cat:'Boho Bob',id:'22694901',name:'Boho Bob (FULL)',time:'5 hr',price:525,img:MENU_IMG.boho},
-    {tab:'bohobob',cat:'Boho Bob',id:'22694876',name:'Boho Bob (MID)',time:'4 hr',price:450,img:MENU_IMG.boho},
-    {tab:'french',cat:'French Braid',id:'26146214',name:'Boho French Curls',time:'5 hr',price:400,img:MENU_IMG.french},
-    {tab:'french',cat:'French Braid',id:'22618370',name:'Knotless French Braids',time:'4 hr',price:315,img:MENU_IMG.french},
-    {tab:'crochet',cat:'Crochet',id:'27851770',name:'Feather Crochet',time:'3 hr',price:300,img:MENU_IMG.detail},
-    {tab:'gray',cat:'Gray',id:'25995983',name:'Small Miracle Knotless Boho Braids',time:'6 hr',price:355,img:MENU_IMG.knotless},
-    {tab:'gray',cat:'Gray',id:'25995971',name:'Miracle Knotless Braids (S-MEDIUM)',time:'5 hr',price:300,img:MENU_IMG.knotless},
-    {tab:'gray',cat:'Gray',id:'25995906',name:'Medium Miracle Boho Braids',time:'5 hr',price:255,img:MENU_IMG.boho},
-    {tab:'gray',cat:'Gray',id:'25552085',name:"Queen's Shadow Gray",time:'6 hr',price:400,img:MENU_IMG.detail},
-    {tab:'latefee',cat:'Late Fee',id:'24665413',name:'Late Fee',time:'5 min',price:20,img:MENU_IMG.store},
-    {tab:'touchups',cat:'Touch-Ups',id:'26808631',name:'Curly Ends',time:'30 min',price:30,img:MENU_IMG.boho},
-    {tab:'touchups',cat:'Touch-Ups',id:'26729311',name:'Extra Small W/ Human Hair (TOUCH UP)',time:'2 hr',price:300,img:MENU_IMG.petite},
-    {tab:'touchups',cat:'Touch-Ups',id:'26354724',name:'Conditioning W/ Wig Down',time:'1 hr',price:150,img:MENU_IMG.care},
-    {tab:'touchups',cat:'Touch-Ups',id:'25375803',name:'French Curls (TOUCH UP)',time:'1 hr',price:200,img:MENU_IMG.french},
-    {tab:'touchups',cat:'Touch-Ups',id:'24999588',name:'Small Knotless (TOUCH UP)',time:'1 hr',price:175,img:MENU_IMG.knotless},
-    {tab:'touchups',cat:'Touch-Ups',id:'24999577',name:'Smedium Knotless (TOUCH UP)',time:'1 hr',price:150,img:MENU_IMG.knotless},
-    {tab:'touchups',cat:'Touch-Ups',id:'16921909',name:'Medium Knotless (TOUCH UP)',time:'1 hr',price:125,img:MENU_IMG.knotless},
-    {tab:'touchups',cat:'Touch-Ups',id:'24999571',name:'Small Fulani (TOUCH UP)',time:'1 hr',price:175,img:MENU_IMG.knotless},
-    {tab:'touchups',cat:'Touch-Ups',id:'24999567',name:'S-Medium Fulani (TOUCH UP)',time:'1 hr',price:150,img:MENU_IMG.knotless},
-    {tab:'touchups',cat:'Touch-Ups',id:'24999440',name:'Medium Fulani (TOUCH UP)',time:'1 hr',price:125,img:MENU_IMG.knotless},
-    {tab:'touchups',cat:'Touch-Ups',id:'24686795',name:'QVR (TOUCH UP)',time:'1 hr',price:200,img:MENU_IMG.detail},
-    {tab:'touchups',cat:'Touch-Ups',id:'17129562',name:'Bohemian (TOUCH UP)',time:'1 hr',price:200,img:MENU_IMG.boho},
-    {tab:'takedown',cat:'Take-Down',id:'27998332',name:'Sew-In Take Down',time:'1 hr',price:100,img:MENU_IMG.detail},
-    {tab:'takedown',cat:'Take-Down',id:'18808594',name:'Take Down',time:'2 hr',price:200,img:MENU_IMG.detail},
-    {tab:'store',cat:'Legacy Store',id:'24665486',name:'LegacyTress Oil',time:'5 min',price:30,img:MENU_IMG.store},
-    {tab:'store',cat:'Legacy Store',id:'24665537',name:'Nighttime Hair Net',time:'5 min',price:10,img:MENU_IMG.store},
-    {tab:'store',cat:'Legacy Store',id:'24665607',name:'Boho Hair Bundles',time:'5 min',price:75,img:MENU_IMG.store},
-    {tab:'store',cat:'Legacy Store',id:'24665551',name:'Afro Twisting Hair',time:'5 min',price:15,img:MENU_IMG.store},
-    {tab:'store',cat:'Legacy Store',id:'24665671',name:'French Curl Hair',time:'5 min',price:15,img:MENU_IMG.store}
+    {tab:'featured',cat:"Featured",id:'22618100',name:"The Classic Knotless (MEDIUM)",time:"4 hr",price:255,img:MENU_IMG.detail},
+    {tab:'featured',cat:"Featured",id:'22618040',name:"The Signature Knotless (SMEDIUM)",time:"5 hr",price:275,img:MENU_IMG.knotless},
+    {tab:'featured',cat:"Featured",id:'22694942',name:"The Ethereal Boho (MID-BACK)",time:"6 hr",price:400,img:MENU_IMG.boho},
+    {tab:'featured',cat:"Featured",id:'22618012',name:"The Delicate Knotless (SMALL)",time:"6 hr",price:300,img:MENU_IMG.french},
+    {tab:'kids',cat:"Kids",id:'28493769',name:"Natural Twist",time:"3 hr",price:110,img:MENU_IMG.petite},
+    {tab:'wash',cat:"Wash & Refresh",id:'27495837',name:"Strength & Shine Rosemary Green Tea Rinse + Deep Conditioning Hair Mask",time:"30 min",price:75,img:MENU_IMG.care},
+    {tab:'wash',cat:"Wash & Refresh",id:'27203887',name:"Signature Braid Cleanse & Treatment",time:"1 hr",price:150,img:MENU_IMG.care},
+    {tab:'wash',cat:"Wash & Refresh",id:'27203878',name:"Regular Wash, Shampoo & Deep Conditioning",time:"1 hr",price:50,img:MENU_IMG.care},
+    {tab:'borabora',cat:"Bora-Bora",id:'24054136',name:"Small Bora-Bora Bohemian",time:"10 hr",price:700,img:MENU_IMG.boho},
+    {tab:'borabora',cat:"Bora-Bora",id:'24054131',name:"Smedium Bora-Bora Bohemian",time:"8 hr",price:600,img:MENU_IMG.boho},
+    {tab:'knotless',cat:"Knotless",id:'26354770',name:"The Petite Knotless (X-SMALL W/HUMAN HAIR)",time:"9 hr",price:700,img:MENU_IMG.petite},
+    {tab:'knotless',cat:"Knotless",id:'26512318',name:"The Petite Knotless (X-SMALL)",time:"8 hr",price:500,img:MENU_IMG.petite},
+    {tab:'knotless',cat:"Knotless",id:'22618012',name:"The Delicate Knotless (SMALL)",time:"6 hr",price:300,img:MENU_IMG.french},
+    {tab:'knotless',cat:"Knotless",id:'22618040',name:"The Signature Knotless (SMEDIUM)",time:"5 hr",price:275,img:MENU_IMG.knotless},
+    {tab:'knotless',cat:"Knotless",id:'22618100',name:"The Classic Knotless (MEDIUM)",time:"4 hr",price:255,img:MENU_IMG.detail},
+    {tab:'boho',cat:"Boho",id:'22694942',name:"The Ethereal Boho (MID-BACK)",time:"6 hr",price:400,img:MENU_IMG.boho},
+    {tab:'boho',cat:"Boho",id:'22694961',name:"The Romantic Boho (WAIST-LENGTH)",time:"6 hr",price:525,img:MENU_IMG.boho},
+    {tab:'boho',cat:"Boho",id:'28515707',name:"Boho Mist",time:"1 hr",price:15,img:MENU_IMG.boho},
+    {tab:'boho',cat:"Boho",id:'28515689',name:"Boho Hair Bundles",time:"5 min",price:90,img:MENU_IMG.store},
+    {tab:'twists',cat:"Twists",id:'22824921',name:"Afro Twist W/ Human Hair",time:"7 hr",price:500,img:MENU_IMG.detail},
+    {tab:'twists',cat:"Twists",id:'22696365',name:"Afro Kinky Twist",time:"4 hr",price:350,img:MENU_IMG.detail},
+    {tab:'twists',cat:"Twists",id:'23868539',name:"Marley Twist",time:"5 hr",price:300,img:MENU_IMG.detail},
+    {tab:'fulani',cat:"Fulani",id:'22697168',name:"Boho Fulani Braids",time:"4 hr",price:450,img:MENU_IMG.knotless},
+    {tab:'fulani',cat:"Fulani",id:'22697157',name:"Knotless Fulani Braids",time:"4 hr",price:300,img:MENU_IMG.knotless},
+    {tab:'passion',cat:"Passion Twist",id:'24664196',name:"Boho Passion Twist",time:"6 hr",price:450,img:MENU_IMG.boho},
+    {tab:'passion',cat:"Passion Twist",id:'22696431',name:"Passion Twist",time:"4 hr",price:300,img:MENU_IMG.boho},
+    {tab:'fusion',cat:"Fusion",id:'24655148',name:"Boho Knotless Sew-In",time:"3 hr 30 min",price:350,img:MENU_IMG.detail},
+    {tab:'fusion',cat:"Fusion",id:'23613184',name:"Fulani Sew-In",time:"3 hr",price:400,img:MENU_IMG.detail},
+    {tab:'bohobob',cat:"Boho Bob",id:'22694876',name:"Boho Bob (MID)",time:"6 hr",price:450,img:MENU_IMG.boho},
+    {tab:'french',cat:"French Braid",id:'26146214',name:"Boho French Curls",time:"4 hr",price:400,img:MENU_IMG.french},
+    {tab:'french',cat:"French Braid",id:'22618370',name:"Knotless French Braids",time:"5 hr",price:315,img:MENU_IMG.french},
+    {tab:'crochet',cat:"Crochet",id:'27851770',name:"Feather Crochet",time:"6 hr",price:300,img:MENU_IMG.detail},
+    {tab:'crochet',cat:"Crochet",id:'25995983',name:"Small Miracle Knotless Boho Braids",time:"4 hr",price:355,img:MENU_IMG.knotless},
+    {tab:'crochet',cat:"Crochet",id:'25995971',name:"Miracle Knotless Braids (S-MEDIUM)",time:"3 hr 15 min",price:300,img:MENU_IMG.knotless},
+    {tab:'crochet',cat:"Crochet",id:'25995906',name:"Medium Miracle Boho Braids",time:"3 hr",price:255,img:MENU_IMG.boho},
+    {tab:'gray',cat:"Gray",id:'25552085',name:"Queen's Shadow Gray",time:"6 hr",price:400,img:MENU_IMG.detail},
+    {tab:'latefee',cat:"Late Fee",id:'28116871',name:"After Hour Service",time:"1 hr",price:150,img:MENU_IMG.store},
+    {tab:'latefee',cat:"Late Fee",id:'24665413',name:"Late Fee",time:"1 hr",price:20,img:MENU_IMG.store},
+    {tab:'touchups',cat:"Touch-Ups",id:'26808631',name:"Curly Ends",time:"1 hr",price:30,img:MENU_IMG.boho},
+    {tab:'touchups',cat:"Touch-Ups",id:'26729311',name:"Extra Small W/ Human Hair (TOUCH UP)",time:"3 hr 30 min",price:300,img:MENU_IMG.petite},
+    {tab:'touchups',cat:"Touch-Ups",id:'26354724',name:"Conditioning W/ Wig Down",time:"1 hr 20 min",price:150,img:MENU_IMG.care},
+    {tab:'touchups',cat:"Touch-Ups",id:'25375803',name:"French Curls (TOUCH UP)",time:"2 hr",price:200,img:MENU_IMG.french},
+    {tab:'touchups',cat:"Touch-Ups",id:'24999588',name:"Small Knotless (TOUCH UP)",time:"2 hr 30 min",price:175,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'24999577',name:"Smedium Knotless (TOUCH UP)",time:"3 hr",price:150,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'16921909',name:"Medium Knotless (TOUCH UP)",time:"2 hr 30 min",price:125,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'24999571',name:"Small Fulani (TOUCH UP)",time:"3 hr",price:175,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'24999567',name:"S-Medium Fulani (TOUCH UP)",time:"3 hr",price:150,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'24999440',name:"Medium Fulani (TOUCH UP)",time:"3 hr",price:125,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'24686795',name:"QVR (TOUCH UP)",time:"4 hr",price:200,img:MENU_IMG.knotless},
+    {tab:'touchups',cat:"Touch-Ups",id:'17129562',name:"Bohemian (TOUCH UP)",time:"2 hr 30 min",price:200,img:MENU_IMG.boho},
+    {tab:'takedown',cat:"Take-Down",id:'28172501',name:"Cornrow Style 6-8",time:"1 hr",price:110,img:MENU_IMG.detail},
+    {tab:'takedown',cat:"Take-Down",id:'27998332',name:"Sew-In Take Down",time:"1 hr",price:100,img:MENU_IMG.detail},
+    {tab:'takedown',cat:"Take-Down",id:'18808594',name:"Take Down",time:"2 hr 15 min",price:200,img:MENU_IMG.detail},
+    {tab:'store',cat:"Legacy Store",id:'24665486',name:"LegacyTress Oil",time:"5 min",price:30,img:MENU_IMG.store},
+    {tab:'store',cat:"Legacy Store",id:'24665537',name:"Nighttime Hair Net",time:"5 min",price:10,img:MENU_IMG.store},
+    {tab:'store',cat:"Legacy Store",id:'24665551',name:"Afro Twisting Hair",time:"5 min",price:15.99,img:MENU_IMG.store},
+    {tab:'store',cat:"Legacy Store",id:'24665671',name:"French Curl Hair",time:"5 min",price:15.99,img:MENU_IMG.store},
   ];
   const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
   const renderServiceMenu=()=>{
