@@ -22,11 +22,11 @@ _BASE_PRESERVE = (
 )
 
 _IMG = {
-    'knotless': 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69272023c3c18212c2317c66.jpg',
-    'boho': 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69150d324a60b5912d8e4bb0.jpg',
-    'french': 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/691c9d2a6a5d3b1bed979aa0.jpg',
+    'knotless': '/static/assets/services/thumbs/signature-knotless.jpg',
+    'boho': '/static/assets/services/thumbs/ethereal-boho.jpg',
+    'french': '/static/assets/services/thumbs/delicate-knotless.jpg',
     'petite': 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/6915e15744003e7298632783.jpg',
-    'detail': 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_600/u_https://assets.cdn.filesafe.space/PdsP45Yo0hioveq4oKF8/media/69385c4c35652b8ef108610d.png',
+    'detail': '/static/assets/services/thumbs/classic-knotless.jpg',
 }
 
 # All braid styles from the live Fresha menu — for AI preview testing.

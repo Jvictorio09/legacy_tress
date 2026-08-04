@@ -6,3 +6,11 @@ db.sqlite3-journal
 venv/
 .venv/
 staticfiles/
+drive_downloads/
+drive_probe/
+_drive_*.py
+_export_service_imgs.py
+_check_prices.py
+_check_cats.py
+fresha_*.html
+fresha_*.json
