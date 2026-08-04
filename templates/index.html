@@ -47,7 +47,7 @@
   "areaServed": ["Margate FL","Coral Springs FL","Coconut Creek FL","Tamarac FL","North Lauderdale FL","Fort Lauderdale FL","Pompano Beach FL","Deerfield Beach FL","Sunrise FL","Plantation FL","Lauderhill FL","Broward County FL"],
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "06:00", "closes": "18:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "08:30", "closes": "18:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "08:00", "closes": "18:00" }
   ],
   "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "600" },
   "sameAs": [
@@ -833,6 +833,9 @@
   .news input:focus{outline:none;border-color:var(--gold-deep)}
   .news button{width:100%;background:var(--gold);border:0;border-radius:2px;padding:14px;color:var(--forest-2);font-weight:500;cursor:pointer;font-family:inherit;letter-spacing:.2em;text-transform:uppercase;font-size:.9rem;transition:background .3s}
   .news button:hover{background:var(--gold-soft)}
+  .news button:disabled{opacity:.7;cursor:wait}
+  .news-msg{margin-top:12px;font-size:.9rem;letter-spacing:.06em;color:var(--gold-soft);line-height:1.45}
+  .news-msg.is-error{color:#f0c4c4}
   .socials{display:flex;gap:12px;margin-top:24px}
   .socials a{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-light-gold);display:grid;place-items:center;transition:.35s var(--ease)}
   .socials a:hover{background:var(--gold);border-color:var(--gold);color:var(--forest-2)}
@@ -955,8 +958,8 @@
 <body>
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 
-<!-- PROMO BAR — links the site to the current flyer campaign -->
-<div class="promo">
+<!-- PROMO BAR — JS hides this (and #offer) once data-ends has passed -->
+<div class="promo" id="promo" data-starts="2026-07-25" data-ends="2026-08-12">
   <div class="wrap">
     <span>Back-to-School Special</span>
     <span class="dot"></span>
@@ -1179,7 +1182,7 @@
   </div>
 </section>
 
-<!-- OFFER TICKET -->
+<!-- OFFER TICKET — JS hides once promo window ends -->
 <section class="offer" id="offer">
   <div class="wrap">
     <div class="ticket reveal">
@@ -1380,8 +1383,10 @@
       <span class="eyebrow center">Your Style Concierge</span>
       <h2>Not sure <em>what to book?</em></h2>
       <p>Tell us a little about your hair, your lifestyle and your budget, and we'll recommend the right style, prep service and add-ons — with a price range and a direct booking link.</p>
-          <a class="btn btn--ghost" href="{% url 'boho_try_on' %}" style="margin-top:10px">Try The Ethereal Boho with AI</a>
-          <a href="#" data-book class="btn btn--gold" target="_blank" rel="noopener">Start My Consultation</a>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+        <button type="button" class="btn btn--gold" data-open-concierge="chat">Start My Consultation</button>
+        <a class="btn btn--ghost" href="{% url 'boho_try_on' %}">Preview a Style with AI</a>
+      </div>
       <div class="conc-steps">
         <div class="step"><span class="n">i</span><p>Share your hair profile</p></div>
         <div class="step"><span class="n">ii</span><p>Tell us your goal &amp; budget</p></div>
@@ -1557,7 +1562,7 @@
     <p class="serving">Serving Margate · Coral Springs · Coconut Creek · Fort Lauderdale</p>
     <div class="final-cta">
       <a href="#" data-book class="btn btn--gold" target="_blank" rel="noopener">Book Now</a>
-      <a href="#concierge" class="btn btn--light">Talk to a Concierge</a>
+      <button type="button" class="btn btn--light" data-open-concierge="chat">Talk to a Concierge</button>
     </div>
   </div>
 </section>
@@ -1572,7 +1577,7 @@
     <div class="visit-map-card">
       <div class="visit-map-meta">
         <div><b>Address</b>7644 Margate Blvd<br>Margate, FL 33063</div>
-        <div><b>Hours</b>Mon–Sat 6:00 AM–6:00 PM<br>Sun 8:30 AM–6:00 PM</div>
+        <div><b>Hours</b>Mon–Sat 6:00 AM–6:00 PM<br>Sun 8:00 AM–6:00 PM</div>
         <div><b>Call</b>561-970-4193<br>786-696-3032</div>
       </div>
       <div class="visit-map-preview">
@@ -1624,15 +1629,16 @@
       </div>
       <div class="foot-col">
         <h4>Visit</h4>
-        <a href="#visit">Directions</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a><a href="#guide">Find Your Style</a><a href="#offer">Current Offer</a><a href="#reviews">Reviews</a><a href="{% url 'policies' %}">Policies</a><a href="#area">Service Area</a>
+        <a href="#visit">Directions</a><a href="#" data-book target="_blank" rel="noopener">Book Now</a><a href="#guide">Find Your Style</a><a href="#offer" data-offer-link>Current Offer</a><a href="#reviews">Reviews</a><a href="{% url 'policies' %}">Policies</a><a href="#area">Service Area</a>
       </div>
       <div class="foot-col news">
         <h4>The List</h4>
         <p class="tag" style="margin-bottom:16px">Styles, tips and quiet offers, to your inbox.</p>
-        <form onsubmit="return false">
-          <input type="email" placeholder="Your email address" aria-label="Email address" autocomplete="email">
+        <form id="newsletter-form" class="news-form" novalidate>
+          <input type="email" name="email" id="newsletter-email" placeholder="Your email address" aria-label="Email address" autocomplete="email" required>
           <button type="submit">Subscribe</button>
         </form>
+        <p class="news-msg" id="newsletter-msg" hidden role="status"></p>
       </div>
     </div>
     <div class="foot-bottom">
@@ -1656,6 +1662,67 @@
     return url.toString();
   };
   const applyBookingLinks=(root=document)=>root.querySelectorAll('[data-book]').forEach(a=>{a.href=bookingUrl(a.dataset.book||'')});
+
+  /* Promo / offer: show only between data-starts and data-ends (inclusive, local date) */
+  (()=>{
+    const promo=document.getElementById('promo');
+    const offer=document.getElementById('offer');
+    if(!promo)return;
+    const starts=promo.dataset.starts||'';
+    const ends=promo.dataset.ends||'';
+    const today=new Date();
+    const ymd=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const active=(!starts||ymd>=starts)&&(!ends||ymd<=ends);
+    if(!active){
+      promo.hidden=true;
+      if(offer)offer.hidden=true;
+      document.querySelectorAll('[data-offer-link], a[href="#offer"]').forEach(a=>{a.hidden=true});
+    }
+  })();
+
+  /* Concierge CTAs open the floating AI chat */
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-open-concierge]');
+    if(!btn)return;
+    e.preventDefault();
+    const view=btn.getAttribute('data-open-concierge')||'chat';
+    if(window.LegacyTressConcierge&&typeof window.LegacyTressConcierge.open==='function'){
+      window.LegacyTressConcierge.open(view==='voice'?'voice':'chat');
+    }else{
+      location.hash='#concierge';
+    }
+  });
+
+  /* Newsletter — collect email locally for now; Resend wiring later */
+  (()=>{
+    const form=document.getElementById('newsletter-form');
+    const msg=document.getElementById('newsletter-msg');
+    const emailEl=document.getElementById('newsletter-email');
+    if(!form||!msg||!emailEl)return;
+    const KEY='legacytress_newsletter_emails';
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      const email=(emailEl.value||'').trim().toLowerCase();
+      const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      msg.hidden=false;
+      if(!ok){
+        msg.classList.add('is-error');
+        msg.textContent='Please enter a valid email address.';
+        emailEl.focus();
+        return;
+      }
+      try{
+        const list=JSON.parse(localStorage.getItem(KEY)||'[]');
+        if(!list.includes(email))list.push(email);
+        localStorage.setItem(KEY,JSON.stringify(list));
+      }catch(_){/* ignore storage errors */}
+      msg.classList.remove('is-error');
+      msg.textContent="You're on the list — we'll be in touch with styles and quiet offers.";
+      form.reset();
+      const btn=form.querySelector('button[type="submit"]');
+      if(btn){btn.disabled=true;btn.textContent='Subscribed';setTimeout(()=>{btn.disabled=false;btn.textContent='Subscribe'},2500)}
+    });
+  })();
 
   const MENU_IMG={
     knotless:'{% static "assets/services/thumbs/signature-knotless.jpg" %}',
@@ -1681,7 +1748,6 @@
     {id:'french',label:"French",title:"The French Braid Collection"},
     {id:'crochet',label:"Crochet",title:"The Crochet Collection"},
     {id:'gray',label:"Gray",title:"The Gray Collection"},
-    {id:'latefee',label:"Late Fee",title:"Late Fee Policy"},
     {id:'touchups',label:"Touch-Ups",title:"Touch-Ups"},
     {id:'takedown',label:"Take-Down",title:"Take-Down Service"},
     {id:'store',label:"Legacy Store",title:"The Legacy Store"},
@@ -1723,8 +1789,6 @@
     {tab:'crochet',cat:"Crochet",id:'25995971',name:"Miracle Knotless Braids (S-MEDIUM)",time:"3 hr 15 min",price:300,img:MENU_IMG.knotless},
     {tab:'crochet',cat:"Crochet",id:'25995906',name:"Medium Miracle Boho Braids",time:"3 hr",price:255,img:MENU_IMG.boho},
     {tab:'gray',cat:"Gray",id:'25552085',name:"Queen's Shadow Gray",time:"6 hr",price:400,img:MENU_IMG.detail},
-    {tab:'latefee',cat:"Late Fee",id:'28116871',name:"After Hour Service",time:"1 hr",price:150,img:MENU_IMG.store},
-    {tab:'latefee',cat:"Late Fee",id:'24665413',name:"Late Fee",time:"1 hr",price:20,img:MENU_IMG.store},
     {tab:'touchups',cat:"Touch-Ups",id:'26808631',name:"Curly Ends",time:"1 hr",price:30,img:MENU_IMG.boho},
     {tab:'touchups',cat:"Touch-Ups",id:'26729311',name:"Extra Small W/ Human Hair (TOUCH UP)",time:"3 hr 30 min",price:300,img:MENU_IMG.petite},
     {tab:'touchups',cat:"Touch-Ups",id:'26354724',name:"Conditioning W/ Wig Down",time:"1 hr 20 min",price:150,img:MENU_IMG.care},
