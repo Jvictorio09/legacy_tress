@@ -200,11 +200,15 @@
     <div class="wrap">© 2026 LegacyTress · <a href="{% url 'try_on' %}">Virtual Color Studio</a> · <a href="{% url 'index' %}">Home</a></div>
   </footer>
 
+  {% csrf_token %}
   {{ braid_styles|json_script:"braid-styles-data" }}
   <script>
     const BOOKING_URL = 'https://www.fresha.com/a/legacytress-margate-7644-margate-boulevard-j6v0alyk/booking?menu=true&dppub=true&cartId=6573ce45-8ba1-4c60-b9f8-d6f22b37a5b0';
+    const CSRF = '{{ csrf_token }}';
+    const GENERATE_URL = '{% url "boho_generate" %}';
 
-    const STYLES = JSON.parse(document.getElementById('braid-styles-data').textContent);
+    const stylesEl = document.getElementById('braid-styles-data');
+    const STYLES = JSON.parse(stylesEl ? stylesEl.textContent : '[]');
     const CATEGORIES = [...new Set(STYLES.map(function (s) { return s.category; }))];
 
     const video = document.getElementById('video');
@@ -369,6 +373,25 @@
       return match ? decodeURIComponent(match[2]) : '';
     }
 
+    function csrfToken() {
+      return CSRF || getCookie('csrftoken');
+    }
+
+    async function readJson(res) {
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        if (res.status === 403) {
+          throw new Error('Your session expired. Refresh the page and try again.');
+        }
+        if (res.status === 413) {
+          throw new Error('That photo is too large. Please use an image under 10 MB.');
+        }
+        throw new Error('Could not generate preview right now. Please try again.');
+      }
+    }
+
     function setFaceGuide(show) {
       faceGuide.hidden = !show;
     }
@@ -528,12 +551,13 @@
       form.append('style', selectedStyleId);
 
       try {
-        const res = await fetch('{% url "boho_generate" %}', {
+        const res = await fetch(GENERATE_URL, {
           method: 'POST',
-          headers: { 'X-CSRFToken': getCookie('csrftoken') },
+          credentials: 'same-origin',
+          headers: { 'X-CSRFToken': csrfToken() },
           body: form
         });
-        const data = await res.json();
+        const data = await readJson(res);
         if (!res.ok || !data.ok) {
           throw new Error(data.error || 'Generation failed.');
         }

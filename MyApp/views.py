@@ -2,7 +2,8 @@ import json
 
 from django.http import JsonResponse
 from django.views import View
-from django.views.decorators.csrf import csrf_protect
+from django.views.csrf import csrf_failure as django_csrf_failure
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
@@ -33,6 +34,7 @@ class TryOnView(TemplateView):
     template_name = 'try_on.html'
 
 
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class BohoTryOnView(TemplateView):
     template_name = 'boho_try_on.html'
 
@@ -40,6 +42,24 @@ class BohoTryOnView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['braid_styles'] = get_braid_style_catalog()
         return context
+
+
+def csrf_failure(request, reason=''):
+    """Return JSON for API calls so the browser never tries to parse an HTML 403."""
+    content_type = request.content_type or ''
+    wants_json = (
+        request.path.startswith('/api/')
+        or 'application/json' in request.headers.get('Accept', '')
+        or request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        or content_type == 'application/json'
+        or content_type.startswith('multipart/')
+    )
+    if wants_json:
+        return JsonResponse(
+            {'ok': False, 'error': 'Your session expired. Refresh the page and try again.'},
+            status=403,
+        )
+    return django_csrf_failure(request, reason)
 
 
 @method_decorator(csrf_protect, name='dispatch')

@@ -92,6 +92,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.csrf',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -139,6 +140,13 @@ STORAGES = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Phone selfies can exceed Django's 2.5 MB default; the try-on view caps at 10 MB.
+DATA_UPLOAD_MAX_MEMORY_SIZE = 12 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 12 * 1024 * 1024
+
+# API endpoints should get JSON, not Django's HTML 403 page.
+CSRF_FAILURE_VIEW = 'MyApp.views.csrf_failure'
 
 # AI Ethereal Boho preview (OpenAI)
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
